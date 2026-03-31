@@ -30,7 +30,7 @@ const contactInfo = [
   {
     icon: <Mail size={18} />,
     label: "Email",
-    value: "your@email.com",   // ← will pull from personalInfo
+    value: "shihabkuetcse@email.com",   // ← will pull from personalInfo
     href: `mailto:${personalInfo.email}`,
   },
   {

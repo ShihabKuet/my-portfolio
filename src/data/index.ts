@@ -74,34 +74,34 @@ export const skills: Skill[] = [
 export const projects: Project[] = [
   // --- FEATURED PROJECTS (shown as large cards) ---
   {
-    title: "Your Best Project Title",
+    title: "An Assistive Device for the Visually Impaired for Enhanced Navigation and Reading",
     description:
-      "A detailed description of what this project does, the problem it solves, and your role in building it. Make it 2-3 sentences — this is what recruiters read.",
-    technologies: ["Python", "React", "Node.js", "PostgreSQL"],
+      "An academic thesis and project on Smart Eye-wear device. A thesis of smartware device which has modules of i. Fall Detection, ii. Object Distance Detection iii. Image to Text Conversion and feeding the output to the bluetooth speaker.",
+    technologies: ["Python", "Raspberry Pi Nano", "Embedded System", "Hardware"],
     github: "https://github.com/ShihabKuet/project-one",
     live: "",
     featured: true,
     category: "fullstack",
   },
   {
-    title: "Second Featured Project",
+    title: "3D Dynamic Airport - OpenGL",
     description:
-      "Describe this project here. What was the technical challenge? What did you learn? Mention any measurable outcomes like performance improvements or users.",
-    technologies: ["C", "Linux", "Networking", "Python"],
-    github: "https://github.com/ShihabKuet/project-two",
+      "Project on Computer Graphics featuring controllable dynamic aeroplanes, lighiting and texturing etc.",
+    technologies: ["C", "C++", "OpenGL 3.3", "GLAD", "CMake"],
+    github: "https://github.com/ShihabKuet/3D_Airport_OpenGL_GLAD",
     live: "",
     featured: true,
-    category: "systems",
+    category: "computer-graphics",
   },
 
   // --- OTHER PROJECTS (shown as compact cards) ---
   {
-    title: "Side Project or Tool",
-    description: "A short description of this project.",
-    technologies: ["Python", "CLI"],
-    github: "https://github.com/ShihabKuet/project-three",
+    title: "LAN-Based Developer Forum (BDCOM Devs Forum)",
+    description: "A full-stack web platform designed for internal team collaboration within a LAN environment. Built with Flask and SQLAlchemy, the system allows users to post technical problems, share solutions, and interact via comments, likes, and notifications. Implemented IP-based identity mapping, username validation flows, and a scalable notification system supporting future features like post following and tag subscriptions.",
+    technologies: ["Python", "Flask", "SQLite/PostgreSQL", "JavaScript"],
+    github: "https://github.com/ShihabKuet/BDCOM_DEVs",
     featured: false,
-    category: "tools",
+    category: "fullstack",
   },
   {
     title: "Another Project",
