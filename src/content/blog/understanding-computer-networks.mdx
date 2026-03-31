@@ -1,0 +1,42 @@
+---
+title: "Computer Networks — What Every Software Engineer Should Know"
+excerpt: "As an R&D Engineer working with networking systems, here are the core networking concepts I use every day and think every engineer should understand."
+date: "2025-02-10"
+tags: ["Networking", "Systems", "Engineering"]
+---
+
+## Why Networks Matter for Software Engineers
+
+Most software runs over a network. Whether you're building a web API,
+a real-time chat app, or embedded firmware — understanding networks
+makes you a significantly better engineer.
+
+## The OSI Model in Plain English
+
+The OSI model has 7 layers. Here's what actually matters in practice:
+
+| Layer | Name | Real-world example |
+|-------|------|--------------------|
+| 7 | Application | HTTP, DNS, FTP |
+| 4 | Transport | TCP (reliable), UDP (fast) |
+| 3 | Network | IP addresses, routing |
+| 2 | Data Link | MAC addresses, Ethernet |
+| 1 | Physical | Cables, WiFi signals |
+
+## TCP vs UDP — When to Use Which
+```python
+# TCP — reliable, ordered, slower
+# Use for: web requests, file transfers, email
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # SOCK_STREAM = TCP
+
+# UDP — unreliable, unordered, faster
+# Use for: video streaming, gaming, DNS lookups
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)   # SOCK_DGRAM = UDP
+```
+
+## Key Takeaway
+
+You don't need to memorize every RFC. But understanding
+**IP addressing**, **TCP handshakes**, and **DNS resolution** will help you
+debug production issues 10x faster.

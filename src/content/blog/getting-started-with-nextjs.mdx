@@ -1,0 +1,38 @@
+---
+title: "Getting Started with Next.js — A Developer's Guide"
+excerpt: "Next.js has become the go-to React framework for production applications. Here's why I chose it for my portfolio and what I learned along the way."
+date: "2025-01-15"
+tags: ["Next.js", "React", "Web Development"]
+---
+
+## Why Next.js?
+
+When I started building my portfolio, I had to choose between plain React, Vite, or Next.js. I chose Next.js for three key reasons:
+
+1. **File-based routing** — no manual router setup needed
+2. **Server Components** — parts of the UI render on the server, making it faster for users
+3. **Built-in optimization** — images, fonts, and scripts are optimized automatically
+
+## The App Router
+
+Next.js 13+ introduced the App Router, which changes how you think about React components:
+```tsx
+// This is a Server Component by default — no "use client" needed
+// It runs on the server, so it can fetch data directly
+export default async function Page() {
+  const data = await fetch('https://api.example.com/data');
+  return <div>{/* render data */}</div>;
+}
+```
+
+## What I Learned
+
+The biggest mental shift was understanding **when to use Client vs Server Components**:
+
+- Use **Server Components** for: data fetching, static content, SEO-critical sections
+- Use **Client Components** (`"use client"`) for: interactivity, `useState`, `useEffect`, browser APIs
+
+## Conclusion
+
+Next.js is worth learning. It's used at Netflix, TikTok, Twitch, and most modern startups.
+The investment pays off quickly.
