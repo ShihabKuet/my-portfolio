@@ -37,6 +37,7 @@ export interface Project {
   live?: string;
   image?: string;
   featured: boolean;
+  category: string;
 }
 
 export interface BlogPost {

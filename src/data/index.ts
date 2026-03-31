@@ -72,11 +72,59 @@ export const skills: Skill[] = [
 ];
 
 export const projects: Project[] = [
+  // --- FEATURED PROJECTS (shown as large cards) ---
   {
-    title: "Project Name",
-    description: "A brief description of what this project does and the problem it solves.",
-    technologies: ["Python", "React", "Node.js"],
-    github: "https://github.com/yourusername/project",
+    title: "Your Best Project Title",
+    description:
+      "A detailed description of what this project does, the problem it solves, and your role in building it. Make it 2-3 sentences — this is what recruiters read.",
+    technologies: ["Python", "React", "Node.js", "PostgreSQL"],
+    github: "https://github.com/ShihabKuet/project-one",
+    live: "",
     featured: true,
+    category: "fullstack",
+  },
+  {
+    title: "Second Featured Project",
+    description:
+      "Describe this project here. What was the technical challenge? What did you learn? Mention any measurable outcomes like performance improvements or users.",
+    technologies: ["C", "Linux", "Networking", "Python"],
+    github: "https://github.com/ShihabKuet/project-two",
+    live: "",
+    featured: true,
+    category: "systems",
+  },
+
+  // --- OTHER PROJECTS (shown as compact cards) ---
+  {
+    title: "Side Project or Tool",
+    description: "A short description of this project.",
+    technologies: ["Python", "CLI"],
+    github: "https://github.com/ShihabKuet/project-three",
+    featured: false,
+    category: "tools",
+  },
+  {
+    title: "Another Project",
+    description: "A short description of this project.",
+    technologies: ["JavaScript", "HTML", "CSS"],
+    github: "https://github.com/ShihabKuet/project-four",
+    featured: false,
+    category: "frontend",
+  },
+  {
+    title: "Research or Uni Project",
+    description: "A short description of what this was about.",
+    technologies: ["Python", "Machine Learning"],
+    github: "",
+    featured: false,
+    category: "ml",
+  },
+  {
+    title: "Another Tool or Script",
+    description: "A short description of this utility or automation.",
+    technologies: ["Bash", "Linux"],
+    github: "",
+    featured: false,
+    category: "tools",
   },
 ];
