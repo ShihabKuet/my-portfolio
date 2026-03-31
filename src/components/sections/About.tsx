@@ -66,12 +66,14 @@ export default function About() {
               <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-violet-600/10 to-indigo-600/10 blur-xl" />
 
               {/* Photo — put your image at public/profile.jpg to activate */}
-              <div className="relative w-full h-full rounded-2xl bg-zinc-900 border border-zinc-800 overflow-hidden flex items-center justify-center">
-                <div className="text-center text-zinc-600">
-                  <div className="w-20 h-20 rounded-full bg-zinc-800 mx-auto mb-3 flex items-center justify-center text-3xl">
-                    👤
-                  </div>
-                  <p className="text-sm">Add profile.jpg to /public</p>
+              <div className="relative w-72 h-72 mx-auto">
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-violet-600/50 to-indigo-600/50 blur-xl" />
+                <div className="relative w-full h-full rounded-full border-2 border-violet-500/30 overflow-hidden">
+                  <img
+                    src="/profile.jpg"
+                    alt={personalInfo.name}
+                    className="w-full h-full object-cover object-top"
+                  />
                 </div>
               </div>
             </div>

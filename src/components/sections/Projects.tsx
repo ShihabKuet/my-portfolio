@@ -31,18 +31,34 @@ function FeaturedCard({ project, index }: { project: (typeof projects)[0]; index
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-600/0 to-indigo-600/0 group-hover:from-violet-600/5 group-hover:to-indigo-600/5 transition-all duration-500 pointer-events-none" />
 
       {/* Left — Image placeholder */}
-      <div className="relative h-52 md:h-full min-h-[200px] rounded-xl bg-zinc-800/50 border border-zinc-700/30 overflow-hidden flex items-center justify-center">
-        <div className="text-center text-zinc-600">
-          {/* Replace this div with an <img> tag when you have project screenshots */}
-          <Folder size={40} className="mx-auto mb-2 text-zinc-700" />
-          <p className="text-xs">Add screenshot to /public/projects/</p>
+      <div className="relative w-full rounded-xl overflow-hidden border border-zinc-700/30 bg-zinc-800/50">
+
+        {/* This div creates the 16:9 box — padding-bottom: 56.25% = 9/16 */}
+        <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+          {project.image ? (
+            <>
+
+{/* ----  className attributes described below for image  ----
+    object-cover:   Fills the box, crops the overflow — good for portraits
+    object-contain: Shrinks to fit entirely, no cropping — good for screenshots/GIFs
+    object-fill:    Stretches to fill — distorts the image, avoid this */}
+
+              <img
+                src={`/projects/${project.image}`}
+                alt={project.title}
+                className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-500 group-hover/img:scale-105"
+              />
+              <div className="absolute inset-0 bg-zinc-950/20 group-hover/img:bg-zinc-950/0 transition-colors duration-300" />
+            </>
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-center text-zinc-600">
+              <div>
+                <Folder size={40} className="mx-auto mb-2 text-zinc-700" />
+                <p className="text-xs">Add screenshot to /public/projects/</p>
+              </div>
+            </div>
+          )}
         </div>
-        {/* Uncomment this when you have a real image:
-        <img
-          src={`/projects/${project.image}`}
-          alt={project.title}
-          className="w-full h-full object-cover"
-        /> */}
       </div>
 
       {/* Right — Info */}

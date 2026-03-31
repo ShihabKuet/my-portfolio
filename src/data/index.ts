@@ -81,7 +81,8 @@ export const projects: Project[] = [
     github: "https://github.com/ShihabKuet/project-one",
     live: "",
     featured: true,
-    category: "fullstack",
+    category: "thesis",
+    image: "thesis_paper.png",
   },
   {
     title: "3D Dynamic Airport - OpenGL",
@@ -92,6 +93,7 @@ export const projects: Project[] = [
     live: "",
     featured: true,
     category: "computer-graphics",
+    image: "opengl.jpg",
   },
 
   // --- OTHER PROJECTS (shown as compact cards) ---
