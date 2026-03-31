@@ -1,14 +1,14 @@
 import { NavItem, Experience, Education, Project, Skill } from "@/types";
 
 export const personalInfo = {
-  name: "Your Name",              // ← Replace with your name
-  role: "Software R&D Engineer",
+  name: "MD. SHANJID AREFIN",              // ← Replace with your name
+  role: "Software Engineer (R&D)",
   company: "Shanghai BDCOM (Bangladesh)",
-  email: "your@email.com",        // ← Replace
-  github: "https://github.com/yourusername",  // ← Replace
-  linkedin: "https://linkedin.com/in/yourusername", // ← Replace
-  location: "Bangladesh",
-  bio: `Software R&D Engineer at Shanghai BDCOM with a passion for building 
+  email: "shihabkuetcse@gmail.com",        // ← Replace
+  github: "https://github.com/ShihabKuet",  // ← Replace
+  linkedin: "https://linkedin.com/in/shihabkuet", // ← Replace
+  location: "Dhaka, Bangladesh",
+  bio: `Software Engineer (R&D) at Shanghai BDCOM with a passion for building 
   scalable systems and exploring emerging technologies. 
   Graduated from KUET in 2024 with a degree in Computer Science & Engineering. 
   I love turning complex problems into elegant solutions.`,
@@ -29,7 +29,7 @@ export const navItems: NavItem[] = [
 export const experiences: Experience[] = [
   {
     company: "Shanghai BDCOM (Bangladesh)",
-    role: "Software R&D Engineer",
+    role: "Software Engineer (R&D)",
     duration: "2024 – Present",
     location: "Bangladesh",
     description: [
@@ -44,10 +44,17 @@ export const experiences: Experience[] = [
 export const education: Education[] = [
   {
     institution: "Khulna University of Engineering & Technology (KUET)",
-    degree: "B.Sc. in Computer Science & Engineering",
+    degree: "B.Sc. (Engg.) in Computer Science & Engineering",
     duration: "2019 – 2024",
-    result: "CGPA: X.XX / 4.00", // ← Fill in
-    description: "Relevant coursework: Data Structures, Algorithms, Computer Networks, OS...",
+    result: "CGPA: 3.42 / 4.00", // ← Fill in
+    description: "Relevant coursework: Data Structures, Algorithms, Computer Networks, Computer Graphics, OS...",
+  },
+  {
+    institution: "Govt. M. M. City College, Khulna",
+    degree: "Science (HSC)",
+    duration: "2017 – 2018",
+    result: "CGPA: 5.00 / 5.00", // ← Fill in
+    description: "Completed Higher Secondary Certificate with a focus on science subjects.",
   },
 ];
 

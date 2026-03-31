@@ -1,12 +1,17 @@
-import Hero from "@/components/sections/Hero";
+import Hero       from "@/components/sections/Hero";
+import About      from "@/components/sections/About";
+import Skills     from "@/components/sections/Skills";
+import Education  from "@/components/sections/Education";
+import Experience from "@/components/sections/Experience";
 
-// This is a Server Component by default (no "use client" needed)
-// It runs on the server, which is great for performance
 export default function HomePage() {
   return (
     <>
       <Hero />
-      {/* More sections will be added here in future phases */}
+      <About />
+      <Skills />
+      <Experience />
+      <Education />
     </>
   );
 }
