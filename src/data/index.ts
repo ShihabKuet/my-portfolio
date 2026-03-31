@@ -1,4 +1,4 @@
-import { NavItem, Experience, Education, Project, Skill } from "@/types";
+import { NavItem, Experience, Education, Project, Skill, Publication } from "@/types";
 
 export const personalInfo = {
   name: "MD. SHANJID AREFIN",              // ← Replace with your name
@@ -20,6 +20,7 @@ export const navItems: NavItem[] = [
   { label: "About",      href: "#about" },
   { label: "Skills",     href: "#skills" },
   { label: "Experience", href: "#experience" },
+  { label: "Research",   href: "#publications" },
   { label: "Projects",   href: "#projects" },
   { label: "Education",  href: "#education" },
   { label: "Blog",       href: "#blog" },
@@ -129,4 +130,17 @@ export const projects: Project[] = [
     featured: false,
     category: "tools",
   },
+];
+
+export const publications: Publication[] = [
+  {
+    title: "An Assistive Device for the Visually Impaired for Enhanced Navigation and Reading",
+    authors: ["Md. Shanjid Arefin", "Sadman Sakib", "Muhammad Sheikh Sadi"],
+    journal: "2024 13th International Conference on Electrical and Computer Engineering (ICECE)",
+    year: "2024",
+    doi: "10.1109/ICECE64886.2024.11024586",
+    link: "https://ieeexplore.ieee.org/document/11024586",
+    abstract: "Visual impairments have emerged as a prevalent issue over recent decades. The daily lives of visually impaired individuals are full of challenges, leading to a significant dependence on others for assistance with everyday tasks. Though various systems have been developed to aid the visually impaired in their day-to-day life, many of these are constrained by their specific domains. In this paper, we have taken a comprehensive approach to develop a solution aimed at enhancing the mobility and reading capabilities of the visually impaired. The solution is provided by developing an embedded spectacle glass with realtime obstacle avoidance, fall detection, and textual information extraction modules. The system generates an audible alert upon detecting obstacles ahead. In the event of an accident, the fall detection module sends an emergency response to a designated caregiver. The optical character recognition (OCR) module includes various image preprocessing techniques, an OCR engine, and a text-to-speech converter. In the optical character recognition module, the overall character error rate (CER) and word error rate (WER) are 6.97% and 9.46% respectively. The paper provides a comprehensive solution for the visually impaired by developing a portable, wearable, lightweight, and low-cost spectacle by which they can get assistance to detect obstacles around them and get textual information easily.",
+    tags: ["Error analysis", "Optical character recognition", "Visual impairment", "Text to speech" , "Sensors", "Image preprocessing" , "Fall detection", "Collision avoidance"],
+  }
 ];

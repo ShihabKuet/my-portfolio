@@ -48,3 +48,14 @@ export interface BlogPost {
   readTime: string;
   tags: string[];
 }
+
+export interface Publication {
+  title: string;
+  authors: string[];
+  journal: string;
+  year: string;
+  doi?: string;
+  link?: string;
+  abstract?: string;
+  tags: string[];
+}
