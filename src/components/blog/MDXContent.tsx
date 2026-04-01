@@ -1,16 +1,15 @@
-"use client";
-
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote";
+// No "use client" needed — this is now a Server Component
+import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
+import rehypeSlug from "rehype-slug";
+import rehypeHighlight from "rehype-highlight";
 
 interface MDXContentProps {
-  source: MDXRemoteSerializeResult;
+  source: string; // raw MDX string — no more serialized object
 }
 
 export default function MDXContent({ source }: MDXContentProps) {
   return (
-    // The "prose" class from @tailwindcss/typography automatically styles
-    // all headings, paragraphs, code blocks, tables, lists etc.
-    // "prose-invert" switches it to dark mode
     <div className="prose prose-invert prose-zinc max-w-none
       prose-headings:text-zinc-100
       prose-headings:font-bold
@@ -37,7 +36,15 @@ export default function MDXContent({ source }: MDXContentProps) {
       prose-td:text-zinc-400
       prose-li:text-zinc-300
       prose-hr:border-zinc-800">
-      <MDXRemote {...source} />
+      <MDXRemote
+        source={source}
+        options={{
+          mdxOptions: {
+            remarkPlugins: [remarkGfm],
+            rehypePlugins: [rehypeSlug, rehypeHighlight],
+          },
+        }}
+      />
     </div>
   );
 }
