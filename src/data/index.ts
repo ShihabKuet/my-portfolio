@@ -20,11 +20,11 @@ export const navItems: NavItem[] = [
   { label: "About",        href: "/#about",        icon: "User"          },
   { label: "Skills",       href: "/#skills",       icon: "Wrench"        },
   { label: "Experience",   href: "/#experience",   icon: "Briefcase"     },
-  { label: "Projects",     href: "/#projects",     icon: "FolderOpen"    },
   { label: "Research",     href: "/#publications", icon: "FlaskConical"  },
+  { label: "Projects",     href: "/#projects",     icon: "FolderOpen"    },
   { label: "Education",    href: "/#education",    icon: "GraduationCap" },
-  { label: "Achievements", href: "/#achievements", icon: "Trophy"        },
   { label: "Coding",       href: "/#coding",       icon: "Terminal"      },
+  { label: "Achievements", href: "/#achievements", icon: "Trophy"        },
   { label: "Blog",         href: "/blog",          icon: "PenLine"       },
   { label: "Contact",      href: "/#contact",      icon: "Mail"          },
 ];

@@ -1,0 +1,278 @@
+---
+title: "Error Message Handling in C (Part-I)"
+excerpt: "A beginner-friendly guide to understanding how C handles errors using errno, strerror(), and perror(). Learn how to detect, interpret, and debug file-related errors effectively instead of letting your program fail silently."
+date: "2024-11-23"
+tags: ["C", "C/C++", "Error Handling", "Debugging"]
+---
+
+![Cover Image](./images/cover.png)
+
+We don’t want our program to behave like our girlfriend or wife — getting angry but not telling us why. You know that classic conversation:
+
+> “What’s wrong?”  
+> “Nothing. I’m fine.”
+
+Yeah… frustrating, right? 😅
+
+Now imagine your **C program** doing the same thing — failing silently with no explanation. That’s exactly what we *don’t* want. Instead, we want clear, meaningful error messages so we can debug properly and fix issues efficiently.
+
+---
+
+## 📌 Introduction
+
+Today, we’ll explore how **error messages in C** are generated and handled.
+
+Errors might be annoying, but they are extremely important. They help us understand:
+- Why a program isn’t working
+- What went wrong internally
+- How to fix the issue
+
+If you have some experience with **file handling in C**, this will feel familiar.
+
+> 🔑 Key terms to remember: `errno` and `perror()`
+
+---
+
+## ⚙️ Error Generation in C
+
+Let’s assume you try to open a file that **doesn’t exist**.
+
+In this situation:
+- The **Operating System (OS)** detects the issue
+- It signals the error to the **library function**
+- The library passes that information to your program
+
+---
+
+## 🧠 How does C store errors?
+
+C uses a special integer variable called:
+
+```c
+errno
+```
+
+But here’s the catch:
+- You don’t declare it yourself
+- It’s defined in the header file:
+
+```c
+#include <errno.h>
+```
+
+---
+
+## 🛠️ Step-by-Step Example
+
+### 1. Create Project Folder
+
+```
+D:\ErrorHandling
+```
+
+### 2. Create a file
+
+```
+program.c
+```
+
+![Project Structure](./images/project-structure.png)
+
+---
+
+### 3. Basic Code Test
+
+```c
+#include <stdio.h>
+
+int main() {
+    printf("We’ll generate error message today!\n");
+    return 0;
+}
+```
+
+![Basic Code](./images/basic-code.png)
+
+---
+
+### 4. Using `errno`
+
+```c
+#include <stdio.h>
+#include <errno.h>
+
+int main() {
+    printf("errno value: %d\n", errno);
+    return 0;
+}
+```
+
+![Errno Variable](./images/errno-variable.png)
+
+👉 If `errno = 0`, no error has occurred.
+
+---
+
+## ❌ Generating an Error
+
+Let’s try opening a file that doesn’t exist:
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *fp = fopen("textfile.txt", "r");
+    return 0;
+}
+```
+
+![Opening Non-existent File](./images/open-file.png)
+
+👉 No error message appears!
+
+Why?
+
+Because `fopen()` does not print errors automatically.
+
+---
+
+## 🔍 Checking for Errors
+
+```c
+#include <stdio.h>
+#include <errno.h>
+
+int main() {
+    FILE *fp = fopen("textfile.txt", "r");
+
+    if (fp == NULL) {
+        printf("Error code: %d\n", errno);
+    }
+
+    return 0;
+}
+```
+
+![Errno Output](./images/errno-output.png)
+
+👉 Example output:
+
+```
+Error code: 2
+```
+
+---
+
+## 🧾 Converting Error Code to Message
+
+To make it human-readable, use:
+
+```c
+strerror(errno)
+```
+
+### Updated Code:
+
+```c
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+
+int main() {
+    FILE *fp = fopen("textfile.txt", "r");
+
+    if (fp == NULL) {
+        printf("%s\n", strerror(errno));
+    }
+
+    return 0;
+}
+```
+
+![Human Readable Error](./images/strerror.png)
+
+### Output:
+
+```
+No such file or directory
+```
+
+👉 `errno = 2` corresponds to:
+
+```
+ENOENT (No such file or directory)
+```
+
+---
+
+## 📚 Where are error codes defined?
+
+All error codes like `ENOENT` are defined in:
+
+```
+errno.h
+```
+
+You can find it inside:
+
+```
+MINGW/include/
+```
+
+![errno.h file](./images/errno-header.png)
+
+---
+
+## ⚡ Using `perror()`
+
+Instead of manually using `strerror()`, C provides a simpler function:
+
+```c
+perror("Error");
+```
+
+### Example:
+
+```c
+#include <stdio.h>
+
+int main() {
+    FILE *fp = fopen("textfile.txt", "r");
+
+    if (fp == NULL) {
+        perror("Error");
+    }
+
+    return 0;
+}
+```
+
+![perror Output](./images/perror.png)
+
+### Output:
+
+```
+Error: No such file or directory
+```
+
+---
+
+## ✅ Conclusion
+
+Now you understand:
+
+- How errors are generated in C
+- What `errno` does
+- How to convert error codes into messages
+- How to use `strerror()` and `perror()`
+
+Error handling is essential for writing **robust and debuggable programs**.
+
+In the next part, we’ll dive deeper into advanced error handling techniques.
+
+---
+
+## 📖 References
+
+- *Pointers on C* — Kenneth A. Reek
+
