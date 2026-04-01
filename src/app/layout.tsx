@@ -3,6 +3,8 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import ScrollProgress from "@/components/ui/ScrollProgress";
+import BackToTop      from "@/components/ui/BackToTop";
 import { personalInfo } from "@/data";
 
 // Google Fonts — loaded efficiently by Next.js (zero layout shift)
@@ -38,9 +40,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}>
+        <ScrollProgress />
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <BackToTop />
       </body>
     </html>
   );

@@ -13,7 +13,7 @@ export default function Footer() {
 
           {/* Brand */}
           <div>
-            <a href="#hero" className="flex items-center gap-2 text-zinc-100 font-bold text-lg mb-3">
+            <a href="/" className="flex items-center gap-2 text-zinc-100 font-bold text-lg mb-3">
               <Code2 size={20} className="text-violet-500" />
               <span className="font-mono">
                 {personalInfo.name.split(" ")[0]}
