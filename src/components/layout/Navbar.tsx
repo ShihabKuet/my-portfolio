@@ -10,7 +10,7 @@ import {
   Code2, Menu, X,
   User, Wrench, Briefcase, FolderOpen, FlaskConical,
   GraduationCap, Trophy, Terminal, PenLine, Mail,
-  LucideIcon,
+  FileDown, LucideIcon,
 } from "lucide-react";
 
 // ── Icon map — string name → Lucide component ────────────────────────────────
@@ -152,9 +152,22 @@ export default function Navbar() {
           <a
             href="/cv.pdf"
             target="_blank"
-            className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-colors font-medium"
+            className="relative inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white overflow-hidden group/resume"
           >
-            Resume ↗
+            {/* Animated gradient background */}
+            <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 transition-all duration-300 group-hover/resume:from-violet-500 group-hover/resume:via-purple-500 group-hover/resume:to-indigo-500" />
+
+            {/* Shimmer sweep on hover */}
+            <span className="absolute inset-0 translate-x-[-100%] group-hover/resume:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+
+            {/* Glow underneath */}
+            <span className="absolute inset-0 rounded-lg opacity-0 group-hover/resume:opacity-100 transition-opacity duration-300 blur-md bg-violet-500/50 -z-10 scale-110" />
+
+            {/* Content */}
+            <span className="relative flex items-center gap-1.5">
+                <FileDown size={14} className="transition-transform duration-300 group-hover/resume:-translate-y-0.5 group-hover/resume:translate-x-0.5" />
+                <span>Resume</span>
+            </span>
           </a>
         </div>
 
@@ -200,9 +213,14 @@ export default function Navbar() {
             <a
               href="/cv.pdf"
               target="_blank"
-              className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-colors font-medium"
+              className="relative inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white overflow-hidden group/resume"
             >
-              Resume ↗
+                <span className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600" />
+                <span className="absolute inset-0 translate-x-[-100%] group-hover/resume:translate-x-[100%] transition-transform duration-700 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+                <span className="relative flex items-center gap-1.5">
+                    <FileDown size={14} />
+                    Resume
+                </span>
             </a>
           </div>
         </div>
