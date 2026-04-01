@@ -24,6 +24,7 @@ export const navItems: NavItem[] = [
   { label: "Projects",   href: "/#projects" },
   { label: "Education",  href: "/#education" },
   { label: "Coding",     href: "/#coding" },
+  { label: "Achievements", href: "/#achievements"  },
   { label: "Blog",       href: "/#blog" },
   { label: "Contact",    href: "/#contact" },
 ];
@@ -167,3 +168,36 @@ export const manualCodingStats = {
     rank:   "Pupil",
   },
 };
+
+export const achievements = [
+  {
+    title: "Fundamentals of Engineering (FE) Exam",
+    issuer: "IEEE / NCEES",
+    date: "October 2024",
+    description: "Passed the FE Computer Engineering exam — a nationally recognized engineering certification. Physical certificate pending collection.",
+    credentialUrl: "",           // ← add URL if available
+    image: "/certs/fe-exam.jpg", // ← add certificate image if you have it
+    category: "certification",
+    highlight: true,             // marks it as a featured achievement
+  },
+  {
+    title: "Problem Solving (Intermediate)",
+    issuer: "HackerRank",
+    date: "2024",
+    description: "Certified in intermediate-level problem solving covering data structures and algorithms.",
+    credentialUrl: "https://www.hackerrank.com/certificates/your-cert-id", // ← replace
+    image: "",
+    category: "certification",
+    highlight: false,
+  },
+  {
+    title: "Your Other HackerRank Certificate",
+    issuer: "HackerRank",
+    date: "2024",
+    description: "Brief description of what this certificate covers.",
+    credentialUrl: "https://www.hackerrank.com/certificates/your-cert-id",
+    image: "",
+    category: "certification",
+    highlight: false,
+  },
+];

@@ -59,3 +59,14 @@ export interface Publication {
   abstract?: string;
   tags: string[];
 }
+
+export interface Achievement {
+  title: string;
+  issuer: string;
+  date: string;
+  description: string;
+  credentialUrl?: string;
+  image?: string;
+  category: "certification" | "award" | "competition";
+  highlight: boolean;
+}
