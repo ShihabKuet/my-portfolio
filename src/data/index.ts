@@ -23,6 +23,7 @@ export const navItems: NavItem[] = [
   { label: "Research",   href: "/#publications" },
   { label: "Projects",   href: "/#projects" },
   { label: "Education",  href: "/#education" },
+  { label: "Coding",     href: "/#coding" },
   { label: "Blog",       href: "/#blog" },
   { label: "Contact",    href: "/#contact" },
 ];
@@ -144,3 +145,25 @@ export const publications: Publication[] = [
     tags: ["Error analysis", "Optical character recognition", "Visual impairment", "Text to speech" , "Sensors", "Image preprocessing" , "Fall detection", "Collision avoidance"],
   }
 ];
+
+export const codingProfiles = {
+  leetcode:   "ShihabKuet",   // ← replace
+  hackerrank: "ShihabKuetCSE", // ← replace
+  codeforces: "ShihabKuet",   // ← replace or remove
+};
+
+// For platforms without a public API, enter your stats manually here.
+// Update these whenever you solve more problems.
+export const manualCodingStats = {
+  hackerrank: {
+    solved:     120,
+    stars:      "5 Star",
+    badges:     8,
+    certificate: "Problem Solving (Intermediate)",
+  },
+  codeforces: {
+    solved:  200,
+    rating:  1200,
+    rank:   "Pupil",
+  },
+};
