@@ -17,16 +17,16 @@ export const personalInfo = {
 };
 
 export const navItems: NavItem[] = [
-  { label: "About",      href: "/#about" },
-  { label: "Skills",     href: "/#skills" },
-  { label: "Experience", href: "/#experience" },
-  { label: "Research",   href: "/#publications" },
-  { label: "Projects",   href: "/#projects" },
-  { label: "Education",  href: "/#education" },
-  { label: "Coding",     href: "/#coding" },
-  { label: "Achievements", href: "/#achievements"  },
-  { label: "Blog",       href: "/#blog" },
-  { label: "Contact",    href: "/#contact" },
+  { label: "About",        href: "/#about",        icon: "User"          },
+  { label: "Skills",       href: "/#skills",       icon: "Wrench"        },
+  { label: "Experience",   href: "/#experience",   icon: "Briefcase"     },
+  { label: "Projects",     href: "/#projects",     icon: "FolderOpen"    },
+  { label: "Research",     href: "/#publications", icon: "FlaskConical"  },
+  { label: "Education",    href: "/#education",    icon: "GraduationCap" },
+  { label: "Achievements", href: "/#achievements", icon: "Trophy"        },
+  { label: "Coding",       href: "/#coding",       icon: "Terminal"      },
+  { label: "Blog",         href: "/blog",          icon: "PenLine"       },
+  { label: "Contact",      href: "/#contact",      icon: "Mail"          },
 ];
 
 export const experiences: Experience[] = [

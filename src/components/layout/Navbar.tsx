@@ -1,31 +1,93 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Menu, X, Code2 } from "lucide-react";
-import { navItems, personalInfo } from "@/data";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { navItems, personalInfo } from "@/data";
+import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import {
+  Code2, Menu, X,
+  User, Wrench, Briefcase, FolderOpen, FlaskConical,
+  GraduationCap, Trophy, Terminal, PenLine, Mail,
+  LucideIcon,
+} from "lucide-react";
 
+// ── Icon map — string name → Lucide component ────────────────────────────────
+// This is the standard pattern for dynamic icon rendering in TypeScript
+const iconMap: Record<string, LucideIcon> = {
+  User, Wrench, Briefcase, FolderOpen, FlaskConical,
+  GraduationCap, Trophy, Terminal, PenLine, Mail,
+};
+
+// ── Tooltip Icon Button ───────────────────────────────────────────────────────
+function NavIconButton({
+  href,
+  label,
+  iconName,
+  active,
+}: {
+  href:     string;
+  label:    string;
+  iconName: string;
+  active:   boolean;
+}) {
+  const Icon = iconMap[iconName] ?? Code2;
+
+  return (
+    // "group" enables group-hover on children — the tooltip appears on hover
+    <li className="relative group">
+      <Link
+        href={href}
+        className={cn(
+          "flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200",
+          active
+            ? "text-violet-400 bg-violet-500/10"
+            : "text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800/60"
+        )}
+        aria-label={label}
+      >
+        <Icon size={17} />
+      </Link>
+
+      {/* Tooltip — hidden by default, visible on group-hover */}
+      <div className={cn(
+        "absolute top-full left-1/2 -translate-x-1/2 mt-2 z-50",
+        "pointer-events-none opacity-0 group-hover:opacity-100",
+        "transition-all duration-200 translate-y-1 group-hover:translate-y-0",
+      )}>
+        {/* Tooltip arrow */}
+        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-800 border-l border-t border-zinc-700/50 rotate-45" />
+
+        {/* Tooltip box */}
+        <div className="relative px-2.5 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700/50 shadow-xl">
+          <span className="text-zinc-200 text-xs font-mono whitespace-nowrap">
+            {label}
+          </span>
+        </div>
+      </div>
+    </li>
+  );
+}
+
+// ── Main Navbar ───────────────────────────────────────────────────────────────
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen]   = useState(false);
-  const [isScrolled, setIsScrolled]   = useState(false);
+  const [isMenuOpen, setIsMenuOpen]       = useState(false);
+  const [isScrolled, setIsScrolled]       = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const isHome   = pathname === "/";
 
-  // Scroll detection — adds backdrop blur when scrolled
+  // Backdrop blur on scroll
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // IntersectionObserver — watches which section is in view
-  // and updates the active nav link accordingly
+  // IntersectionObserver — highlight active section
   useEffect(() => {
-    if (!isHome) return; // Only track sections on the homepage
+    if (!isHome) return;
 
     const sectionIds = navItems
       .map((item) => item.href.replace("/#", ""))
@@ -36,27 +98,16 @@ export default function Navbar() {
     sectionIds.forEach((id) => {
       const el = document.getElementById(id);
       if (!el) return;
-
       const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
-        {
-          // Fire when section is 40% visible
-          threshold: 0.4,
-          rootMargin: "-80px 0px -20% 0px",
-        }
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { threshold: 0.4, rootMargin: "-80px 0px -20% 0px" }
       );
-
       observer.observe(el);
       observers.push(observer);
     });
 
-    // Cleanup all observers when component unmounts
     return () => observers.forEach((o) => o.disconnect());
   }, [isHome]);
-
-  const handleNavClick = () => setIsMenuOpen(false);
 
   const isActive = (href: string) => {
     if (href === "/blog") return pathname.startsWith("/blog");
@@ -67,14 +118,14 @@ export default function Navbar() {
   return (
     <header className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300",
-        isScrolled
-        ? "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50 py-3"
-        : "bg-transparent py-5"
+      isScrolled
+        ? "bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/50 py-2"
+        : "bg-transparent py-4"
     )}>
-      <nav className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+      <nav className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
 
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 text-zinc-100 font-bold text-lg hover:text-violet-400 transition-colors">
+        {/* ── Logo ── */}
+        <Link href="/" className="flex items-center gap-2 text-zinc-100 font-bold text-lg hover:text-violet-400 transition-colors shrink-0">
           <Code2 size={20} className="text-violet-500" />
           <span className="font-mono">
             {personalInfo.name.split(" ")[0]}
@@ -82,38 +133,32 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop nav */}
-        <ul className="hidden md:flex items-center gap-1">
+        {/* ── Desktop — Icon nav ── */}
+        <ul className="hidden md:flex items-center gap-0.5">
           {navItems.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className={cn(
-                  "px-3 py-2 text-sm rounded-md transition-all duration-200 font-mono",
-                  isActive(item.href)
-                    ? "text-violet-400 bg-violet-500/10"
-                    : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60"
-                )}
-              >
-                {item.label}
-              </Link>
-            </li>
+            <NavIconButton
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              iconName={item.icon ?? "Code2"}
+              active={isActive(item.href)}
+            />
           ))}
-          <li>
-            <ThemeToggle />
-          </li>
-          <li>
-            <a
-              href="/cv.pdf"
-              target="_blank"
-              className="ml-2 px-4 py-2 text-sm bg-violet-600 hover:bg-violet-500 text-white rounded-md transition-colors font-medium"
-            >
-              Resume ↗
-            </a>
-          </li>
         </ul>
 
-        {/* Mobile hamburger */}
+        {/* ── Right side — Theme toggle + Resume ── */}
+        <div className="hidden md:flex items-center gap-2 shrink-0">
+          <ThemeToggle />
+          <a
+            href="/cv.pdf"
+            target="_blank"
+            className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-colors font-medium"
+          >
+            Resume ↗
+          </a>
+        </div>
+
+        {/* ── Mobile hamburger ── */}
         <button
           className="md:hidden p-2 text-zinc-400 hover:text-zinc-100 transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -123,34 +168,43 @@ export default function Navbar() {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* ── Mobile Menu — shows icon + label side by side ── */}
       {isMenuOpen && (
         <div className="md:hidden bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800">
-          <ul className="max-w-6xl mx-auto px-4 py-4 flex flex-col gap-1">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  onClick={handleNavClick}
-                  className={cn(
-                    "block px-3 py-2 rounded-md transition-all font-mono text-sm",
-                    isActive(item.href)
-                      ? "text-violet-400 bg-violet-500/10"
-                      : "text-zinc-300 hover:text-violet-400 hover:bg-zinc-800/50"
-                  )}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-
-            <li className="pt-2 border-t border-zinc-800 mt-1">
-                <div className="flex items-center justify-between px-3 py-2">
-                <span className="text-zinc-500 text-sm font-mono">Theme</span>
-                <ThemeToggle />
-                </div>
-            </li>
+          <ul className="max-w-6xl mx-auto px-4 py-3 grid grid-cols-2 gap-1">
+            {navItems.map((item) => {
+              const Icon = iconMap[item.icon ?? "Code2"] ?? Code2;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={cn(
+                      "flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all font-mono text-sm",
+                      isActive(item.href)
+                        ? "text-violet-400 bg-violet-500/10"
+                        : "text-zinc-400 hover:text-violet-400 hover:bg-zinc-800/50"
+                    )}
+                  >
+                    <Icon size={15} />
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
+
+          {/* Mobile bottom row */}
+          <div className="px-4 pb-3 pt-1 border-t border-zinc-800/50 flex items-center justify-between">
+            <ThemeToggle />
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-500 text-white rounded-lg transition-colors font-medium"
+            >
+              Resume ↗
+            </a>
+          </div>
         </div>
       )}
     </header>
