@@ -4,6 +4,9 @@
 /* ======================================
    THEME CONFIGURATION (replaces tailwind.config.ts in v4)
    ====================================== */
+/* It tells Tailwind v4: "dark: variant = when .dark class exists on a parent" */
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   /* Custom fonts */
   --font-sans: var(--font-inter), system-ui, sans-serif;
@@ -22,21 +25,32 @@
    BASE STYLES
    ====================================== */
 @layer base {
-  html {
-    scroll-behavior: smooth;
-  }
+  html { scroll-behavior: smooth; }
 
+  /* ── Light mode ── */
   body {
-    @apply bg-zinc-950 text-zinc-100;
+    @apply bg-zinc-50 text-zinc-900;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Custom scrollbar */
-  ::-webkit-scrollbar       { width: 6px; }
-  ::-webkit-scrollbar-track { @apply bg-zinc-900; }
-  ::-webkit-scrollbar-thumb { @apply bg-zinc-600 rounded-full; }
-  ::-webkit-scrollbar-thumb:hover { @apply bg-zinc-500; }
+  /* ── Dark mode ── */
+  .dark body {
+    @apply bg-zinc-950 text-zinc-100;
+  }
 
-  /* Text selection color */
-  ::selection { @apply bg-violet-500/30 text-violet-200; }
+  /* Scrollbar */
+  ::-webkit-scrollbar       { width: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-zinc-200; }
+  ::-webkit-scrollbar-thumb { @apply bg-zinc-400 rounded-full; }
+
+  .dark ::-webkit-scrollbar-track { @apply bg-zinc-900; }
+  .dark ::-webkit-scrollbar-thumb { @apply bg-zinc-600 rounded-full; }
+  .dark ::-webkit-scrollbar-thumb:hover { @apply bg-zinc-500; }
+
+  ::selection {
+    @apply bg-violet-500/30 text-violet-700;
+  }
+  .dark ::selection {
+    @apply bg-violet-500/30 text-violet-200;
+  }
 }

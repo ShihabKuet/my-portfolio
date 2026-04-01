@@ -6,6 +6,7 @@ import { navItems, personalInfo } from "@/data";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen]   = useState(false);
@@ -66,8 +67,8 @@ export default function Navbar() {
   return (
     <header className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300",
-      isScrolled
-        ? "bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/50 py-3"
+        isScrolled
+        ? "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md border-b border-zinc-200/50 dark:border-zinc-800/50 py-3"
         : "bg-transparent py-5"
     )}>
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between">
@@ -98,6 +99,9 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          <li>
+            <ThemeToggle />
+          </li>
           <li>
             <a
               href="/cv.pdf"
@@ -139,6 +143,13 @@ export default function Navbar() {
                 </Link>
               </li>
             ))}
+
+            <li className="pt-2 border-t border-zinc-800 mt-1">
+                <div className="flex items-center justify-between px-3 py-2">
+                <span className="text-zinc-500 text-sm font-mono">Theme</span>
+                <ThemeToggle />
+                </div>
+            </li>
           </ul>
         </div>
       )}

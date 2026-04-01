@@ -30,10 +30,10 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-zinc-300 text-lg leading-relaxed mb-6">
+            <p className="text-zinc-700 dark:text-zinc-300 text-lg leading-relaxed mb-6">
               {personalInfo.bio}
             </p>
-            <p className="text-zinc-400 leading-relaxed mb-8">
+            <p className="text-zinc-900 dark:text-zinc-400 leading-relaxed mb-8">
               When I&apos;m not engineering software, I enjoy exploring new technologies,
               contributing to open source, and writing about what I learn.
             </p>

@@ -16,14 +16,14 @@ export default function SectionHeading({
       {/* The colored dot + line decoration before the title */}
       <div className={`flex items-center gap-3 mb-3 ${align === "center" ? "justify-center" : ""}`}>
         <div className="h-px w-8 bg-violet-500" />
-        <span className="text-violet-400 text-sm font-mono tracking-widest uppercase">
+        <span className="text-violet-500 dark:text-violet-400 text-sm font-mono tracking-widest uppercase">
           {title}
         </span>
         <div className="h-px w-8 bg-violet-500" />
       </div>
 
       {subtitle && (
-        <p className="text-zinc-400 text-base max-w-xl mx-auto">{subtitle}</p>
+        <p className="text-zinc-600 dark:text-zinc-400 text-base max-w-xl mx-auto">{subtitle}</p>
       )}
     </div>
   );
