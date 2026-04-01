@@ -25,6 +25,12 @@ export const metadata: Metadata = {
   description: personalInfo.bio,
   keywords: ["Software Engineer", "R&D", "KUET", "Portfolio", "Bangladesh"],
   authors: [{ name: personalInfo.name }],
+
+  // Google Search Engine Verification:
+  verification: {
+    google: "roRt5OCysppLvJFSam2eMT3fIRZqP3p2Q7FZQU4Cj-c", // ← replace with your string
+  },
+
   // OpenGraph = what shows up when you share on LinkedIn/WhatsApp/Twitter
   openGraph: {
     title: `${personalInfo.name} | Software Engineer`,
