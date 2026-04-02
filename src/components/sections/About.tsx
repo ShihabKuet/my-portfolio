@@ -62,13 +62,13 @@ export default function About() {
           >
             <div className="relative w-72 h-72">
               {/* Decorative ring */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 border border-violet-500/20" />
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-violet-600/10 to-indigo-600/10 blur-xl" />
+              <div className="absolute inset-0" />
+              <div className="absolute -inset-1 blur-xl" />
 
               {/* Photo — put your image at public/profile.jpg to activate */}
               <div className="relative w-72 h-72 mx-auto">
-                <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-violet-600/50 to-indigo-600/50 blur-xl" />
-                <div className="relative w-full h-full rounded-full border-2 border-violet-500/30 overflow-hidden">
+                <div className="absolute -inset-1 blur-xl" />
+                <div className="relative w-full h-full overflow-hidden">
                   <img
                     src="/profile.png"
                     alt={personalInfo.name}
