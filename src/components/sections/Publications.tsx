@@ -151,7 +151,7 @@ export default function Publications() {
             { value: publications[0]?.year ?? "2024", label: "Latest" },
           ].map(({ value, label }) => (
             <div key={label} className="text-center p-4 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50">
-              <p className="text-2xl font-bold text-violet-400 font-mono mb-1">{value}</p>
+              <p className="text-2xl font-bold text-violet-800 dark:text-violet-400 font-mono mb-1">{value}</p>
               <p className="text-sky-500 dark:text-zinc-500 text-xs">{label}</p>
             </div>
           ))}
