@@ -20,6 +20,7 @@ export const navItems: NavItem[] = [
   { label: "About",        href: "/#about",        icon: "User"          },
   { label: "Skills",       href: "/#skills",       icon: "Wrench"        },
   { label: "Experience",   href: "/#experience",   icon: "Briefcase"     },
+  { label: "Expertise",    href: "/#expertise",    icon: "Network"       },
   { label: "Research",     href: "/#publications", icon: "FlaskConical"  },
   { label: "Projects",     href: "/#projects",     icon: "FolderOpen"    },
   { label: "Education",    href: "/#education",    icon: "GraduationCap" },

@@ -1,14 +1,15 @@
-import Hero         from "@/components/sections/Hero";
-import About        from "@/components/sections/About";
-import Skills       from "@/components/sections/Skills";
-import Education    from "@/components/sections/Education";
-import Experience   from "@/components/sections/Experience";
-import Projects     from "@/components/sections/Projects";
-import CodingStats  from "@/components/sections/CodingStats";
-import Achievements from "@/components/sections/Achievements";
-import Blog         from "@/components/sections/Blog";
-import Contact      from "@/components/sections/Contact";
-import Publications from "@/components/sections/Publications";
+import Hero           from "@/components/sections/Hero";
+import About          from "@/components/sections/About";
+import Skills         from "@/components/sections/Skills";
+import Education      from "@/components/sections/Education";
+import Experience     from "@/components/sections/Experience";
+import TechExpertise  from "@/components/sections/TechExpertise";
+import Projects       from "@/components/sections/Projects";
+import CodingStats    from "@/components/sections/CodingStats";
+import Achievements   from "@/components/sections/Achievements";
+import Blog           from "@/components/sections/Blog";
+import Contact        from "@/components/sections/Contact";
+import Publications   from "@/components/sections/Publications";
 
 export default function HomePage() {
   return (
@@ -17,6 +18,7 @@ export default function HomePage() {
       <About />
       <Skills />
       <Experience />
+      <TechExpertise />
       <Publications />
       <Projects />
       <Education />

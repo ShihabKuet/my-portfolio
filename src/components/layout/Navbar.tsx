@@ -7,7 +7,7 @@ import { navItems, personalInfo } from "@/data";
 import { cn } from "@/lib/utils";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import {
-  Code2, Menu, X,
+  Code2, Menu, X, Network,
   User, Wrench, Briefcase, FolderOpen, FlaskConical,
   GraduationCap, Trophy, Terminal, PenLine, Mail,
   FileDown, LucideIcon,
@@ -17,7 +17,7 @@ import {
 // This is the standard pattern for dynamic icon rendering in TypeScript
 const iconMap: Record<string, LucideIcon> = {
   User, Wrench, Briefcase, FolderOpen, FlaskConical,
-  GraduationCap, Trophy, Terminal, PenLine, Mail,
+  GraduationCap, Trophy, Terminal, PenLine, Mail, Network,
 };
 
 // ── Tooltip Icon Button ───────────────────────────────────────────────────────
