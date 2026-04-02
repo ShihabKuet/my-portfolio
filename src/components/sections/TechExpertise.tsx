@@ -278,7 +278,8 @@ function ExpertiseCard({
       </div>
 
       {/* Title */}
-      <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-sm leading-snug mb-1.5 group-hover:text-white transition-colors">
+      <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-sm leading-snug mb-1.5
+                     group-hover:text-sky-950 dark:group-hover:text-white transition-colors">
         {item.title}
       </h3>
 
@@ -292,7 +293,7 @@ function ExpertiseCard({
         initial={false}
         animate={{ opacity: hovered ? 1 : 0, height: hovered ? "auto" : 0 }}
         transition={{ duration: 0.25 }}
-        className="text-sky-500 dark:text-zinc-500 text-xs leading-relaxed overflow-hidden"
+        className="text-sky-700 dark:text-zinc-500 text-xs leading-relaxed overflow-hidden"
       >
         {item.description}
       </motion.p>
