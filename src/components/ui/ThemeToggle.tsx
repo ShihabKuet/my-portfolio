@@ -23,10 +23,10 @@ export default function ThemeToggle() {
       className={cn(
         "relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200",
         "border border-zinc-700 hover:border-zinc-500",
-        "bg-zinc-900/50 hover:bg-zinc-800",
-        "dark:bg-zinc-900/50 dark:hover:bg-zinc-800",
+        "bg-white dark:bg-zinc-900/50 hover:bg-sky-100 dark:bg-zinc-800",
+        "bg-white dark:bg-zinc-900/50 dark:hover:bg-sky-100 dark:bg-zinc-800",
         "light:bg-zinc-100 light:hover:bg-zinc-200",
-        "text-zinc-400 hover:text-zinc-100"
+        "text-sky-700 dark:text-zinc-400 hover:text-sky-950 dark:text-zinc-100"
       )}
     >
       {/* Animate between Sun and Moon icons */}

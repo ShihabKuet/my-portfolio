@@ -47,7 +47,7 @@ function FeaturedAchievementCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative p-6 sm:p-8 rounded-2xl bg-zinc-900/50 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 overflow-hidden"
+      className="relative p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900/50 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5 overflow-hidden"
     >
       {/* Background glow */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
@@ -71,17 +71,17 @@ function FeaturedAchievementCard({
             </div>
           </div>
 
-          <h3 className="text-zinc-100 font-bold text-xl leading-snug mb-2">
+          <h3 className="text-sky-950 dark:text-zinc-100 font-bold text-xl leading-snug mb-2">
             {achievement.title}
           </h3>
 
-          <p className="text-zinc-400 text-sm leading-relaxed mb-4">
+          <p className="text-sky-700 dark:text-zinc-400 text-sm leading-relaxed mb-4">
             {achievement.description}
           </p>
 
           <div className="flex flex-wrap items-center gap-4">
             {/* Date */}
-            <span className="flex items-center gap-1.5 text-zinc-500 text-xs font-mono">
+            <span className="flex items-center gap-1.5 text-sky-500 dark:text-zinc-500 text-xs font-mono">
               <Calendar size={12} />
               {achievement.date}
             </span>
@@ -99,7 +99,7 @@ function FeaturedAchievementCard({
                 <ExternalLink size={11} />
               </a>
             ) : (
-              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-800/50 border border-zinc-700/30 text-zinc-500 text-xs font-mono">
+              <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-100 dark:bg-zinc-800/50 border border-zinc-700/30 text-sky-500 dark:text-zinc-500 text-xs font-mono">
                 <BadgeCheck size={13} />
                 Certificate Pending Collection
               </span>
@@ -125,7 +125,7 @@ function AchievementCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="group p-5 rounded-xl bg-zinc-900/50 border border-zinc-800/50 hover:border-emerald-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5"
+      className="group p-5 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-emerald-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/5"
     >
       <div className="flex items-start gap-4">
 
@@ -140,16 +140,16 @@ function AchievementCard({
             <IssuerBadge issuer={achievement.issuer} />
           </div>
 
-          <h3 className="text-zinc-100 font-semibold text-base leading-snug mb-1.5 group-hover:text-emerald-300 transition-colors">
+          <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-base leading-snug mb-1.5 group-hover:text-emerald-300 transition-colors">
             {achievement.title}
           </h3>
 
-          <p className="text-zinc-500 text-sm leading-relaxed mb-3">
+          <p className="text-sky-500 dark:text-zinc-500 text-sm leading-relaxed mb-3">
             {achievement.description}
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
-            <span className="flex items-center gap-1.5 text-zinc-600 text-xs font-mono">
+            <span className="flex items-center gap-1.5 text-sky-400 dark:text-zinc-600 text-xs font-mono">
               <Calendar size={11} />
               {achievement.date}
             </span>
@@ -197,9 +197,9 @@ export default function Achievements() {
             { value: featured.length,     label: "Major Certifications", color: "text-blue-400"   },
             { value: others.length,       label: "Platform Certificates", color: "text-emerald-400" },
           ].map(({ value, label, color }) => (
-            <div key={label} className="text-center p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
+            <div key={label} className="text-center p-4 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50">
               <p className={cn("text-2xl font-bold font-mono mb-1", color)}>{value}</p>
-              <p className="text-zinc-500 text-xs">{label}</p>
+              <p className="text-sky-500 dark:text-zinc-500 text-xs">{label}</p>
             </div>
           ))}
         </motion.div>
@@ -216,7 +216,7 @@ export default function Achievements() {
         {/* Other certifications */}
         {others.length > 0 && (
           <>
-            <h3 className="text-zinc-400 text-sm font-mono uppercase tracking-widest mb-4 mt-8">
+            <h3 className="text-sky-700 dark:text-zinc-400 text-sm font-mono uppercase tracking-widest mb-4 mt-8">
               Platform Certificates
             </h3>
             <div className="space-y-4">

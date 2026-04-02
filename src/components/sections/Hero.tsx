@@ -470,7 +470,7 @@ export default function Hero() {
             {/* Skip button */}
             <button
               onClick={() => setPhase("reveal")}
-              className="absolute -top-9 right-0 flex items-center gap-1.5 text-zinc-600 hover:text-zinc-400 text-xs font-mono transition-colors group"
+              className="absolute -top-9 right-0 flex items-center gap-1.5 text-sky-400 dark:text-zinc-600 hover:text-sky-700 dark:text-zinc-400 text-xs font-mono transition-colors group"
             >
               <SkipForward size={12} className="group-hover:text-violet-400 transition-colors" />
               skip intro
@@ -515,7 +515,7 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-700/50 bg-zinc-900/50 text-zinc-400 text-sm mb-8 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-zinc-700/50 bg-white dark:bg-zinc-900/50 text-sky-700 dark:text-zinc-400 text-sm mb-8 backdrop-blur-sm"
             >
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               <Briefcase size={13} />
@@ -525,7 +525,7 @@ export default function Hero() {
             <motion.h1
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-5xl sm:text-6xl md:text-7xl font-bold text-zinc-100 leading-tight mb-4"
+              className="text-5xl sm:text-6xl md:text-7xl font-bold text-sky-950 dark:text-zinc-100 leading-tight mb-4"
             >
               Hello World! I&apos;m{" "}
               <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
@@ -536,7 +536,7 @@ export default function Hero() {
             <motion.p
               initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35 }}
-              className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto mb-8 leading-relaxed"
+              className="text-lg sm:text-xl text-sky-700 dark:text-zinc-400 max-w-2xl mx-auto mb-8 leading-relaxed"
             >
               {personalInfo.bio}
             </motion.p>
@@ -544,7 +544,7 @@ export default function Hero() {
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}
               transition={{ delay: 0.45 }}
-              className="flex items-center justify-center gap-1.5 text-zinc-500 text-sm mb-10"
+              className="flex items-center justify-center gap-1.5 text-sky-500 dark:text-zinc-500 text-sm mb-10"
             >
               <MapPin size={14} className="text-violet-400" />
               <span>{personalInfo.location}</span>
@@ -560,7 +560,7 @@ export default function Hero() {
                 View My Work
               </a>
               <a href="/#contact"
-                className="px-6 py-3 border border-zinc-700 hover:border-zinc-500 text-zinc-300 hover:text-zinc-100 font-medium rounded-lg transition-all duration-200 hover:bg-zinc-800/50 hover:-translate-y-0.5">
+                className="px-6 py-3 border border-zinc-700 hover:border-zinc-500 text-sky-800 dark:text-zinc-300 hover:text-sky-950 dark:text-zinc-100 font-medium rounded-lg transition-all duration-200 hover:bg-sky-100 bg-sky-100 dark:bg-zinc-800/50 hover:-translate-y-0.5">
                 Get In Touch
               </a>
             </motion.div>
@@ -576,7 +576,7 @@ export default function Hero() {
                 { href: `mailto:${personalInfo.email}`, icon: <Mail size={20} />,       label: "Email"    },
               ].map(({ href, icon, label }) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
-                  className="p-2.5 text-zinc-500 hover:text-violet-400 hover:bg-zinc-800 rounded-lg transition-all duration-200">
+                  className="p-2.5 text-sky-500 dark:text-zinc-500 hover:text-violet-400 hover:bg-sky-100 dark:bg-zinc-800 rounded-lg transition-all duration-200">
                   {icon}
                 </a>
               ))}
@@ -589,7 +589,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }} animate={{ opacity: 1 }}
           transition={{ delay: 1.4 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-zinc-600 animate-bounce"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-sky-400 dark:text-zinc-600 animate-bounce"
         >
           <ArrowDown size={20} />
         </motion.div>

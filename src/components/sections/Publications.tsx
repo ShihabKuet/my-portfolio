@@ -16,7 +16,7 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 hover:border-violet-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/5"
+      className="relative p-6 rounded-2xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-violet-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-violet-500/5"
     >
       {/* IEEE Badge */}
       <div className="flex items-start justify-between gap-4 mb-4">
@@ -28,21 +28,21 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
         </div>
 
         {/* Year badge */}
-        <span className="flex items-center gap-1.5 text-zinc-500 text-xs font-mono shrink-0">
+        <span className="flex items-center gap-1.5 text-sky-500 dark:text-zinc-500 text-xs font-mono shrink-0">
           <Calendar size={11} />
           {pub.year}
         </span>
       </div>
 
       {/* Title */}
-      <h3 className="text-zinc-100 font-semibold text-lg leading-snug mb-3 hover:text-violet-300 transition-colors">
+      <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-lg leading-snug mb-3 hover:text-violet-300 transition-colors">
         {pub.title}
       </h3>
 
       {/* Authors */}
       <div className="flex items-start gap-2 mb-3">
         <Users size={14} className="text-violet-400 shrink-0 mt-0.5" />
-        <p className="text-zinc-400 text-sm">
+        <p className="text-sky-700 dark:text-zinc-400 text-sm">
           {pub.authors.map((author, i) => (
             <span key={author}>
               {/* Highlight your name (first author) */}
@@ -57,8 +57,8 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
 
       {/* Journal/Conference */}
       <div className="flex items-start gap-2 mb-4">
-        <Quote size={14} className="text-zinc-500 shrink-0 mt-0.5" />
-        <p className="text-zinc-400 text-sm italic">{pub.journal}</p>
+        <Quote size={14} className="text-sky-500 dark:text-zinc-500 shrink-0 mt-0.5" />
+        <p className="text-sky-700 dark:text-zinc-400 text-sm italic">{pub.journal}</p>
       </div>
 
       {/* Tags */}
@@ -66,7 +66,7 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
         {pub.tags.map((tag) => (
           <span
             key={tag}
-            className="px-2.5 py-1 rounded-md bg-zinc-800/80 text-zinc-400 text-xs font-mono border border-zinc-700/50 hover:border-violet-500/40 hover:text-violet-300 transition-colors"
+            className="px-2.5 py-1 rounded-md bg-sky-100 dark:bg-zinc-800/80 text-sky-700 dark:text-zinc-400 text-xs font-mono border border-zinc-700/50 hover:border-violet-500/40 hover:text-violet-300 transition-colors"
           >
             {tag}
           </span>
@@ -78,7 +78,7 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
         <div className="mb-4">
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1.5 text-zinc-500 hover:text-violet-400 text-xs font-mono transition-colors"
+            className="flex items-center gap-1.5 text-sky-500 dark:text-zinc-500 hover:text-violet-400 text-xs font-mono transition-colors"
           >
             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             {expanded ? "Hide Abstract" : "Show Abstract"}
@@ -91,7 +91,7 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="mt-3 text-zinc-400 text-sm leading-relaxed p-4 rounded-lg bg-zinc-800/40 border border-zinc-700/30">
+            <p className="mt-3 text-sky-700 dark:text-zinc-400 text-sm leading-relaxed p-4 rounded-lg bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
               {pub.abstract}
             </p>
           </motion.div>
@@ -99,10 +99,10 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
       )}
 
       {/* Footer — DOI + links */}
-      <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-zinc-800/50">
+      <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-sky-200 dark:border-zinc-800/50">
         {pub.doi && (
-          <span className="text-zinc-600 text-xs font-mono">
-            DOI: <span className="text-zinc-500">{pub.doi}</span>
+          <span className="text-sky-400 dark:text-zinc-600 text-xs font-mono">
+            DOI: <span className="text-sky-500 dark:text-zinc-500">{pub.doi}</span>
           </span>
         )}
 
@@ -124,7 +124,7 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
 
 export default function Publications() {
   return (
-    <section id="publications" className="py-24 px-4 bg-zinc-900/30">
+    <section id="publications" className="py-24 px-4 bg-sky-100/60 dark:bg-zinc-900/30">
       <div className="max-w-4xl mx-auto">
         <SectionHeading
           title="Research"
@@ -150,9 +150,9 @@ export default function Publications() {
             { value: "IEEE",                     label: "Publisher"   },
             { value: publications[0]?.year ?? "2024", label: "Latest" },
           ].map(({ value, label }) => (
-            <div key={label} className="text-center p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
+            <div key={label} className="text-center p-4 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50">
               <p className="text-2xl font-bold text-violet-400 font-mono mb-1">{value}</p>
-              <p className="text-zinc-500 text-xs">{label}</p>
+              <p className="text-sky-500 dark:text-zinc-500 text-xs">{label}</p>
             </div>
           ))}
         </motion.div>

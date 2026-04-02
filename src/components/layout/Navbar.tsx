@@ -42,8 +42,8 @@ function NavIconButton({
         className={cn(
           "flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200",
           active
-            ? "text-violet-400 bg-violet-500/10"
-            : "text-zinc-500 hover:text-zinc-100 hover:bg-zinc-800/60"
+            ? "text-violet-600 dark:text-violet-400 bg-violet-500/10"
+            : "text-sky-600 text-sky-500 dark:text-zinc-500 hover:text-sky-900 dark:hover:text-sky-950 dark:text-zinc-100 hover:bg-sky-100 dark:hover:bg-sky-100 dark:bg-zinc-800/60"
         )}
         aria-label={label}
       >
@@ -57,11 +57,11 @@ function NavIconButton({
         "transition-all duration-200 translate-y-1 group-hover:translate-y-0",
       )}>
         {/* Tooltip arrow */}
-        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-zinc-800 border-l border-t border-zinc-700/50 rotate-45" />
+        <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-sky-100 dark:bg-zinc-800 border-l border-t border-zinc-700/50 rotate-45" />
 
         {/* Tooltip box */}
-        <div className="relative px-2.5 py-1.5 rounded-lg bg-zinc-800 border border-zinc-700/50 shadow-xl">
-          <span className="text-zinc-200 text-xs font-mono whitespace-nowrap">
+        <div className="relative px-2.5 py-1.5 rounded-lg bg-sky-100 dark:bg-zinc-800 border border-zinc-700/50 shadow-xl">
+          <span className="text-sky-900 dark:text-zinc-200 text-xs font-mono whitespace-nowrap">
             {label}
           </span>
         </div>
@@ -119,13 +119,13 @@ export default function Navbar() {
     <header className={cn(
       "fixed top-0 w-full z-50 transition-all duration-300",
       isScrolled
-        ? "bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800/50 py-2"
+        ? "bg-sky-50/90 dark:bg-zinc-950/80 backdrop-blur-md border-b border-sky-200 dark:border-zinc-800/50 py-3"
         : "bg-transparent py-4"
     )}>
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-4">
 
         {/* ── Logo ── */}
-        <Link href="/" className="flex items-center gap-2 text-zinc-100 font-bold text-lg hover:text-violet-400 transition-colors shrink-0">
+        <Link href="/" className="flex items-center gap-2 text-sky-900 text-sky-950 dark:text-zinc-100 font-bold text-lg hover:text-violet-600 dark:hover:text-violet-400 transition-colors shrink-0">
           <Code2 size={20} className="text-violet-500" />
           <span className="font-mono">
             {personalInfo.name.split(" ")[0]}
@@ -173,7 +173,7 @@ export default function Navbar() {
 
         {/* ── Mobile hamburger ── */}
         <button
-          className="md:hidden p-2 text-zinc-400 hover:text-zinc-100 transition-colors"
+          className="md:hidden p-2 text-sky-700 dark:text-zinc-400 hover:text-sky-950 dark:text-zinc-100 transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           aria-label="Toggle menu"
         >
@@ -183,7 +183,7 @@ export default function Navbar() {
 
       {/* ── Mobile Menu — shows icon + label side by side ── */}
       {isMenuOpen && (
-        <div className="md:hidden bg-zinc-950/95 backdrop-blur-md border-b border-zinc-800">
+        <div className="md:hidden bg-sky-50/95 dark:bg-zinc-950/95 backdrop-blur-md border-b border-sky-200 dark:border-zinc-800">
           <ul className="max-w-6xl mx-auto px-4 py-3 grid grid-cols-2 gap-1">
             {navItems.map((item) => {
               const Icon = iconMap[item.icon ?? "Code2"] ?? Code2;
@@ -196,7 +196,7 @@ export default function Navbar() {
                       "flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all font-mono text-sm",
                       isActive(item.href)
                         ? "text-violet-400 bg-violet-500/10"
-                        : "text-zinc-400 hover:text-violet-400 hover:bg-zinc-800/50"
+                        : "text-sky-600 text-sky-700 dark:text-zinc-400 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-sky-100 dark:hover:bg-sky-100 bg-sky-100 dark:bg-zinc-800/50"
                     )}
                   >
                     <Icon size={15} />
@@ -208,7 +208,7 @@ export default function Navbar() {
           </ul>
 
           {/* Mobile bottom row */}
-          <div className="px-4 pb-3 pt-1 border-t border-zinc-800/50 flex items-center justify-between">
+          <div className="px-4 pb-3 pt-1 border-t border-sky-200 dark:border-zinc-800/50 flex items-center justify-between">
             <ThemeToggle />
             <a
               href="/cv.pdf"

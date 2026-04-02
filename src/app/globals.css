@@ -27,30 +27,29 @@
 @layer base {
   html { scroll-behavior: smooth; }
 
-  /* ── Light mode ── */
+  /* ── Light mode — sky blue theme ── */
   body {
-    @apply bg-zinc-50 text-zinc-900;
+    background-color: #f0f9ff;
+    color: #0c4a6e;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   /* ── Dark mode ── */
   .dark body {
-    @apply bg-zinc-950 text-zinc-100;
+    background-color: #09090b;
+    color: #f4f4f5;
   }
 
   /* Scrollbar */
-  ::-webkit-scrollbar       { width: 6px; }
-  ::-webkit-scrollbar-track { @apply bg-zinc-200; }
-  ::-webkit-scrollbar-thumb { @apply bg-zinc-400 rounded-full; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #e0f2fe; }
+  ::-webkit-scrollbar-thumb { background: #7dd3fc; border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
 
-  .dark ::-webkit-scrollbar-track { @apply bg-zinc-900; }
-  .dark ::-webkit-scrollbar-thumb { @apply bg-zinc-600 rounded-full; }
-  .dark ::-webkit-scrollbar-thumb:hover { @apply bg-zinc-500; }
+  .dark ::-webkit-scrollbar-track { background: #18181b; }
+  .dark ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 999px; }
+  .dark ::-webkit-scrollbar-thumb:hover { background: #52525b; }
 
-  ::selection {
-    @apply bg-violet-500/30 text-violet-700;
-  }
-  .dark ::selection {
-    @apply bg-violet-500/30 text-violet-200;
-  }
+  ::selection { background: #7dd3fc55; color: #0c4a6e; }
+  .dark ::selection { background: #7c3aed44; color: #ddd6fe; }
 }

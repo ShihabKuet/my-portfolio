@@ -256,7 +256,7 @@ function ExpertiseCard({
       onMouseLeave={() => setHovered(false)}
       className={cn(
         "relative group flex flex-col p-5 rounded-2xl cursor-default",
-        "bg-zinc-900/50 border border-zinc-800/50 transition-all duration-300",
+        "bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 transition-all duration-300",
         "hover:shadow-lg overflow-hidden",
         glow
       )}
@@ -278,7 +278,7 @@ function ExpertiseCard({
       </div>
 
       {/* Title */}
-      <h3 className="text-zinc-100 font-semibold text-sm leading-snug mb-1.5 group-hover:text-white transition-colors">
+      <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-sm leading-snug mb-1.5 group-hover:text-white transition-colors">
         {item.title}
       </h3>
 
@@ -292,7 +292,7 @@ function ExpertiseCard({
         initial={false}
         animate={{ opacity: hovered ? 1 : 0, height: hovered ? "auto" : 0 }}
         transition={{ duration: 0.25 }}
-        className="text-zinc-500 text-xs leading-relaxed overflow-hidden"
+        className="text-sky-500 dark:text-zinc-500 text-xs leading-relaxed overflow-hidden"
       >
         {item.description}
       </motion.p>
@@ -309,7 +309,7 @@ export default function TechExpertise() {
     : expertiseItems.filter((i) => i.category === active);
 
   return (
-    <section id="expertise" className="py-24 px-4 bg-zinc-900/30">
+    <section id="expertise" className="py-24 px-4 bg-sky-100/60 dark:bg-zinc-900/30">
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           title="Technical Expertise"
@@ -328,7 +328,7 @@ export default function TechExpertise() {
                   ? value === "all"
                     ? "bg-violet-600 text-white border-violet-600"
                     : cn(categoryColor[value], "font-semibold")
-                  : "bg-zinc-800/50 text-zinc-500 border-zinc-700/50 hover:text-zinc-300 hover:bg-zinc-700/50"
+                  : "bg-sky-100 dark:bg-zinc-800/50 text-sky-500 dark:text-zinc-500 border-zinc-700/50 hover:text-sky-800 dark:text-zinc-300 hover:bg-zinc-700/50"
               )}
             >
               {label}

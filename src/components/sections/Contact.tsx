@@ -60,7 +60,7 @@ function InputField({
 }) {
   return (
     <div>
-      <label className="block text-zinc-300 text-sm font-medium mb-2">
+      <label className="block text-sky-800 dark:text-zinc-300 text-sm font-medium mb-2">
         {label}
       </label>
       {children}
@@ -76,8 +76,8 @@ function InputField({
 
 const inputClass = cn(
   "w-full px-4 py-3 rounded-lg text-sm",
-  "bg-zinc-900/50 border border-zinc-800",
-  "text-zinc-100 placeholder:text-zinc-600",
+  "bg-white dark:bg-zinc-900/50 border border-zinc-800",
+  "text-sky-950 dark:text-zinc-100 placeholder:text-sky-400 dark:text-zinc-600",
   "focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/50",
   "transition-colors duration-200"
 );
@@ -137,10 +137,10 @@ export default function Contact() {
             className="lg:col-span-2 space-y-6"
           >
             <div>
-              <h3 className="text-zinc-100 font-semibold text-lg mb-2">
+              <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-lg mb-2">
                 Let&apos;s talk
               </h3>
-              <p className="text-zinc-400 text-sm leading-relaxed">
+              <p className="text-sky-700 dark:text-zinc-400 text-sm leading-relaxed">
                 Whether it&apos;s a job opportunity, collaboration, or just a
                 technical discussion — feel free to reach out.
               </p>
@@ -149,16 +149,16 @@ export default function Contact() {
             {/* Contact info cards */}
             <div className="space-y-3">
               {contactInfo.map(({ icon, label, value, href }) => (
-                <div key={label} className="flex items-center gap-3 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
+                <div key={label} className="flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50">
                   <span className="text-violet-400 shrink-0">{icon}</span>
                   <div>
-                    <p className="text-zinc-500 text-xs">{label}</p>
+                    <p className="text-sky-500 dark:text-zinc-500 text-xs">{label}</p>
                     {href ? (
-                      <a href={href} className="text-zinc-200 text-sm hover:text-violet-400 transition-colors">
+                      <a href={href} className="text-sky-900 dark:text-zinc-200 text-sm hover:text-violet-400 transition-colors">
                         {value}
                       </a>
                     ) : (
-                      <p className="text-zinc-200 text-sm">{value}</p>
+                      <p className="text-sky-900 dark:text-zinc-200 text-sm">{value}</p>
                     )}
                   </div>
                 </div>
@@ -167,7 +167,7 @@ export default function Contact() {
 
             {/* Social links */}
             <div>
-              <p className="text-zinc-500 text-xs font-mono mb-3 uppercase tracking-wider">
+              <p className="text-sky-500 dark:text-zinc-500 text-xs font-mono mb-3 uppercase tracking-wider">
                 Find me on
               </p>
               <div className="flex items-center gap-3">
@@ -178,7 +178,7 @@ export default function Contact() {
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50 text-zinc-400 hover:text-violet-400 hover:border-violet-500/30 transition-all duration-200"
+                    className="p-3 rounded-lg bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 text-sky-700 dark:text-zinc-400 hover:text-violet-400 hover:border-violet-500/30 transition-all duration-200"
                   >
                     {icon}
                   </a>
@@ -197,7 +197,7 @@ export default function Contact() {
           >
             <form
               onSubmit={handleSubmit(onSubmit)}
-              className="p-6 sm:p-8 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 space-y-5"
+              className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 space-y-5"
             >
               {/* Name + Email row */}
               <div className="grid sm:grid-cols-2 gap-5">

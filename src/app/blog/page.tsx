@@ -17,7 +17,7 @@ export default function BlogPage() {
       <div className="max-w-4xl mx-auto">
 
         {/* Back to home */}
-        <Link href="/#blog" className="inline-flex items-center gap-2 text-zinc-500 hover:text-violet-400 transition-colors text-sm mb-10 font-mono">
+        <Link href="/#blog" className="inline-flex items-center gap-2 text-sky-500 dark:text-zinc-500 hover:text-violet-400 transition-colors text-sm mb-10 font-mono">
           <ArrowLeft size={15} />
           Back to Portfolio
         </Link>
@@ -31,10 +31,10 @@ export default function BlogPage() {
             </span>
             <div className="h-px w-8 bg-violet-500" />
           </div>
-          <h1 className="text-4xl font-bold text-zinc-100 mb-3">
+          <h1 className="text-4xl font-bold text-sky-950 dark:text-zinc-100 mb-3">
             Writing & Thoughts
           </h1>
-          <p className="text-zinc-400">
+          <p className="text-sky-700 dark:text-zinc-400">
             Articles on software engineering, networking, and things I find interesting.
           </p>
         </div>
@@ -43,7 +43,7 @@ export default function BlogPage() {
         <div className="space-y-5">
           {posts.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
-              <article className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/50 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-300">
+              <article className="p-6 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-300">
 
                 {/* Tags row */}
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -55,16 +55,16 @@ export default function BlogPage() {
                   ))}
                 </div>
 
-                <h2 className="text-xl font-semibold text-zinc-100 mb-2 group-hover:text-violet-300 transition-colors">
+                <h2 className="text-xl font-semibold text-sky-950 dark:text-zinc-100 mb-2 group-hover:text-violet-300 transition-colors">
                   {post.title}
                 </h2>
 
-                <p className="text-zinc-400 text-sm leading-relaxed mb-4">
+                <p className="text-sky-700 dark:text-zinc-400 text-sm leading-relaxed mb-4">
                   {post.excerpt}
                 </p>
 
                 {/* Meta row */}
-                <div className="flex items-center gap-4 text-zinc-500 text-xs font-mono">
+                <div className="flex items-center gap-4 text-sky-500 dark:text-zinc-500 text-xs font-mono">
                   <span className="flex items-center gap-1.5">
                     <Calendar size={12} />
                     {formatDate(post.date)}
@@ -80,7 +80,7 @@ export default function BlogPage() {
         </div>
 
         {posts.length === 0 && (
-          <p className="text-center text-zinc-600 py-16 font-mono">
+          <p className="text-center text-sky-400 dark:text-zinc-600 py-16 font-mono">
             No posts yet. Check back soon.
           </p>
         )}

@@ -59,9 +59,9 @@ function DifficultyBar({
     <div>
       <div className="flex justify-between items-center mb-1">
         <span className={cn("text-xs font-mono", color)}>{label}</span>
-        <span className="text-zinc-500 text-xs font-mono">{count}</span>
+        <span className="text-sky-500 dark:text-zinc-500 text-xs font-mono">{count}</span>
       </div>
-      <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-sky-100 dark:bg-zinc-800 rounded-full overflow-hidden">
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: start ? `${percentage}%` : "0%" }}
@@ -114,7 +114,7 @@ function LeetCodeCard() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
-      className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 hover:border-yellow-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-yellow-500/5"
+      className="p-6 rounded-2xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-yellow-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-yellow-500/5"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -123,27 +123,27 @@ function LeetCodeCard() {
             <SiLeetcode size={20} className="text-yellow-500" />
           </div>
           <div>
-            <h3 className="text-zinc-100 font-semibold">LeetCode</h3>
-            <p className="text-zinc-500 text-xs font-mono">@{codingProfiles.leetcode}</p>
+            <h3 className="text-sky-950 dark:text-zinc-100 font-semibold">LeetCode</h3>
+            <p className="text-sky-500 dark:text-zinc-500 text-xs font-mono">@{codingProfiles.leetcode}</p>
           </div>
         </div>
         <a href={`https://leetcode.com/${codingProfiles.leetcode}`}
           target="_blank" rel="noopener noreferrer"
-          className="text-zinc-600 hover:text-yellow-500 transition-colors">
+          className="text-sky-400 dark:text-zinc-600 hover:text-yellow-500 transition-colors">
           <ExternalLink size={15} />
         </a>
       </div>
 
       {loading && (
         <div className="space-y-3 animate-pulse">
-          <div className="h-12 bg-zinc-800 rounded-lg" />
-          <div className="h-4 bg-zinc-800 rounded w-3/4" />
-          <div className="h-4 bg-zinc-800 rounded w-1/2" />
+          <div className="h-12 bg-sky-100 dark:bg-zinc-800 rounded-lg" />
+          <div className="h-4 bg-sky-100 dark:bg-zinc-800 rounded w-3/4" />
+          <div className="h-4 bg-sky-100 dark:bg-zinc-800 rounded w-1/2" />
         </div>
       )}
 
       {error && (
-        <p className="text-zinc-500 text-sm text-center py-4">
+        <p className="text-sky-500 dark:text-zinc-500 text-sm text-center py-4">
           Could not load stats. Check your username in data/index.ts
         </p>
       )}
@@ -151,13 +151,13 @@ function LeetCodeCard() {
       {stats && !loading && (
         <>
           {/* Big solved number */}
-          <div className="text-center mb-6 p-4 rounded-xl bg-zinc-800/40 border border-zinc-700/30">
+          <div className="text-center mb-6 p-4 rounded-xl bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
             <AnimatedNumber
               value={stats.solved}
               start={inView}
               className="text-4xl font-bold text-yellow-400 font-mono"
             />
-            <p className="text-zinc-500 text-sm mt-1">Problems Solved</p>
+            <p className="text-sky-500 dark:text-zinc-500 text-sm mt-1">Problems Solved</p>
           </div>
 
           {/* Difficulty breakdown */}
@@ -168,14 +168,14 @@ function LeetCodeCard() {
           </div>
 
           {/* Ranking */}
-          <div className="flex items-center justify-center gap-2 pt-4 border-t border-zinc-800/50">
+          <div className="flex items-center justify-center gap-2 pt-4 border-t border-sky-200 dark:border-zinc-800/50">
             <Trophy size={14} className="text-yellow-500" />
-            <span className="text-zinc-400 text-sm">
+            <span className="text-sky-700 dark:text-zinc-400 text-sm">
               Global Rank:{" "}
               <AnimatedNumber
                 value={stats.ranking}
                 start={inView}
-                className="text-zinc-200 font-mono font-semibold"
+                className="text-sky-900 dark:text-zinc-200 font-mono font-semibold"
               />
             </span>
           </div>
@@ -206,7 +206,7 @@ function HackerRankCard() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: 0.1 }}
-      className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 hover:border-emerald-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5"
+      className="p-6 rounded-2xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-emerald-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-emerald-500/5"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -215,25 +215,25 @@ function HackerRankCard() {
             <SiHackerrank size={20} className="text-emerald-500" />
           </div>
           <div>
-            <h3 className="text-zinc-100 font-semibold">HackerRank</h3>
-            <p className="text-zinc-500 text-xs font-mono">@{codingProfiles.hackerrank}</p>
+            <h3 className="text-sky-950 dark:text-zinc-100 font-semibold">HackerRank</h3>
+            <p className="text-sky-500 dark:text-zinc-500 text-xs font-mono">@{codingProfiles.hackerrank}</p>
           </div>
         </div>
         <a href={`https://hackerrank.com/${codingProfiles.hackerrank}`}
           target="_blank" rel="noopener noreferrer"
-          className="text-zinc-600 hover:text-emerald-500 transition-colors">
+          className="text-sky-400 dark:text-zinc-600 hover:text-emerald-500 transition-colors">
           <ExternalLink size={15} />
         </a>
       </div>
 
       {/* Big solved number */}
-      <div className="text-center mb-6 p-4 rounded-xl bg-zinc-800/40 border border-zinc-700/30">
+      <div className="text-center mb-6 p-4 rounded-xl bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
         <AnimatedNumber
           value={stats.solved}
           start={inView}
           className="text-4xl font-bold text-emerald-400 font-mono"
         />
-        <p className="text-zinc-500 text-sm mt-1">Problems Solved</p>
+        <p className="text-sky-500 dark:text-zinc-500 text-sm mt-1">Problems Solved</p>
       </div>
 
       {/* Stats grid */}
@@ -242,18 +242,18 @@ function HackerRankCard() {
           { icon: <Star size={14} />,  label: "Stars",       value: stats.stars,   color: "text-yellow-400"  },
           { icon: <Award size={14} />, label: "Badges",      value: stats.badges,  color: "text-emerald-400" },
         ].map(({ icon, label, value, color }) => (
-          <div key={label} className="flex flex-col items-center p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/30">
+          <div key={label} className="flex flex-col items-center p-3 rounded-lg bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
             <span className={cn("mb-1", color)}>{icon}</span>
             <span className={cn("text-lg font-bold font-mono", color)}>{value}</span>
-            <span className="text-zinc-500 text-xs">{label}</span>
+            <span className="text-sky-500 dark:text-zinc-500 text-xs">{label}</span>
           </div>
         ))}
       </div>
 
       {/* Certificate */}
-      <div className="flex items-center gap-2 pt-4 border-t border-zinc-800/50">
+      <div className="flex items-center gap-2 pt-4 border-t border-sky-200 dark:border-zinc-800/50">
         <Award size={14} className="text-emerald-500 shrink-0" />
-        <span className="text-zinc-400 text-xs">{stats.certificate}</span>
+        <span className="text-sky-700 dark:text-zinc-400 text-xs">{stats.certificate}</span>
       </div>
     </motion.div>
   );
@@ -280,7 +280,7 @@ function CodeforcesCard() {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="p-6 rounded-2xl bg-zinc-900/50 border border-zinc-800/50 hover:border-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5"
+      className="p-6 rounded-2xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-blue-500/30 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/5"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
@@ -289,42 +289,42 @@ function CodeforcesCard() {
             <SiCodeforces size={20} className="text-blue-500" />
           </div>
           <div>
-            <h3 className="text-zinc-100 font-semibold">Codeforces</h3>
-            <p className="text-zinc-500 text-xs font-mono">@{codingProfiles.codeforces}</p>
+            <h3 className="text-sky-950 dark:text-zinc-100 font-semibold">Codeforces</h3>
+            <p className="text-sky-500 dark:text-zinc-500 text-xs font-mono">@{codingProfiles.codeforces}</p>
           </div>
         </div>
         <a href={`https://codeforces.com/profile/${codingProfiles.codeforces}`}
           target="_blank" rel="noopener noreferrer"
-          className="text-zinc-600 hover:text-blue-500 transition-colors">
+          className="text-sky-400 dark:text-zinc-600 hover:text-blue-500 transition-colors">
           <ExternalLink size={15} />
         </a>
       </div>
 
       {/* Big solved number */}
-      <div className="text-center mb-6 p-4 rounded-xl bg-zinc-800/40 border border-zinc-700/30">
+      <div className="text-center mb-6 p-4 rounded-xl bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
         <AnimatedNumber
           value={stats.solved}
           start={inView}
           className="text-4xl font-bold text-blue-400 font-mono"
         />
-        <p className="text-zinc-500 text-sm mt-1">Problems Solved</p>
+        <p className="text-sky-500 dark:text-zinc-500 text-sm mt-1">Problems Solved</p>
       </div>
 
       {/* Rating + Rank */}
       <div className="grid grid-cols-2 gap-3 mb-5">
-        <div className="flex flex-col items-center p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/30">
+        <div className="flex flex-col items-center p-3 rounded-lg bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
           <Code2 size={14} className="text-blue-400 mb-1" />
           <AnimatedNumber
             value={stats.rating}
             start={inView}
             className="text-lg font-bold font-mono text-blue-400"
           />
-          <span className="text-zinc-500 text-xs">Rating</span>
+          <span className="text-sky-500 dark:text-zinc-500 text-xs">Rating</span>
         </div>
-        <div className="flex flex-col items-center p-3 rounded-lg bg-zinc-800/40 border border-zinc-700/30">
+        <div className="flex flex-col items-center p-3 rounded-lg bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
           <Trophy size={14} className="text-blue-400 mb-1" />
           <span className="text-lg font-bold font-mono text-blue-400">{stats.rank}</span>
-          <span className="text-zinc-500 text-xs">Rank</span>
+          <span className="text-sky-500 dark:text-zinc-500 text-xs">Rank</span>
         </div>
       </div>
     </motion.div>
@@ -352,7 +352,7 @@ export default function CodingStats() {
   );
 
   return (
-    <section id="coding" className="py-24 px-4 bg-zinc-900/30">
+    <section id="coding" className="py-24 px-4 bg-sky-100/60 dark:bg-zinc-900/30">
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           title="Coding"
@@ -372,14 +372,14 @@ export default function CodingStats() {
             { label: "Codeforces Solved",  value: manualCodingStats.codeforces.solved, suffix: "+", color: "text-blue-400"    },
             { label: "Total (excl. LC)",   value: totalSolved,  suffix: "+",  color: "text-yellow-400" },
           ].map(({ label, value, suffix, color }) => (
-            <div key={label} className="text-center p-5 rounded-xl bg-zinc-900/50 border border-zinc-800/50">
+            <div key={label} className="text-center p-5 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50">
               <AnimatedNumber
                 value={value}
                 start={inView}
                 suffix={suffix}
                 className={cn("text-3xl font-bold font-mono", color)}
               />
-              <p className="text-zinc-500 text-xs mt-1">{label}</p>
+              <p className="text-sky-500 dark:text-zinc-500 text-xs mt-1">{label}</p>
             </div>
           ))}
         </motion.div>

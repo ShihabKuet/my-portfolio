@@ -34,7 +34,7 @@ export default async function BlogPostPage({ params }: Props) {
     <main className="min-h-screen py-24 px-4">
       <div className="max-w-3xl mx-auto">
 
-        <Link href="/blog" className="inline-flex items-center gap-2 text-zinc-500 hover:text-violet-400 transition-colors text-sm mb-10 font-mono">
+        <Link href="/blog" className="inline-flex items-center gap-2 text-sky-500 dark:text-zinc-500 hover:text-violet-400 transition-colors text-sm mb-10 font-mono">
           <ArrowLeft size={15} />
           All Posts
         </Link>
@@ -49,15 +49,15 @@ export default async function BlogPostPage({ params }: Props) {
             ))}
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-bold text-zinc-100 leading-tight mb-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-sky-950 dark:text-zinc-100 leading-tight mb-4">
             {post.title}
           </h1>
 
-          <p className="text-zinc-400 text-lg leading-relaxed mb-6">
+          <p className="text-sky-700 dark:text-zinc-400 text-lg leading-relaxed mb-6">
             {post.excerpt}
           </p>
 
-          <div className="flex items-center gap-5 text-zinc-500 text-sm font-mono pb-6 border-b border-zinc-800">
+          <div className="flex items-center gap-5 text-sky-500 dark:text-zinc-500 text-sm font-mono pb-6 border-b border-zinc-800">
             <span className="flex items-center gap-1.5">
               <Calendar size={13} />
               {formatDate(post.date)}
@@ -73,7 +73,7 @@ export default async function BlogPostPage({ params }: Props) {
         <MDXContent source={post.content} />
 
         <div className="mt-16 pt-8 border-t border-zinc-800">
-          <Link href="/blog" className="inline-flex items-center gap-2 text-zinc-400 hover:text-violet-400 transition-colors font-mono text-sm">
+          <Link href="/blog" className="inline-flex items-center gap-2 text-sky-700 dark:text-zinc-400 hover:text-violet-400 transition-colors font-mono text-sm">
             <ArrowLeft size={14} />
             Back to all posts
           </Link>

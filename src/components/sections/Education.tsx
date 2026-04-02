@@ -28,7 +28,7 @@ export default function EducationEndian() {
               className={`px-4 py-2 rounded-lg text-sm font-mono transition ${
                 mode === "little"
                   ? "bg-violet-600 text-white"
-                  : "text-zinc-400 hover:text-white"
+                  : "text-sky-700 dark:text-zinc-400 hover:text-white"
               }`}
             >
               Little Endian
@@ -38,7 +38,7 @@ export default function EducationEndian() {
               className={`px-4 py-2 rounded-lg text-sm font-mono transition ${
                 mode === "big"
                   ? "bg-violet-600 text-white"
-                  : "text-zinc-400 hover:text-white"
+                  : "text-sky-700 dark:text-zinc-400 hover:text-white"
               }`}
             >
               Big Endian
@@ -48,7 +48,7 @@ export default function EducationEndian() {
 
         {/* Timeline */}
         <motion.div layout className="relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-zinc-800" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-sky-100 dark:bg-zinc-800" />
 
           <motion.div layout className="space-y-12">
             <AnimatePresence>
@@ -76,11 +76,11 @@ export default function EducationEndian() {
                     {/* Card */}
                     <motion.div
                       layout
-                      className="w-[45%] p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/50 hover:border-zinc-700/50 transition"
+                      className="w-[45%] p-6 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-zinc-700/50 transition"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                         <div>
-                          <h3 className="text-zinc-100 font-semibold text-lg flex items-center gap-2">
+                          <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-lg flex items-center gap-2">
                             <GraduationCap
                               size={18}
                               className="text-violet-400"
@@ -92,7 +92,7 @@ export default function EducationEndian() {
                           </p>
                         </div>
                         <div className="text-right">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-800 text-zinc-400 text-xs font-mono">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 dark:bg-zinc-800 text-sky-700 dark:text-zinc-400 text-xs font-mono">
                             <Calendar size={11} />
                             {edu.duration}
                           </span>
@@ -102,18 +102,18 @@ export default function EducationEndian() {
                         </div>
                       </div>
                       {edu.description && (
-                        <p className="text-zinc-400 text-sm leading-relaxed">
+                        <p className="text-sky-700 dark:text-zinc-400 text-sm leading-relaxed">
                           {edu.description}
                         </p>
                       )}
 
                       {/* Memory + Stack Direction */}
                       <div className="mt-5 pt-4 border-t border-zinc-800 flex items-center justify-between text-xs font-mono">
-                        <div className="px-2 py-1 rounded bg-zinc-800 text-violet-400">
+                        <div className="px-2 py-1 rounded bg-sky-100 dark:bg-zinc-800 text-violet-400">
                           {`ADDR: 0x${(0x3e8 + i * 0x10).toString(16).toUpperCase()}`}
                         </div>
 
-                        <div className="flex items-center gap-2 text-zinc-500">
+                        <div className="flex items-center gap-2 text-sky-500 dark:text-zinc-500">
                           {mode === "little" ? (
                             <>
                               <span>STACK ↓</span>
@@ -136,7 +136,7 @@ export default function EducationEndian() {
         </motion.div>
 
         {/* Explanation */}
-        <div className="mt-16 text-center text-sm text-zinc-500 font-mono">
+        <div className="mt-16 text-center text-sm text-sky-500 dark:text-zinc-500 font-mono">
           {mode === "little"
             ? "Little Endian → Earliest → Latest (like LSB first in memory)"
             : "Big Endian → Latest → Earliest (like MSB first in memory)"}

@@ -8,7 +8,7 @@ export default function Blog() {
   const posts = getAllPosts().slice(0, 3);
 
   return (
-    <section id="blog" className="py-24 px-4 bg-zinc-900/30">
+    <section id="blog" className="py-24 px-4 bg-sky-100/60 dark:bg-zinc-900/30">
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           title="Blog"
@@ -18,27 +18,27 @@ export default function Blog() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
           {posts.map((post) => (
             <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
-              <article className="h-full flex flex-col p-5 rounded-xl bg-zinc-900/50 border border-zinc-800/50 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-300">
+              <article className="h-full flex flex-col p-5 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-violet-500/30 hover:shadow-lg hover:shadow-violet-500/5 transition-all duration-300">
 
                 {/* Tags */}
                 <div className="flex flex-wrap gap-1.5 mb-3">
                   {post.tags.slice(0, 2).map((tag) => (
-                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-violet-500/10 text-violet-400 text-xs font-mono border border-violet-500/20">
+                    <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-violet-500/10 text-violet-600 dark:text-violet-400 text-xs font-mono border border-violet-500/20">
                       <Tag size={9} />
                       {tag}
                     </span>
                   ))}
                 </div>
 
-                <h3 className="text-zinc-100 font-semibold text-base leading-snug mb-2 group-hover:text-violet-300 transition-colors flex-grow">
+                <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-base leading-snug mb-2 group-hover:text-violet-600 dark:group-hover:text-violet-300 transition-colors flex-grow">
                   {post.title}
                 </h3>
 
-                <p className="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-2">
+                <p className="text-sky-700 dark:text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-2">
                   {post.excerpt}
                 </p>
 
-                <div className="flex items-center gap-3 text-zinc-500 text-xs font-mono mt-auto pt-3 border-t border-zinc-800/50">
+                <div className="flex items-center gap-3 text-sky-500 dark:text-zinc-500 text-xs font-mono mt-auto pt-3 border-t border-sky-200 dark:border-zinc-800/50">
                   <span className="flex items-center gap-1">
                     <Calendar size={11} />
                     {formatDate(post.date)}
@@ -55,7 +55,7 @@ export default function Blog() {
 
         {/* View all link */}
         <div className="text-center">
-          <Link href="/blog" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-zinc-700 hover:border-violet-500/50 text-zinc-300 hover:text-violet-400 transition-all duration-200 text-sm font-medium">
+          <Link href="/blog" className="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-sky-300 dark:border-zinc-700 hover:border-violet-500/50 text-sky-800 dark:text-zinc-300 hover:text-violet-600 dark:hover:text-violet-400 transition-all duration-200 text-sm font-medium">
             View All Posts
             <ArrowRight size={15} />
           </Link>

@@ -7,7 +7,7 @@ import { Briefcase, Calendar, MapPin } from "lucide-react";
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-24 px-4 bg-zinc-900/30">
+    <section id="experience" className="py-24 px-4 bg-sky-100/60 dark:bg-zinc-900/30">
       <div className="max-w-4xl mx-auto">
         <SectionHeading
           title="Work Experience"
@@ -16,7 +16,7 @@ export default function Experience() {
 
         <div className="relative">
           {/* Vertical timeline line */}
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-zinc-800" />
+          <div className="absolute left-6 top-0 bottom-0 w-px bg-sky-100 dark:bg-zinc-800" />
 
           <div className="space-y-8">
             {experiences.map((exp, i) => (
@@ -31,23 +31,23 @@ export default function Experience() {
                 {/* Timeline dot */}
                 <div className="absolute left-3.5 top-5 w-5 h-5 rounded-full bg-violet-600 border-4 border-zinc-950" />
 
-                <div className="p-6 rounded-xl bg-zinc-900/50 border border-zinc-800/50 hover:border-zinc-700/50 transition-colors">
+                <div className="p-6 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-zinc-700/50 transition-colors">
 
                   {/* Header */}
                   <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
                     <div>
-                      <h3 className="text-zinc-100 font-semibold text-lg flex items-center gap-2">
+                      <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-lg flex items-center gap-2">
                         <Briefcase size={18} className="text-violet-400" />
                         {exp.role}
                       </h3>
                       <p className="text-violet-400 font-medium mt-1">{exp.company}</p>
                     </div>
                     <div className="flex flex-col items-end gap-1.5">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-800 text-zinc-400 text-xs font-mono">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 dark:bg-zinc-800 text-sky-700 dark:text-zinc-400 text-xs font-mono">
                         <Calendar size={11} />
                         {exp.duration}
                       </span>
-                      <span className="inline-flex items-center gap-1 text-zinc-500 text-xs">
+                      <span className="inline-flex items-center gap-1 text-sky-500 dark:text-zinc-500 text-xs">
                         <MapPin size={11} />
                         {exp.location}
                       </span>
@@ -57,7 +57,7 @@ export default function Experience() {
                   {/* Bullet points */}
                   <ul className="space-y-2 mb-4">
                     {exp.description.map((point, j) => (
-                      <li key={j} className="flex items-start gap-2 text-zinc-400 text-sm">
+                      <li key={j} className="flex items-start gap-2 text-sky-700 dark:text-zinc-400 text-sm">
                         <span className="text-violet-500 mt-1.5 text-xs">▹</span>
                         {point}
                       </li>
@@ -67,7 +67,7 @@ export default function Experience() {
                   {/* Tech tags */}
                   <div className="flex flex-wrap gap-2">
                     {exp.technologies.map((tech) => (
-                      <span key={tech} className="px-2.5 py-1 rounded-md bg-zinc-800/80 text-zinc-400 text-xs font-mono border border-zinc-700/50">
+                      <span key={tech} className="px-2.5 py-1 rounded-md bg-sky-100 dark:bg-zinc-800/80 text-sky-700 dark:text-zinc-400 text-xs font-mono border border-zinc-700/50">
                         {tech}
                       </span>
                     ))}

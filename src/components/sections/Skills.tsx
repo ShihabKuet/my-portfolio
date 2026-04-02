@@ -25,7 +25,7 @@ export default function Skills() {
     : skills.filter((s) => s.category === active);
 
   return (
-    <section id="skills" className="py-24 px-4 bg-zinc-900/30">
+    <section id="skills" className="py-24 px-4 bg-sky-100/60 dark:bg-zinc-900/30">
       <div className="max-w-6xl mx-auto">
         <SectionHeading
           title="Skills"
@@ -42,7 +42,7 @@ export default function Skills() {
                 "px-4 py-1.5 rounded-full text-sm font-mono transition-all duration-200",
                 active === value
                   ? "bg-violet-600 text-white"
-                  : "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-200"
+                  : "bg-sky-100 dark:bg-zinc-800/50 text-sky-700 dark:text-zinc-400 hover:bg-zinc-700/50 hover:text-sky-900 dark:text-zinc-200"
               )}
             >
               {label}
@@ -59,15 +59,15 @@ export default function Skills() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: i * 0.05 }}
-              className="p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50 hover:border-zinc-700/50 transition-colors"
+              className="p-4 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-zinc-700/50 transition-colors"
             >
               <div className="flex justify-between items-center mb-3">
-                <span className="text-zinc-200 font-medium text-sm">{skill.name}</span>
-                <span className="text-zinc-500 text-xs font-mono">{skill.level}%</span>
+                <span className="text-sky-900 dark:text-zinc-200 font-medium text-sm">{skill.name}</span>
+                <span className="text-sky-500 dark:text-zinc-500 text-xs font-mono">{skill.level}%</span>
               </div>
 
               {/* Progress bar */}
-              <div className="h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+              <div className="h-1.5 bg-sky-100 dark:bg-zinc-800 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: `${skill.level}%` }}

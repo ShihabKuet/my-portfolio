@@ -30,10 +30,10 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-zinc-700 dark:text-zinc-300 text-lg leading-relaxed mb-6">
+            <p className="text-zinc-700 text-sky-800 dark:text-zinc-300 text-lg leading-relaxed mb-6">
               {personalInfo.bio}
             </p>
-            <p className="text-zinc-900 dark:text-zinc-400 leading-relaxed mb-8">
+            <p className="text-zinc-900 text-sky-700 dark:text-zinc-400 leading-relaxed mb-8">
               When I&apos;m not engineering software, I enjoy exploring new technologies,
               contributing to open source, and writing about what I learn.
             </p>
@@ -41,11 +41,11 @@ export default function About() {
             {/* Quick stat pills */}
             <div className="grid grid-cols-2 gap-3">
               {stats.map(({ icon, label, value }) => (
-                <div key={label} className="flex items-start gap-3 p-3 rounded-lg bg-zinc-900/50 border border-zinc-800/50">
+                <div key={label} className="flex items-start gap-3 p-3 rounded-lg bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50">
                   <span className="text-violet-400 mt-0.5">{icon}</span>
                   <div>
-                    <p className="text-zinc-500 text-xs">{label}</p>
-                    <p className="text-zinc-200 text-sm font-medium">{value}</p>
+                    <p className="text-sky-500 dark:text-zinc-500 text-xs">{label}</p>
+                    <p className="text-sky-900 dark:text-zinc-200 text-sm font-medium">{value}</p>
                   </div>
                 </div>
               ))}
