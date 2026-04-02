@@ -527,7 +527,7 @@ export default function Hero() {
               transition={{ delay: 0.2 }}
               className="text-5xl sm:text-6xl md:text-7xl font-bold text-zinc-100 leading-tight mb-4"
             >
-              Hi, I&apos;m{" "}
+              Hello World! I&apos;m{" "}
               <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
                 {personalInfo.name}
               </span>
