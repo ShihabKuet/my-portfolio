@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "@/data";
 import { ArrowDown, MapPin, Mail, Briefcase, SkipForward } from "lucide-react";
@@ -107,6 +107,12 @@ export default function Hero() {
   const [compileTyped, setCompileTyped] = useState("");
   const [outLen,       setOutLen]       = useState(0);
   const [outputDone,   setOutputDone]   = useState(false);
+  const phaseRef                        = useRef<Phase>(phase); // Use a ref to track the current phase so the async callbacks always see the latest value
+
+  // Keep the ref synced with state
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);  
 
   // ── Animation sequence ──────────────────────────────────────────────────────
 
@@ -114,13 +120,16 @@ export default function Hero() {
     let cancelled = false;
     const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
+    // Helper to check if we should abort
+    const shouldAbort = () => cancelled || phaseRef.current === "reveal";
+
     const type = async (
       text: string,
       setter: (s: string) => void,
       speed: number,
     ) => {
       for (let i = 1; i <= text.length; i++) {
-        if (cancelled) return;
+        if (shouldAbort()) return;
         setter(text.slice(0, i));
         await sleep(speed);
       }
@@ -129,46 +138,46 @@ export default function Hero() {
     const run = async () => {
       // 1 ─ Segfault glitters for 2.2s
       await sleep(2200);
-      if (cancelled) return;
+      if (shouldAbort()) return;
 
       // 2 ─ Type "nano Portfolio.c", cursor blinks ~1.3s then Enter
       setPhase("typing-nano");
       await type(NANO_CMD, setNanoTyped, 80);
       await sleep(1300);
-      if (cancelled) return;
+      if (shouldAbort()) return;
 
       // 3 ─ Editor opens, pause before cursor starts moving
       setPhase("editor");
       await sleep(900);
-      if (cancelled) return;
+      if (shouldAbort()) return;
 
       // 4 ─ Backspace through *name → type "MD. SHANJID AREFIN"
       setPhase("fixing");
       for (let i = EDIT_FROM.length; i >= 0; i--) {
-        if (cancelled) return;
+        if (shouldAbort()) return;
         setEditText(EDIT_FROM.slice(0, i));
         await sleep(90);
       }
       for (let i = 1; i <= EDIT_TO.length; i++) {
-        if (cancelled) return;
+        if (shouldAbort()) return;
         setEditText(EDIT_TO.slice(0, i));
         await sleep(85);
       }
       await sleep(420);
-      if (cancelled) return;
+      if (shouldAbort()) return;
 
       // 5 ─ Ctrl+X save sequence
       setPhase("saving");
-      await sleep(320); if (cancelled) return; setSavingStep(1);
-      await sleep(700); if (cancelled) return; setSavingStep(2);
-      await sleep(700); if (cancelled) return; setSavingStep(3);
-      await sleep(950); if (cancelled) return;
+      await sleep(320); if (shouldAbort()) return; setSavingStep(1);
+      await sleep(700); if (shouldAbort()) return; setSavingStep(2);
+      await sleep(700); if (shouldAbort()) return; setSavingStep(3);
+      await sleep(950); if (shouldAbort()) return;
 
       // 6 ─ Compile command types out
       setPhase("compiling");
       await type(COMPILE_CMD, setCompileTyped, 36);
       await sleep(420);
-      if (cancelled) return;
+      if (shouldAbort()) return;
 
       // 7 ─ Typewrite output, name glows
       setPhase("output");
@@ -176,15 +185,15 @@ export default function Hero() {
       await new Promise<void>(resolve => {
         let i = 0;
         const iv = setInterval(() => {
-          if (cancelled) { clearInterval(iv); resolve(); return; }
+          if (shouldAbort()) { clearInterval(iv); resolve(); return; }
           setOutLen(++i);
           if (i >= OUTPUT_TEXT.length) { clearInterval(iv); resolve(); }
         }, 55);
       });
-      if (cancelled) return;
+      if (shouldAbort()) return;
       setOutputDone(true);
       await sleep(2400);
-      if (cancelled) return;
+      if (shouldAbort()) return;
 
       // 8 ─ Fade to hero reveal
       setPhase("reveal");
@@ -470,7 +479,7 @@ export default function Hero() {
             {/* Skip button */}
             <button
               onClick={() => setPhase("reveal")}
-              className="absolute -top-9 right-0 flex items-center gap-1.5 text-sky-400 dark:text-zinc-600 hover:text-sky-700 dark:text-zinc-400 text-xs font-mono transition-colors group"
+              className="absolute -top-9 right-0 flex items-center gap-1.5 text-sky-400 dark:text-zinc-400 hover:text-sky-600 dark:hover:text-zinc-200 text-xs font-mono transition-colors group"
             >
               <SkipForward size={12} className="group-hover:text-violet-400 transition-colors" />
               skip intro
