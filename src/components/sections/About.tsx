@@ -70,7 +70,7 @@ export default function About() {
                 <div className="absolute -inset-1 rounded-full bg-gradient-to-br from-violet-600/50 to-indigo-600/50 blur-xl" />
                 <div className="relative w-full h-full rounded-full border-2 border-violet-500/30 overflow-hidden">
                   <img
-                    src="/profile.jpg"
+                    src="/profile.png"
                     alt={personalInfo.name}
                     className="w-full h-full object-cover object-top"
                   />
