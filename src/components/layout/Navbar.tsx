@@ -43,7 +43,7 @@ function NavIconButton({
           "flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-200",
           active
             ? "text-violet-600 dark:text-violet-400 bg-violet-500/10"
-            : "text-sky-600 text-sky-500 dark:text-zinc-500 hover:text-sky-900 dark:hover:text-sky-950 dark:text-zinc-100 hover:bg-sky-100 dark:hover:bg-sky-100 dark:bg-zinc-800/60"
+            : "text-sky-600 dark:text-zinc-500 hover:text-sky-900 dark:hover:text-sky-950 dark:text-zinc-100 hover:bg-sky-100 dark:hover:bg-sky-100 dark:bg-zinc-800/60"
         )}
         aria-label={label}
       >
@@ -100,7 +100,7 @@ export default function Navbar() {
       if (!el) return;
       const observer = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
-        { threshold: 0.4, rootMargin: "-80px 0px -20% 0px" }
+        { threshold: 0.2, rootMargin: "-80px 0px -20% 0px" }
       );
       observer.observe(el);
       observers.push(observer);
