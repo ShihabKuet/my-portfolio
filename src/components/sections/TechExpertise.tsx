@@ -13,6 +13,7 @@ interface ExpertiseItem {
   category: Category;
   description: string;
   icon: React.ReactNode;
+  demoLink?: string;
 }
 
 const categories: { label: string; value: Category }[] = [
@@ -195,6 +196,7 @@ const expertiseItems: ExpertiseItem[] = [
     category: "network",
     description: "Deep practical understanding of OSI layers — applied daily in troubleshooting, protocol design, and switch configuration.",
     icon: <OSIIcon c="#60a5fa" />,
+    demoLink: "/osi",
   },
   {
     title: "TCP/IP Protocol Stack",
@@ -202,6 +204,7 @@ const expertiseItems: ExpertiseItem[] = [
     category: "network",
     description: "Hands-on experience with TCP/IP — packet inspection, encapsulation flows, and protocol interaction at each layer.",
     icon: <TCPIPIcon c="#60a5fa" />,
+    demoLink: "/osi",
   },
   {
     title: "Layer 3 Network Switch",
@@ -223,6 +226,7 @@ const expertiseItems: ExpertiseItem[] = [
     category: "protocol",
     description: "Designed and worked with TFTP for firmware upgrades and config backup across network devices — UDP-based simplicity.",
     icon: <TFTPIcon c="#2dd4bf" />,
+    demoLink: "/osi",
   },
   {
     title: "Implementing RFC",
@@ -246,21 +250,18 @@ function ExpertiseCard({
   const glow  = categoryGlow[item.category];
   const bar   = categoryTopBar[item.category];
 
-  return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className={cn(
-        "relative group flex flex-col p-5 rounded-2xl cursor-default",
-        "bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 transition-all duration-300",
-        "hover:shadow-lg overflow-hidden",
-        glow
-      )}
-    >
+  const sharedClassName = cn(
+    "relative group flex flex-col p-5 rounded-2xl",
+    "bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 transition-all duration-300",
+    "hover:shadow-lg overflow-hidden",
+    glow,
+    item.demoLink
+        ? "cursor-pointer hover:bg-amber-50 dark:hover:bg-amber-50/10"
+        : "cursor-default"
+  );
+
+  const cardContent = (
+    <>
       {/* Top color accent bar */}
       <div className={cn(
         "absolute top-0 left-0 right-0 h-0.5 transition-all duration-300",
@@ -268,13 +269,31 @@ function ExpertiseCard({
         hovered ? "opacity-100" : "opacity-0"
       )} />
 
-      {/* Icon */}
-      <div className={cn(
-        "w-12 h-12 rounded-xl flex items-center justify-center mb-4",
-        "border transition-colors duration-300",
-        color
-      )}>
-        {item.icon}
+      {/* Icon row + arrow indicator */}
+      <div className="flex items-start justify-between mb-4">
+        <div className={cn(
+          "w-12 h-12 rounded-xl flex items-center justify-center",
+          "border transition-colors duration-300",
+          color
+        )}>
+          {item.icon}
+        </div>
+
+        {/* Diagonal arrow fades in on hover for linkable cards */}
+        {item.demoLink && (
+          <motion.div
+            initial={false}
+            animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 4 }}
+            transition={{ duration: 0.2 }}
+            className="text-sky-400 dark:text-zinc-500 mt-1"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" strokeWidth="2"
+                 strokeLinecap="round" strokeLinejoin="round">
+              <path d="M7 17L17 7M17 7H7M17 7v10"/>
+            </svg>
+          </motion.div>
+        )}
       </div>
 
       {/* Title */}
@@ -297,6 +316,37 @@ function ExpertiseCard({
       >
         {item.description}
       </motion.p>
+    </>
+  );
+
+  if (item.demoLink) {
+    return (
+      <motion.a
+        href={item.demoLink}
+        layout
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        className={sharedClassName}
+      >
+        {cardContent}
+      </motion.a>
+    );
+  }
+
+  return (
+    <motion.div
+      layout
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.05, ease: "easeOut" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className={sharedClassName}
+    >
+      {cardContent}
     </motion.div>
   );
 }
