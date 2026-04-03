@@ -7,6 +7,7 @@ import ScrollProgress            from "@/components/ui/ScrollProgress";
 import BackToTop                 from "@/components/ui/BackToTop";
 import ThemeProvider             from "@/components/providers/ThemeProvider";
 import { personalInfo }          from "@/data";
+import FloatingTerminal          from "@/components/ui/FloatingTerminal";
 
 // Google Fonts — loaded efficiently by Next.js (zero layout shift)
 const inter = Inter({
@@ -53,6 +54,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
           <BackToTop />
+          <FloatingTerminal />
         </ThemeProvider>
       </body>
     </html>
