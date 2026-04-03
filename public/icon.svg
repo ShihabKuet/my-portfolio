@@ -1,0 +1,43 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="90" fill="#020617"/>
+
+  <!-- Gradient -->
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#00f5ff"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Bold geometric S -->
+  <path d="
+    M 380 120
+    L 200 120
+    L 160 180
+    L 300 180
+    L 360 240
+    L 260 240
+    L 200 300
+    L 340 300
+    L 380 360
+    L 140 360
+  "
+    stroke="url(#g)"
+    stroke-width="28"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    fill="none"
+  />
+
+  <!-- Binary pattern inside -->
+  <text x="190" y="170" font-size="22" fill="#22d3ee" font-family="monospace">101</text>
+  <text x="260" y="270" font-size="22" fill="#a78bfa" font-family="monospace">010</text>
+  <text x="180" y="340" font-size="22" fill="#22d3ee" font-family="monospace">110</text>
+
+  <!-- Cursor line -->
+  <rect x="350" y="320" width="8" height="40" fill="#00f5ff">
+    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
+  </rect>
+
+</svg>
