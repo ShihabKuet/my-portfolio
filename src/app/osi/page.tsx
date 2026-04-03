@@ -1,5 +1,7 @@
 "use client";
 
+// NOTE: Add `darkMode: "class"` to your tailwind.config.ts
+
 import { useRef } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 import Link from "next/link";
@@ -44,13 +46,13 @@ const LAYERS: Layer[] = [
     name: "Transport Layer",
     protocol: "UDP",
     pdu: "Datagram",
-    role: "End-to-end delivery — port-based multiplexing",
+    role: "End-to-end delivery — port-based multiplexing, no connection overhead",
     accent: "#60a5fa",
     fields: [
-      { name: "Src Port", size: "2B", value: "61234"      },
-      { name: "Dst Port", size: "2B", value: "69 (TFTP)"  },
-      { name: "Length",   size: "2B", value: "524 bytes"  },
-      { name: "Checksum", size: "2B", value: "0xA4F2"     },
+      { name: "Src Port", size: "2B", value: "61234"     },
+      { name: "Dst Port", size: "2B", value: "69 (TFTP)" },
+      { name: "Length",   size: "2B", value: "524 bytes" },
+      { name: "Checksum", size: "2B", value: "0xA4F2"    },
     ],
     payloadLabel: "TFTP Packet (516 bytes)",
   },
@@ -101,7 +103,112 @@ const LAYERS: Layer[] = [
   },
 ];
 
-// ── Field row ──────────────────────────────────────────────────────────────────
+// ── Incoming Packet Card ────────────────────────────────────────────────────────
+// Shows the previous layer's PDU in compact form — this card "falls in" from above
+// to represent the packet being handed down the stack.
+
+function IncomingPacketCard({ layer }: { layer: Layer }) {
+  return (
+    <div
+      className="rounded-xl p-3"
+      style={{
+        background: `${layer.accent}08`,
+        border: `1px solid ${layer.accent}40`,
+      }}
+    >
+      {/* Protocol badge */}
+      <div className="flex items-center gap-2 mb-2">
+        <div
+          className="px-2 py-0.5 rounded text-[10px] font-mono font-bold"
+          style={{ background: `${layer.accent}25`, color: layer.accent }}
+        >
+          {layer.protocol}
+        </div>
+        <span className="text-[10px] font-mono text-sky-400 dark:text-zinc-600">
+          {layer.pdu} · handed down ↓
+        </span>
+      </div>
+
+      {/* Compact field grid — odd last field spans full width */}
+      <div className="grid grid-cols-2 gap-[3px] mb-[6px]">
+        {layer.fields.map((f, fi) => (
+          <div
+            key={f.name}
+            className={`px-2 py-[4px] rounded font-mono text-[9px] ${
+              fi === layer.fields.length - 1 && layer.fields.length % 2 !== 0
+                ? "col-span-2"
+                : ""
+            }`}
+            style={{
+              background: `${layer.accent}10`,
+              borderLeft: `2px solid ${layer.accent}50`,
+            }}
+          >
+            <div
+              className="text-[8px] mb-[1px] opacity-60"
+              style={{ color: layer.accent }}
+            >
+              {f.name}
+            </div>
+            <div className="text-sky-700 dark:text-zinc-400 truncate">{f.value}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Payload label */}
+      <div
+        className="px-2 py-[5px] rounded font-mono text-[10px] border border-dashed"
+        style={{ borderColor: `${layer.accent}30` }}
+      >
+        <span className="text-sky-400 dark:text-zinc-600 text-[9px] mr-1">DATA →</span>
+        <span className="text-sky-500 dark:text-zinc-500">{layer.payloadLabel}</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Data Source Card (Application layer only) ──────────────────────────────────
+// Simulates raw file bytes being handed to TFTP before any header is added.
+
+function DataSourceCard({ accent }: { accent: string }) {
+  const hex = ["46","49","52","4D","57","41","52","45",
+               "00","01","00","00","00","00","55","AA"];
+  return (
+    <div
+      className="rounded-xl p-3"
+      style={{ background: `${accent}08`, border: `1px solid ${accent}40` }}
+    >
+      <div className="flex items-center gap-2 mb-2">
+        <div
+          className="px-2 py-0.5 rounded text-[10px] font-mono font-bold"
+          style={{ background: `${accent}25`, color: accent }}
+        >
+          FILE DATA
+        </div>
+        <span className="text-[10px] font-mono text-sky-400 dark:text-zinc-600">
+          firmware.bin · block #1 · 512 B
+        </span>
+      </div>
+      <div className="font-mono text-[9px] leading-[1.9] break-all">
+        {hex.map((b, i) => (
+          <span
+            key={i}
+            className="mr-1.5"
+            style={{
+              color:   i % 4 === 0 ? accent : undefined,
+              opacity: i % 4 === 0 ? 0.85   : 0.4,
+            }}
+          >
+            {b}
+          </span>
+        ))}
+        <span className="text-sky-400 dark:text-zinc-600 opacity-30"> ···</span>
+      </div>
+    </div>
+  );
+}
+
+// ── Static field row ───────────────────────────────────────────────────────────
 
 function FieldRow({ field, accent }: { field: Field; accent: string }) {
   return (
@@ -119,12 +226,10 @@ function FieldRow({ field, accent }: { field: Field; accent: string }) {
         >
           {field.name}
         </span>
-        {/* value: text-sky-700 dark:text-zinc-400 */}
         <div className="text-[11px] font-mono text-sky-700 dark:text-zinc-400">
           {field.value}
         </div>
       </div>
-      {/* size: text-sky-400 dark:text-zinc-600 */}
       <span className="text-[10px] font-mono text-sky-400 dark:text-zinc-600 self-center">
         {field.size}
       </span>
@@ -132,7 +237,9 @@ function FieldRow({ field, accent }: { field: Field; accent: string }) {
   );
 }
 
-// ── Animated field row (extracted from map to satisfy Rules of Hooks) ──────────
+// ── Animated field row ─────────────────────────────────────────────────────────
+// Extracted into its own component so useTransform is called at the top level
+// (Rules of Hooks: no hooks inside .map()).
 
 interface AnimatedFieldRowProps {
   field: Field;
@@ -149,13 +256,13 @@ function AnimatedFieldRow({
   totalFields,
   scrollYProgress,
 }: AnimatedFieldRowProps) {
-  const fieldStart   = 0.30 + fieldIndex * (0.30 / totalFields);
-  const fieldEnd     = fieldStart + 0.12;
-  const fieldOpacity = useTransform(scrollYProgress, [fieldStart, fieldEnd], [0, 1]);
-  const fieldX       = useTransform(scrollYProgress, [fieldStart, fieldEnd], [-8, 0]);
+  const start   = 0.32 + fieldIndex * (0.28 / totalFields);
+  const end     = start + 0.12;
+  const opacity = useTransform(scrollYProgress, [start, end], [0, 1]);
+  const x       = useTransform(scrollYProgress, [start, end], [-14, 0]);
 
   return (
-    <motion.div style={{ opacity: fieldOpacity, x: fieldX }}>
+    <motion.div style={{ opacity, x }}>
       <FieldRow field={field} accent={accent} />
     </motion.div>
   );
@@ -163,31 +270,19 @@ function AnimatedFieldRow({
 
 // ── Accumulated packet strip ───────────────────────────────────────────────────
 
-function PacketStrip({
-  upToIndex,
-  show,
-}: {
-  upToIndex: number;
-  show: boolean;
-}) {
+function PacketStrip({ upToIndex }: { upToIndex: number }) {
   const visible = LAYERS.slice(0, upToIndex + 1);
   return (
-    <motion.div
-      animate={{ opacity: show ? 1 : 0, y: show ? 0 : 8 }}
-      transition={{ duration: 0.4 }}
-      className="flex gap-[3px] mt-3 items-center flex-wrap"
-    >
-      {/* PDU label: text-sky-400 dark:text-zinc-600 */}
+    <div className="flex gap-[3px] mt-3 items-center flex-wrap">
       <span className="text-[10px] font-mono text-sky-400 dark:text-zinc-600 mr-1">
         PDU:
       </span>
-
       {[...visible].reverse().map((layer, i) => (
         <motion.div
           key={layer.protocol}
           initial={{ opacity: 0, scaleX: 0 }}
           animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ delay: i * 0.06 }}
+          transition={{ delay: i * 0.07 }}
           className="px-2 py-[2px] rounded text-[10px] font-mono font-bold whitespace-nowrap"
           style={{
             background: `${layer.accent}20`,
@@ -199,15 +294,13 @@ function PacketStrip({
           {layer.protocol}
         </motion.div>
       ))}
-
-      {/* DATA block: bg-sky-100 dark:bg-zinc-800, border-sky-200 dark:border-zinc-700/50, text-sky-400 dark:text-zinc-600 */}
       <div className="flex-1 min-w-[50px] px-2 py-[2px] rounded font-mono text-[10px] text-center
                       bg-sky-100 dark:bg-zinc-800
                       border border-sky-200 dark:border-zinc-700/50
                       text-sky-400 dark:text-zinc-600">
         DATA ██████
       </div>
-    </motion.div>
+    </div>
   );
 }
 
@@ -216,28 +309,33 @@ function PacketStrip({
 function LayerSection({ layer, index }: { layer: Layer; index: number }) {
   const ref       = useRef<HTMLDivElement>(null);
   const prevLayer = index > 0 ? LAYERS[index - 1] : null;
-  const isLast    = index === LAYERS.length - 1; // Physical layer (fixes layer.id bug)
+  const isLast    = index === LAYERS.length - 1;
 
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start 85%", "end 15%"],
   });
 
-  const packetY        = useTransform(scrollYProgress, [0.00, 0.30], [-70,  0]);
-  const packetOpacity  = useTransform(scrollYProgress, [0.00, 0.25], [0,    1]);
-  const headerShow     = useTransform(scrollYProgress, [0.28, 0.32], [0,    1]);
-  const encapShow      = useTransform(scrollYProgress, [0.62, 0.68], [0,    1]);
-  const sectionOpacity = useTransform(scrollYProgress, [0.00, 0.12], [0,    1]);
-  const payloadOpacity = useTransform(
-    scrollYProgress,
-    index === 0 ? [0.00, 0.15] : [0.25, 0.40],
-    [0, 1]
-  );
-  const trailerOpacity = useTransform(scrollYProgress, [0.55, 0.68], [0, 1]);
+  // ── Scroll animation phases ───────────────────────────────────────────────
+  //
+  //  0.00 – 0.28  Phase 1 : incoming PDU card drags down from y=-70
+  //  0.26 – 0.36  Phase 2a: separator "+ PROTO HEADER ↓" fades in
+  //  0.32 – 0.65  Phase 2b: header fields slide in from x=-14 (staggered)
+  //  0.55 – 0.65  Phase 3a: Ethernet FCS trailer (if present)
+  //  0.55 – 0.63  Phase 3b: "✓ built" badge appears
+  //  0.65 – 0.74  Phase 4 : packet strip + final message appear
+  //  0.00 – 0.12  Fade-in  : entire section
+
+  const incomingY        = useTransform(scrollYProgress, [0.00, 0.28], [-70, 0]);
+  const incomingOpacity  = useTransform(scrollYProgress, [0.00, 0.22], [0,   1]);
+  const separatorOpacity = useTransform(scrollYProgress, [0.26, 0.36], [0,   1]);
+  const headerShow       = useTransform(scrollYProgress, [0.55, 0.63], [0,   1]);
+  const trailerOpacity   = useTransform(scrollYProgress, [0.55, 0.65], [0,   1]);
+  const encapShow        = useTransform(scrollYProgress, [0.65, 0.74], [0,   1]);
+  const sectionOpacity   = useTransform(scrollYProgress, [0.00, 0.12], [0,   1]);
 
   return (
     <section ref={ref} className="min-h-[160vh] pb-20">
-      {/* Sticky inner */}
       <div className="sticky top-[10vh] flex justify-center px-5">
         <motion.div
           style={{ opacity: sectionOpacity }}
@@ -245,7 +343,6 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
         >
           {/* ── Section header ── */}
           <div className="flex items-center gap-3 mb-5">
-            {/* L-badge: accent bg/border, accent text */}
             <div
               className="w-10 h-10 rounded-xl flex items-center justify-center text-[13px] font-bold shrink-0"
               style={{
@@ -256,22 +353,14 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
             >
               L{layer.osiNumber}
             </div>
-
             <div>
-              {/* Layer name: text-sky-950 dark:text-zinc-100 */}
               <div className="font-bold text-base text-sky-950 dark:text-zinc-100">
                 {layer.name}
               </div>
-              {/* Protocol line: accent color */}
-              <div
-                className="text-xs font-mono"
-                style={{ color: layer.accent }}
-              >
+              <div className="text-xs font-mono" style={{ color: layer.accent }}>
                 {layer.protocol} · PDU: {layer.pdu}
               </div>
             </div>
-
-            {/* OSI badge */}
             <div
               className="ml-auto px-3 py-1 rounded-full text-[11px] font-mono"
               style={{
@@ -286,7 +375,7 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
 
           <div className="grid grid-cols-[1fr_1.3fr] gap-4">
 
-            {/* ── Left: role + incoming packet ── */}
+            {/* ── LEFT: role + Physical bit stream ── */}
             <div
               className="p-[18px] rounded-2xl flex flex-col gap-3"
               style={{
@@ -294,47 +383,17 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
                 border: `1px solid ${layer.accent}25`,
               }}
             >
-              {/* Role text: text-sky-700 dark:text-zinc-400 */}
               <p className="text-[13px] leading-[1.7] text-sky-700 dark:text-zinc-400">
                 {layer.role}
               </p>
 
-              {/* Incoming packet indicator */}
-              {prevLayer && (
-                <motion.div
-                  style={{ y: packetY, opacity: packetOpacity }}
-                  transition={{ type: "spring", stiffness: 120, damping: 20 }}
-                >
-                  {/* bg-sky-100/60 dark:bg-zinc-900/30, border accent */}
-                  <div
-                    className="p-[10px_14px] rounded-[10px] bg-sky-100/60 dark:bg-zinc-900/30"
-                    style={{ border: `1px solid ${prevLayer.accent}40` }}
-                  >
-                    {/* label: text-sky-400 dark:text-zinc-600 */}
-                    <div className="text-[10px] font-mono mb-[5px] text-sky-400 dark:text-zinc-600">
-                      ↓ ARRIVING FROM LAYER {layer.osiNumber + 1}
-                    </div>
-                    <div className="text-xs font-mono font-semibold" style={{ color: prevLayer.accent }}>
-                      {prevLayer.protocol} {prevLayer.pdu}
-                    </div>
-                    {/* payload label: text-sky-400 dark:text-zinc-600 */}
-                    <div className="text-[11px] font-mono text-sky-400 dark:text-zinc-600">
-                      {prevLayer.payloadLabel}
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-              {/* Physical bit stream */}
               {isLast && (
                 <motion.div style={{ opacity: encapShow }}>
-                  {/* bg-sky-100/60 dark:bg-zinc-900/30, border-sky-200 dark:border-zinc-800 */}
                   <div className="p-[10px_14px] rounded-[10px] font-mono text-[10px] leading-[2] break-all
                                   bg-sky-100/60 dark:bg-zinc-900/30
                                   border border-sky-200 dark:border-zinc-800
                                   text-sky-400 dark:text-zinc-600">
-                    {/* BIT STREAM label: text-slate-400 */}
-                    <div className="text-[11px] mb-[6px] text-slate-400 dark:text-slate-400">
+                    <div className="text-[11px] mb-[6px] text-slate-400">
                       BIT STREAM →
                     </div>
                     {["10101010","10101011","00000001","00000110","01000101",
@@ -342,9 +401,7 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
                       <span
                         key={i}
                         className={`mr-[5px] ${
-                          i % 2 === 0
-                            ? "text-slate-400"
-                            : "text-sky-400 dark:text-zinc-600"
+                          i % 2 === 0 ? "text-slate-400" : "text-sky-400 dark:text-zinc-600"
                         }`}
                       >
                         {b}{" "}
@@ -355,18 +412,16 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
               )}
             </div>
 
-            {/* ── Right: packet builder ── */}
-            {/* bg-sky-100 dark:bg-zinc-800, border accent */}
+            {/* ── RIGHT: animated packet building ── */}
             <div
               className="p-[18px] rounded-2xl bg-sky-100 dark:bg-zinc-800"
               style={{ border: `1px solid ${layer.accent}30` }}
             >
+              {/* Label row */}
               <div className="flex justify-between items-center mb-3">
-                {/* label: text-sky-400 dark:text-zinc-600 */}
                 <span className="text-[10px] font-mono text-sky-400 dark:text-zinc-600">
                   {layer.protocol} HEADER GENERATION
                 </span>
-                {/* ✓ built: text-green-500 */}
                 <motion.span
                   style={{ opacity: headerShow }}
                   className="text-[10px] font-mono text-green-500"
@@ -375,7 +430,34 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
                 </motion.span>
               </div>
 
-              {/* Header fields — each animated via extracted sub-component */}
+              {/* ── Phase 1: Incoming PDU drags down from the layer above ── */}
+              <motion.div style={{ y: incomingY, opacity: incomingOpacity }}>
+                {index === 0
+                  ? <DataSourceCard accent={layer.accent} />
+                  : <IncomingPacketCard layer={prevLayer!} />
+                }
+              </motion.div>
+
+              {/* ── Phase 2a: Separator — signals header is being added ── */}
+              <motion.div
+                style={{ opacity: separatorOpacity }}
+                className="flex items-center gap-2 my-3"
+              >
+                <div className="flex-1 h-px bg-sky-200 dark:bg-zinc-700/50" />
+                <span
+                  className="text-[9px] font-mono px-2 py-[3px] rounded whitespace-nowrap"
+                  style={{
+                    color: layer.accent,
+                    background: `${layer.accent}12`,
+                    border: `1px solid ${layer.accent}35`,
+                  }}
+                >
+                  + {layer.protocol} HEADER ↓
+                </span>
+                <div className="flex-1 h-px bg-sky-200 dark:bg-zinc-700/50" />
+              </motion.div>
+
+              {/* ── Phase 2b: Header fields slide in from left, one by one ── */}
               {layer.fields.map((field, fi) => (
                 <AnimatedFieldRow
                   key={field.name}
@@ -387,24 +469,6 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
                 />
               ))}
 
-              {/* Payload from upper layer */}
-              {/* bg-sky-100 dark:bg-zinc-800/50, border-sky-200 dark:border-zinc-700/50 */}
-              <motion.div
-                style={{ opacity: payloadOpacity }}
-                className="mt-2 p-[8px_12px] rounded-lg
-                           bg-sky-100 dark:bg-zinc-800/50
-                           border border-dashed border-sky-200 dark:border-zinc-700/50"
-              >
-                {/* label: text-sky-400 dark:text-zinc-600 */}
-                <div className="text-[10px] font-mono text-sky-400 dark:text-zinc-600">
-                  {index === 0 ? "GENERATED DATA" : "PAYLOAD (UPPER LAYER)"}
-                </div>
-                {/* value: text-sky-500 dark:text-zinc-500 */}
-                <div className="text-xs font-mono mt-0.5 text-sky-500 dark:text-zinc-500">
-                  {layer.payloadLabel}
-                </div>
-              </motion.div>
-
               {/* Ethernet FCS trailer */}
               {layer.trailer && (
                 <motion.div style={{ opacity: trailerOpacity }} className="mt-1">
@@ -412,13 +476,12 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
                 </motion.div>
               )}
 
-              {/* Accumulated packet strip */}
+              {/* ── Phase 4: Full PDU strip ── */}
               <motion.div style={{ opacity: encapShow }}>
-                <PacketStrip upToIndex={index} show={true} />
+                <PacketStrip upToIndex={index} />
               </motion.div>
 
-              {/* Arrow hint to next layer */}
-              {index < LAYERS.length - 1 && (
+              {!isLast && (
                 <motion.div
                   style={{ opacity: encapShow }}
                   className="mt-[14px] text-center text-[11px] font-mono text-sky-400 dark:text-zinc-600"
@@ -427,7 +490,6 @@ function LayerSection({ layer, index }: { layer: Layer; index: number }) {
                 </motion.div>
               )}
 
-              {/* Final layer message */}
               {isLast && (
                 <motion.div
                   style={{ opacity: encapShow }}
@@ -479,30 +541,28 @@ export default function OSIPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
-          {/* Badge: bg-sky-100/60 dark:bg-zinc-900/30, border-sky-200 dark:border-zinc-800 */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full mb-5
-                          bg-sky-100/60 dark:bg-zinc-900/30
-                          border border-sky-200 dark:border-zinc-800
-                          text-[12px] font-mono"
-               style={{ color: LAYERS[0].accent }}>
+          <div
+            className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full mb-5
+                        bg-sky-100/60 dark:bg-zinc-900/30
+                        border border-sky-200 dark:border-zinc-800
+                        text-[12px] font-mono"
+            style={{ color: LAYERS[0].accent }}
+          >
             Interactive · Scroll-driven · Reversible
           </div>
 
-          {/* H1: text-sky-950 dark:text-zinc-100 */}
           <h1 className="text-[clamp(28px,5vw,52px)] font-extrabold leading-[1.2] mb-4
                          text-sky-950 dark:text-zinc-100">
             TCP/IP Encapsulation
           </h1>
 
-          {/* p: text-sky-500 dark:text-zinc-500 */}
           <p className="text-base max-w-[520px] mx-auto mb-8 leading-[1.7]
                         text-sky-500 dark:text-zinc-500">
-            Watch a TFTP file transfer travel down the OSI stack — each layer
-            wrapping the data in its own header. Scroll down to transmit,
-            scroll up to reverse.
+            Watch a TFTP file transfer travel down the OSI stack. Each layer
+            drags the packet in from above and appends its own header around it.
+            Scroll down to transmit, scroll up to reverse.
           </p>
 
-          {/* Protocol badges */}
           <div className="flex gap-2 justify-center flex-wrap">
             {LAYERS.map((l) => (
               <span
@@ -520,7 +580,6 @@ export default function OSIPage() {
           </div>
         </motion.div>
 
-        {/* Scroll hint: text-sky-400 dark:text-zinc-600 */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -529,7 +588,10 @@ export default function OSIPage() {
                      text-sky-400 dark:text-zinc-600"
         >
           <span>start scrolling</span>
-          <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.4, repeat: Infinity }}>
+          <motion.div
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.4, repeat: Infinity }}
+          >
             ↓
           </motion.div>
         </motion.div>
@@ -541,12 +603,9 @@ export default function OSIPage() {
           <div key={layer.osiNumber} id={`layer-${layer.osiNumber}`}>
             <LayerSection layer={layer} index={i} />
 
-            {/* Divider between layers */}
             {i < LAYERS.length - 1 && (
               <div className="flex items-center gap-4 pb-10 max-w-[860px] mx-auto">
-                {/* line: bg-sky-200 dark:bg-zinc-800 */}
                 <div className="flex-1 h-px bg-sky-200 dark:bg-zinc-800" />
-                {/* text: text-sky-400 dark:text-zinc-600 */}
                 <div className="flex items-center gap-2 text-[11px] font-mono text-sky-400 dark:text-zinc-600">
                   <span style={{ color: layer.accent }}>↓</span>
                   <span>{layer.protocol} hands off to {LAYERS[i + 1].protocol}</span>
@@ -569,23 +628,17 @@ export default function OSIPage() {
                    bg-sky-100 dark:bg-zinc-800
                    border border-sky-200 dark:border-zinc-800"
       >
-        {/* Status: text-green-500 */}
         <div className="text-[13px] font-mono mb-3 text-green-500">
           ✓ TRANSMISSION COMPLETE
         </div>
-
-        {/* H2: text-sky-950 dark:text-zinc-100 */}
         <h2 className="text-xl font-bold mb-2 text-sky-950 dark:text-zinc-100">
           Complete Encapsulation
         </h2>
-
-        {/* p: text-sky-500 dark:text-zinc-500 */}
         <p className="text-[13px] mb-6 leading-[1.7] text-sky-500 dark:text-zinc-500">
           The TFTP data payload has been wrapped by 4 protocol headers and is
           ready for physical transmission as an Ethernet frame.
         </p>
 
-        {/* Final packet visualization */}
         <div className="flex gap-[3px] justify-center flex-wrap items-center">
           {(["Ethernet", "IPv4", "UDP", "TFTP"] as const).map((p, i) => {
             const colors = ["#fbbf24", "#34d399", "#60a5fa", "#a78bfa"];
@@ -603,16 +656,12 @@ export default function OSIPage() {
               </div>
             );
           })}
-
-          {/* DATA: bg-sky-100 dark:bg-zinc-800, border-sky-200 dark:border-zinc-700/50, text-sky-400 dark:text-zinc-600 */}
           <div className="px-5 py-1.5 rounded-md text-xs font-mono
                           bg-sky-100 dark:bg-zinc-800
                           border border-sky-200 dark:border-zinc-700/50
                           text-sky-400 dark:text-zinc-600">
             DATA ████████████
           </div>
-
-          {/* FCS: Ethernet accent color */}
           <div className="text-xs font-mono" style={{ color: "#fbbf24" }}>
             FCS
           </div>
@@ -621,8 +670,7 @@ export default function OSIPage() {
         <div className="mt-6">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl no-underline
-                       text-[13px] font-mono"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl no-underline text-[13px] font-mono"
             style={{
               background: `${LAYERS[0].accent}20`,
               border: `1px solid ${LAYERS[0].accent}40`,
