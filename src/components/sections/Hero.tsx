@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "@/data";
 import { ArrowDown, MapPin, Mail, Briefcase, SkipForward } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { SiResearchgate, SiMedium } from "react-icons/si";
+import { Globe } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -580,9 +582,12 @@ export default function Hero() {
               className="flex items-center justify-center gap-4"
             >
               {[
-                { href: personalInfo.github,            icon: <FaGithub size={20} />,   label: "GitHub"   },
-                { href: personalInfo.linkedin,          icon: <FaLinkedin size={20} />, label: "LinkedIn" },
-                { href: `mailto:${personalInfo.email}`, icon: <Mail size={20} />,       label: "Email"    },
+                { href: personalInfo.github,            icon: <FaGithub size={20} />,       label: "GitHub"       },
+                { href: personalInfo.linkedin,          icon: <FaLinkedin size={20} />,     label: "LinkedIn"     },
+                { href: personalInfo.researchgate,      icon: <SiResearchgate size={20} />, label: "ResearchGate" },
+                { href: personalInfo.medium,            icon: <SiMedium size={20} />,       label: "Medium"       },
+                { href: personalInfo.blog,              icon: <Globe size={20} />,          label: "Blog"         },
+                { href: `mailto:${personalInfo.email}`, icon: <Mail size={20} />,           label: "Email"        },
               ].map(({ href, icon, label }) => (
                 <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}
                   className="p-2.5 text-sky-500 dark:text-zinc-500 hover:text-violet-400 hover:bg-sky-100 dark:bg-zinc-800 rounded-lg transition-all duration-200">

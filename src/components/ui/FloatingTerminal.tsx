@@ -99,7 +99,19 @@ export default function FloatingTerminal() {
         Object.entries(COMMANDS)
           .map(([c, { description }]) => `  ${c.padEnd(28)} # ${description}`)
           .join("\n") +
-        "\n  clear                        # Clear terminal\n  help                         # Show this message"
+        "\n  ─────────────────────────────────────────" +
+        "\n  top                          # Scroll to top of page" +
+        "\n  bottom                       # Scroll to bottom of page" +
+        "\n  date                         # Show current date & time" +
+        "\n  uname                        # System information" +
+        "\n  history                      # Command history" +
+        "\n  echo <text>                  # Print text" +
+        "\n  open <url>                   # Open URL in new tab" +
+        "\n  neofetch                     # System overview" +
+        "\n  man                          # Full manual" +
+        "\n  clear / Ctrl+L               # Clear terminal" +
+        "\n  exit / quit                  # Close terminal" +
+        "\n  help                         # This message"
       });
       setInput("");
       return;
@@ -129,6 +141,115 @@ export default function FloatingTerminal() {
       setInput("");
       setTimeout(() => setIsOpen(false), 300);
       addEntry({ cmd: raw, ok: true, output: "Closing terminal..." });
+      return;
+    }
+
+    if (cmd === "top" || cmd === "scroll top" || cmd === "go top") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      addEntry({ cmd: raw, ok: true, output: "Scrolled to top." });
+      setInput("");
+      return;
+    }
+
+    if (cmd === "bottom" || cmd === "scroll bottom" || cmd === "go bottom") {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+      addEntry({ cmd: raw, ok: true, output: "Scrolled to bottom." });
+      setInput("");
+      return;
+    }
+
+    if (cmd === "date") {
+      addEntry({ cmd: raw, ok: true, output: new Date().toString() });
+      setInput("");
+      return;
+    }
+
+    if (cmd === "uname" || cmd === "uname -a") {
+      addEntry({ cmd: raw, ok: true, isInfo: true, output:
+        "PortfolioOS 1.0.0 — Next.js 16 · TypeScript · Tailwind v4\n" +
+        "Arch: web · Kernel: react-18 · Shell: bash (portfolio edition)"
+      });
+      setInput("");
+      return;
+    }
+
+    if (cmd === "history") {
+      if (cmdHistory.length === 0) {
+        addEntry({ cmd: raw, ok: true, output: "No commands in history yet." });
+      } else {
+        addEntry({ cmd: raw, ok: true, isInfo: true, output:
+          cmdHistory
+            .slice()
+            .reverse()
+            .map((c, i) => `  ${String(i + 1).padStart(3)}  ${c}`)
+            .join("\n")
+        });
+      }
+      setInput("");
+      return;
+    }
+
+    if (cmd.startsWith("echo ")) {
+      addEntry({ cmd: raw, ok: true, output: raw.slice(5) });
+      setInput("");
+      return;
+    }
+
+    if (cmd.startsWith("open ")) {
+      const url = raw.trim().slice(5).trim();
+      if (url.startsWith("http://") || url.startsWith("https://")) {
+        window.open(url, "_blank", "noopener,noreferrer");
+        addEntry({ cmd: raw, ok: true, output: `Opening ${url}...` });
+      } else {
+        addEntry({ cmd: raw, ok: false, output: `open: invalid URL — must start with http:// or https://` });
+      }
+      setInput("");
+      return;
+    }
+
+    if (cmd === "man" || cmd === "man help") {
+      addEntry({ cmd: raw, ok: true, isInfo: true, output:
+        "PORTFOLIO TERMINAL MANUAL\n" +
+        "─────────────────────────────────────────────\n" +
+        "NAVIGATION\n" +
+        "  cd /home/<section>   Navigate to a section\n" +
+        "  ls                   List all sections\n" +
+        "  pwd                  Print working directory\n\n" +
+        "SCROLL\n" +
+        "  top                  Scroll to top of page\n" +
+        "  bottom               Scroll to bottom of page\n\n" +
+        "SYSTEM\n" +
+        "  date                 Show current date & time\n" +
+        "  uname                Show system information\n" +
+        "  history              Show command history\n" +
+        "  echo <text>          Print text to terminal\n" +
+        "  open <url>           Open a URL in new tab\n\n" +
+        "TERMINAL\n" +
+        "  clear / Ctrl+L       Clear terminal\n" +
+        "  exit / quit          Close terminal\n" +
+        "  help                 Quick command list\n" +
+        "  man                  This manual\n\n" +
+        "KEYBOARD\n" +
+        "  Tab                  Autocomplete command\n" +
+        "  ↑ / ↓               Browse command history"
+      });
+      setInput("");
+      return;
+    }
+
+    if (cmd === "neofetch") {
+      addEntry({ cmd: raw, ok: true, isInfo: true, output:
+        "        /\\         visitor@shanjid\n" +
+        "       /  \\        ───────────────\n" +
+        "      / /\\ \\       OS: PortfolioOS · Next.js 16\n" +
+        "     / /  \\ \\      Host: shanjidarefin.vercel.app\n" +
+        "    / /    \\ \\     Shell: bash (portfolio edition)\n" +
+        "   / / /\\   \\ \\    Stack: TypeScript · Tailwind v4\n" +
+        "  /_/  \\_\\   \\_\\   Role: Software R&D Engineer\n" +
+        "                   Company: Shanghai BDCOM\n" +
+        "                   Degree: B.Sc CSE · KUET '24"
+      });
+      setInput("");
       return;
     }
 

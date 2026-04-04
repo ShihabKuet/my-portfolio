@@ -1,18 +1,21 @@
 import { NavItem, Experience, Education, Project, Skill, Publication } from "@/types";
 
 export const personalInfo = {
-  name: "MD. SHANJID AREFIN",              // ← Replace with your name
-  role: "Software Engineer (R&D)",
-  company: "Shanghai BDCOM (Bangladesh)",
-  email: "shihabkuetcse@gmail.com",        // ← Replace
-  github: "https://github.com/ShihabKuet",  // ← Replace
-  linkedin: "https://linkedin.com/in/shihabkuet", // ← Replace
-  location: "Dhaka, Bangladesh",
+  name:         "MD. SHANJID AREFIN",
+  role:         "Software Engineer (R&D)",
+  company:      "Shanghai BDCOM (Bangladesh)",
+  email:        "shihabkuetcse@gmail.com",
+  github:       "https://github.com/ShihabKuet",
+  linkedin:     "https://linkedin.com/in/shihabkuet",
+  researchgate: "https://www.researchgate.net/profile/Md-Shanjid-Arefin",
+  medium:       "https://medium.com/@shihabkuetcse",
+  blog:         "https://sanzidarefin.wordpress.com",
+  location:     "Dhaka, Bangladesh",
   bio: `Software Engineer (R&D) at Shanghai BDCOM with a passion for building 
   scalable systems and exploring emerging technologies. 
   Graduated from KUET in 2024 with a degree in Computer Science & Engineering. 
   I love turning complex problems into elegant solutions.`,
-  shortBio: "Building scalable systems & exploring emerging tech.",
+  shortBio:     "Building scalable systems & exploring emerging tech.",
   availableForWork: false,
 };
 
