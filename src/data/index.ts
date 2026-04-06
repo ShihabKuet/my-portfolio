@@ -65,17 +65,37 @@ export const education: Education[] = [
   },
 ];
 
+// Skill Section Data
+import {
+  SiCplusplus, SiPython, SiJavascript, SiTypescript,
+  SiPostgresql, SiGnubash, SiReact, SiNextdotjs,
+  SiTailwindcss, SiNodedotjs, SiLinux, SiGit, SiWireshark,
+} from "react-icons/si";
+import { 
+  TbBrandJavascript, TbBrandTypescript 
+} from "react-icons/tb";
+import { Database, Globe, Cpu, Wrench } from "lucide-react";
+
 export const skills: Skill[] = [
-  { name: "Python",     level: 85, category: "languages" },
-  { name: "C/C++",      level: 80, category: "languages" },
-  { name: "JavaScript", level: 75, category: "languages" },
-  { name: "TypeScript", level: 70, category: "languages" },
-  { name: "React",      level: 75, category: "frontend" },
-  { name: "Next.js",    level: 65, category: "frontend" },
-  { name: "Tailwind",   level: 70, category: "frontend" },
-  { name: "Node.js",    level: 65, category: "backend" },
-  { name: "Linux",      level: 80, category: "tools" },
-  { name: "Git",        level: 80, category: "tools" },
+  // Languages
+  { name: "C/C++",         stars: 5, category: "languages", icon: SiCplusplus         },
+  { name: "Python",        stars: 4, category: "languages", icon: SiPython            },
+  { name: "JavaScript",    stars: 4, category: "languages", icon: TbBrandJavascript   },
+  { name: "TypeScript",    stars: 3, category: "languages", icon: TbBrandTypescript   },
+  { name: "SQL",           stars: 4, category: "languages", icon: SiPostgresql        },
+  { name: "Bash / Shell",  stars: 4, category: "languages", icon: SiGnubash           },
+  // Frontend
+  { name: "React",         stars: 4, category: "frontend",  icon: SiReact             },
+  { name: "Next.js",       stars: 3, category: "frontend",  icon: SiNextdotjs         },
+  { name: "Tailwind CSS",  stars: 4, category: "frontend",  icon: SiTailwindcss       },
+  // Backend
+  { name: "Node.js",       stars: 3, category: "backend",   icon: SiNodedotjs         },
+  { name: "REST API",      stars: 4, category: "backend",   icon: Globe               },
+  // Tools
+  { name: "Linux",         stars: 5, category: "tools",     icon: SiLinux             },
+  { name: "Git",           stars: 4, category: "tools",     icon: SiGit               },
+  { name: "GCC / GDB",     stars: 4, category: "tools",     icon: Cpu                 },
+  { name: "Wireshark",     stars: 4, category: "tools",     icon: SiWireshark         },
 ];
 
 export const projects: Project[] = [

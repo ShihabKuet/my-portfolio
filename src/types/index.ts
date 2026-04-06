@@ -1,3 +1,7 @@
+import type { ComponentType, SVGProps } from "react";
+
+export type SkillIcon = ComponentType<{ size?: number; className?: string } & SVGProps<SVGSVGElement>>;
+
 // These interfaces describe what your data looks like.
 // Think of them as contracts: "a Project MUST have these fields."
 
@@ -8,9 +12,10 @@ export interface NavItem {
 }
 
 export interface Skill {
-  name: string;
-  level: number; // 0-100
+  name:     string;
+  stars:    1 | 2 | 3 | 4 | 5;   // 1–5 star rating
   category: "frontend" | "backend" | "tools" | "languages";
+  icon?:    SkillIcon;
 }
 
 export interface Experience {
