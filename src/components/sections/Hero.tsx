@@ -11,17 +11,40 @@ import { Globe } from "lucide-react";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Phase =
-  | "segfault" | "typing-nano" | "editor"
-  | "fixing"   | "saving"      | "compiling"
-  | "output"   | "done";
+  | "segfault"
+  | "typing-nano"
+  | "editor"
+  | "fixing"
+  | "saving"
+  | "compiling"
+  | "output"
+  | "done";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// ─── Terminal Content Constants ────────────────────────────────────────────────────────────────
 
-const NANO_CMD    = "nano Portfolio.c";
-const EDIT_FROM   = "*name";
-const EDIT_TO     = '"MD. SHANJID AREFIN"';
-const COMPILE_CMD = "gcc Portfolio.c -o portfolio && ./portfolio";
-const OUTPUT_TEXT = "Hello World! I am MD. SHANJID AREFIN";
+const NANO_CMD    = "nano shanjid_arefin.c";
+const COMPILE_CMD = "gcc shanjid_arefin.c -o shanjid_arefin && ./shanjid_arefin";
+
+// What the terminal animation is simulating:
+// The bug: dev pointer is NULL — dereferencing causes SIGSEGV
+// The fix: properly initialize the struct fields
+const BUGGY_LINE  = 'Engineer *dev = NULL;';
+const FIXED_LINE  = 'Engineer *dev = &profile;';
+
+// Multi-line output — each line typed after previous completes
+const OUTPUT_LINES = [
+  { text: "[BOOT]  Initializing engineer profile...",                          color: "#6b7280", delay: 0    },
+  { text: "[OK]    Hello World! I'm MD. SHANJID AREFIN",                      color: "#818cf8", delay: 380  },
+  { text: "[OK]    Role     : Software R&D Engineer @ Shanghai BDCOM",         color: "#4ade80", delay: 320  },
+  { text: "[OK]    Stack    : C · Embedded Systems · Network Protocols",       color: "#4ade80", delay: 300  },
+  { text: "[OK]    Skills   : RADIUS · TACACS+ · AAA · ACL · SNMP · 802.1X", color: "#4ade80", delay: 320  },
+  { text: "[OK]    IEEE     : Published — Network Security Research",          color: "#4ade80", delay: 300  },
+  { text: "[OK]    RFC      : TFTP (RFC 1350) · Implemented from spec",        color: "#4ade80", delay: 300  },
+  { text: "[OK]    Degree   : B.Sc CSE — KUET, 2024",                         color: "#4ade80", delay: 280  },
+  { text: "[INFO]  Fixing bugs in the network stack...",                       color: "#fbbf24", delay: 500  },
+  { text: "[INFO]  Status   : Ready to build something great.",                color: "#fbbf24", delay: 400  },
+  { text: "[DONE]  All systems operational. Uptime: ∞",                        color: "#22c55e", delay: 500  },
+];
 
 // ─── Social links (defined at module level — stable reference) ────────────────
 
@@ -49,9 +72,9 @@ const Cursor = ({ color = "#4ade80" }: { color?: string }) => (
 
 const Prompt = () => (
   <span style={{ fontFamily: "monospace" }}>
-    <span style={{ color: "#4ade80" }}>user</span>
+    <span style={{ color: "#4ade80" }}>visitor</span>
     <span style={{ color: "#6b7280" }}>@</span>
-    <span style={{ color: "#818cf8" }}>portfolio</span>
+    <span style={{ color: "#818cf8" }}>shanjid-portfolio</span>
     <span style={{ color: "#6b7280" }}>:~$ </span>
   </span>
 );
@@ -63,26 +86,29 @@ const Fn  = ({ c }: { c: string }) => <span style={{ color: "#50fa7b" }}>{c}</sp
 const St  = ({ c }: { c: string }) => <span style={{ color: "#f1fa8c" }}>{c}</span>;
 const Inc = ({ c }: { c: string }) => <span style={{ color: "#8be9fd" }}>{c}</span>;
 const Num = ({ c }: { c: string }) => <span style={{ color: "#bd93f9" }}>{c}</span>;
+const Cm   = ({ c }: { c: string }) => <span style={{ color: "#6272a4", fontStyle: "italic" }}>{c}</span>;
+const Err  = ({ c }: { c: string }) => <span style={{ color: "#ff5555", fontWeight: 700 }}>{c}</span>;
+const Ty   = ({ c }: { c: string }) => <span style={{ color: "#8be9fd" }}>{c}</span>;
 
 // ─── Nano line ────────────────────────────────────────────────────────────────
 
-function NLine({ n, eof, children }: {
-  n?: number; eof?: boolean; children?: React.ReactNode;
+function NLine({ n, eof, children, highlight }: {
+  n?: number; eof?: boolean; highlight?: boolean; children?: React.ReactNode;
 }) {
   if (eof) return (
-    <div style={{ display: "flex", lineHeight: 1.82, fontSize: "0.82rem" }}>
-      <span style={{ minWidth: "2.8rem", textAlign: "right", paddingRight: "0.9rem", color: "#2a2a42", userSelect: "none", fontSize: "0.74rem" }}>~</span>
+    <div style={{ display: "flex", lineHeight: 1.75, fontSize: "0.80rem" }}>
+      <span style={{ minWidth: "2.6rem", textAlign: "right", paddingRight: "0.8rem", color: "#2a2a42", userSelect: "none", fontSize: "0.72rem" }}>~</span>
     </div>
   );
   return (
-    <div style={{ display: "flex", lineHeight: 1.82, fontSize: "0.82rem" }}>
-      <span style={{ minWidth: "2.8rem", textAlign: "right", paddingRight: "0.9rem", color: "#1e1e32", userSelect: "none", fontSize: "0.74rem", flexShrink: 0 }}>{n}</span>
+    <div style={{ display: "flex", lineHeight: 1.75, fontSize: "0.80rem", background: highlight ? "rgba(255,85,85,0.08)" : "transparent", borderLeft: highlight ? "2px solid #ff5555" : "2px solid transparent" }}>
+      <span style={{ minWidth: "2.6rem", textAlign: "right", paddingRight: "0.8rem", color: highlight ? "#ff5555" : "#1e1e32", userSelect: "none", fontSize: "0.72rem", flexShrink: 0 }}>{n}</span>
       <span style={{ color: "#c8ccd8", whiteSpace: "pre", flex: 1 }}>{children ?? ""}</span>
     </div>
   );
 }
 
-// ─── LeftContent — defined OUTSIDE Hero so it never remounts on phase change ──
+// ─── LeftContent — defined OUTSIDE Hero to prevent re-animation on phase change ──
 //
 // WHY: When a component is defined inside another component, React creates a new
 // function reference on every render of the parent. React sees a different component
@@ -199,11 +225,11 @@ function LeftContent({ centered }: LeftContentProps) {
 export default function Hero() {
   const [phase,        setPhase]        = useState<Phase>("segfault");
   const [nanoTyped,    setNanoTyped]    = useState("");
-  const [editText,     setEditText]     = useState(EDIT_FROM);
   const [savingStep,   setSavingStep]   = useState(0);
   const [compileTyped, setCompileTyped] = useState("");
-  const [outLen,       setOutLen]       = useState(0);
-  const [outputDone,   setOutputDone]   = useState(false);
+  const [editFixed,     setEditFixed]   = useState(false);  // true = show fixed line
+  const [editProgress,  setEditProgress]= useState("");     // typewriter during fix
+  const [outputLines,   setOutputLines] = useState<typeof OUTPUT_LINES>([]);
   const [showTerminal, setShowTerminal] = useState(true);
   const cancelRef                       = useRef(false);
 
@@ -222,45 +248,63 @@ export default function Hero() {
     };
 
     const run = async () => {
+      // 1. Segfault sits for 2.2s
       await sleep(2200);              if (abort()) return;
+
+      // 2. Type "nano shanjid_arefin.c"
       setPhase("typing-nano");
-      await type(NANO_CMD, setNanoTyped, 80);
+      await type(NANO_CMD, setNanoTyped, 20);
       await sleep(1300);              if (abort()) return;
+
+      // 3. Editor opens — show buggy code
       setPhase("editor");
       await sleep(900);               if (abort()) return;
+
+      // 4. Fix the bug: backspace only "NULL;" → typewrite "&profile;"
+      const FIX_PREFIX = "Engineer *dev = ";  // the part we keep
+      const FIX_REMOVE = "NULL;";             // only these chars get backspaced
+      const FIX_ADD    = "&profile;";         // then typed in
+
       setPhase("fixing");
-      for (let i = EDIT_FROM.length; i >= 0; i--) {
+      setEditProgress(BUGGY_LINE);            // start from full buggy line
+
+      // Backspace only "NULL;" character by character
+      for (let i = FIX_REMOVE.length; i >= 0; i--) {
         if (abort()) return;
-        setEditText(EDIT_FROM.slice(0, i));
-        await sleep(90);
+        setEditProgress(FIX_PREFIX + FIX_REMOVE.slice(0, i));
+        await sleep(60);
       }
-      for (let i = 1; i <= EDIT_TO.length; i++) {
+      // Typewrite "&profile;"
+      for (let i = 1; i <= FIX_ADD.length; i++) {
         if (abort()) return;
-        setEditText(EDIT_TO.slice(0, i));
-        await sleep(85);
+        setEditProgress(FIX_PREFIX + FIX_ADD.slice(0, i));
+        await sleep(70);
       }
-      await sleep(420);              if (abort()) return;
+      
+      await sleep(500);                    if (abort()) return;
+      setEditFixed(true);
+
+      // 5. Ctrl+X save sequence
       setPhase("saving");
       await sleep(320); if (abort()) return; setSavingStep(1);
       await sleep(700); if (abort()) return; setSavingStep(2);
       await sleep(700); if (abort()) return; setSavingStep(3);
       await sleep(950);              if (abort()) return;
+
+      // 6. Type compile command
       setPhase("compiling");
       await type(COMPILE_CMD, setCompileTyped, 36);
       await sleep(420);              if (abort()) return;
+
+      // 7. Output lines appear one by one with individual delays
       setPhase("output");
-      await sleep(500);
-      await new Promise<void>(resolve => {
-        let i = 0;
-        const iv = setInterval(() => {
-          if (abort()) { clearInterval(iv); resolve(); return; }
-          setOutLen(++i);
-          if (i >= OUTPUT_TEXT.length) { clearInterval(iv); resolve(); }
-        }, 55);
-      });
-      if (abort()) return;
-      setOutputDone(true);
-      await sleep(2400);             if (abort()) return;
+      for (let i = 0; i < OUTPUT_LINES.length; i++) {
+        if (abort()) return;
+        await sleep(OUTPUT_LINES[i].delay);
+        if (abort()) return;
+        setOutputLines(prev => [...prev, OUTPUT_LINES[i]]);
+      }
+      await sleep(2000);                   if (abort()) return;
       setPhase("done");
     };
 
@@ -282,6 +326,15 @@ export default function Hero() {
     const modified   = isFix || (isSave && savingStep < 3);
     const showCursor = phase === "editor" || isFix;
 
+      // What shows on the buggy/fixed line
+    const lineSrc = editFixed
+      ? FIXED_LINE
+      : isFix
+      ? editProgress
+      : BUGGY_LINE;
+
+    const isFixed = editFixed || (isFix && editProgress === FIXED_LINE);
+
     const statusContent = (() => {
       if (!isSave) return null;
       if (savingStep === 1) return (
@@ -291,47 +344,89 @@ export default function Hero() {
       );
       if (savingStep === 2) return (
         <span>File Name to Write:{" "}
-          <span style={{ color: "#050510", fontWeight: 700 }}>Portfolio.c</span>
+          <span style={{ color: "#050510", fontWeight: 700 }}>shanjid_arefin.c</span>
           <span style={{ display: "inline-block", width: 7, height: "0.85em", background: "#050510", marginLeft: 2, verticalAlign: "middle" }} />
         </span>
       );
-      if (savingStep === 3) return <span style={{ color: "#155724" }}>[ Wrote 7 lines ]</span>;
+      if (savingStep === 3) return <span style={{ color: "#155724" }}>[ Wrote 22 lines ]</span>;
     })();
 
     return (
       <div style={{ fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace", width: "100%" }}>
+        
+        {/* nano title bar */}
         <div style={{ background: "#c4c8d4", color: "#050510", fontSize: "0.78rem", fontWeight: 700, padding: "0.2rem 0.8rem", display: "flex", justifyContent: "space-between" }}>
           <span>GNU nano 5.4</span>
-          <span>Portfolio.c{modified && <span style={{ color: "#6b2e00" }}> [Modified]</span>}</span>
+          <span>shanjid_arefin.c{modified && <span style={{ color: "#6b2e00" }}> [Modified]</span>}</span>
           <span />
         </div>
-        <div style={{ background: "#06060d", padding: "0.4rem 0", minHeight: 180 }}>
+
+        {/* Code body */}
+        <div style={{ background: "#06060d", padding: "0.35rem 0", minHeight: 230 }}>
+
           <NLine n={1}><Inc c="#include" /> <St c="&lt;stdio.h&gt;" /></NLine>
-          <NLine n={2} />
-          <NLine n={3}><Kw c="int" /> <Fn c="main" />{"() {"}</NLine>
-          <NLine n={4}>{"    "}<Kw c="char" />{" *name = "}<St c={'"???";'} /></NLine>
-          <div style={{ display: "flex", lineHeight: 1.82, fontSize: "0.82rem", background: "rgba(0,212,255,0.035)", borderLeft: (showCursor || isSave) ? "2px solid #7c3aed" : "2px solid transparent" }}>
-            <span style={{ minWidth: "2.8rem", textAlign: "right", paddingRight: "0.9rem", color: "#1e1e32", userSelect: "none", fontSize: "0.74rem", flexShrink: 0 }}>5</span>
+          <NLine n={2}><Inc c="#include" /> <St c="&lt;string.h&gt;" /></NLine>
+          <NLine n={3} />
+          <NLine n={4}><Cm c="/* Engineer profile — network software R&D */" /></NLine>
+          <NLine n={5}><Kw c="typedef" /> <Kw c="struct" /> {"{"}</NLine>
+          <NLine n={6}>{"    "}<Ty c="char" /> <Cm c="*name" />{", "}<Cm c="*role" />{", "}<Cm c="*stack" />{";"}</NLine>
+          <NLine n={7}>{"    "}<Ty c="int" />{"  "}<Cm c="experience" />{";"}</NLine>
+          <NLine n={8}>{"} "}<Ty c="Engineer" />{";"}</NLine>
+          <NLine n={9} />
+          <NLine n={10}><Kw c="int" /> <Fn c="main" />{"() {"}</NLine>
+          <NLine n={11}>{"    "}<Ty c="Engineer" />{" profile = {"}</NLine>
+          <NLine n={12}>{"        "}<St c={'"MD. SHANJID AREFIN"'} />{", "}<St c={'"R&D Engineer"'} />{","}</NLine>
+          <NLine n={13}>{"        "}<St c={'"C · Networking · Embedded"'} />{", "}<Num c="2" /></NLine>
+          <NLine n={14}>{"    "}{"}"}</NLine>
+
+          {/* Line 15 — the buggy/fixed line, highlighted in red while buggy */}
+          <div style={{
+            display: "flex", lineHeight: 1.75, fontSize: "0.80rem",
+            background: isFixed ? "rgba(80,250,123,0.06)" : "rgba(255,85,85,0.09)",
+            borderLeft: isFixed ? "2px solid #50fa7b" : "2px solid #ff5555",
+          }}>
+            <span style={{ minWidth: "2.6rem", textAlign: "right", paddingRight: "0.8rem", color: isFixed ? "#50fa7b" : "#ff5555", userSelect: "none", fontSize: "0.72rem", flexShrink: 0 }}>15</span>
             <span style={{ color: "#c8ccd8", whiteSpace: "pre", flex: 1 }}>
-              {"    "}<Fn c="printf" />{"("}<St c={'"Hello World! I am %s"'} />{", "}
-              <span style={{ color: editText.startsWith('"') ? "#f1fa8c" : "#c8ccd8" }}>{editText}</span>
-              {showCursor && (
+              {"    "}<Ty c="Engineer" />{" "}
+              {isFixed
+                ? <><span style={{ color: "#f1fa8c" }}>*dev = &amp;profile</span>{";"}</>
+                : isFix
+                ? <><Err c="*dev = " /><span style={{ color: "#f1fa8c" }}>{editProgress.replace("Engineer *dev = ", "").replace(";","")}</span>{";"}</>
+                : <><Err c="*dev = NULL" />{";"}</>
+              }
+              {showCursor && !editFixed && (
                 <motion.span
                   animate={{ opacity: [1, 1, 0, 0] }}
                   transition={{ duration: 0.72, repeat: Infinity, times: [0, 0.45, 0.5, 1] }}
-                  style={{ display: "inline-block", width: "0.50em", height: "1.12em", background: "#e8eaf4", verticalAlign: "text-bottom", marginLeft: 1 }}
+                  style={{ display: "inline-block", width: "0.48em", height: "1.1em", background: "#e8eaf4", verticalAlign: "text-bottom", marginLeft: 1 }}
                 />
               )}
-              {");"}
             </span>
           </div>
-          <NLine n={6}>{"    "}<Kw c="return" /> <Num c="0" />{";"}</NLine>
-          <NLine n={7}>{"}"}</NLine>
+
+          <NLine n={16} />
+
+          {/* The crash line — highlighted red before fix */}
+          <NLine n={17} highlight={!isFixed}>
+            {"    "}
+            {isFixed ? <Fn c="printf" /> : <Err c="printf" />}
+            {"("}
+            <St c={'"Hello World! I am %s\\n"'} />
+            {", dev->name);"}
+            {!isFixed && <Cm c="  // SIGSEGV: null ptr!" />}
+          </NLine>
+
+          <NLine n={18}>{"    "}<Kw c="return" /> <Num c="0" />{";"}</NLine>
+          <NLine n={19}>{"}"}</NLine>
           <NLine eof /><NLine eof />
         </div>
+
+        {/* Status bar */}
         <div style={{ background: "#c4c8d4", color: "#050510", fontSize: "0.75rem", fontWeight: 700, padding: "0.15rem 0.8rem", minHeight: "1.4rem" }}>
           {statusContent ?? "\u00a0"}
         </div>
+
+        {/* Shortcut grid */}
         <div style={{ background: "#06060d", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid #0e0e1e" }}>
           {[["^G","Help"],["^X","Exit"],["^O","Write Out"],["^W","Search"],["^K","Cut"],["^U","Paste"]].map(([k, l]) => (
             <span key={k} style={{ display: "flex", gap: "0.4rem", alignItems: "center", fontSize: "0.7rem", padding: "0.2rem 0.6rem", color: "#7880a0", fontFamily: "inherit" }}>
@@ -346,7 +441,11 @@ export default function Hero() {
   // ── bash terminal ─────────────────────────────────────────────────────────
   const renderBash = () => (
     <div style={{ padding: "14px 18px", fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace", fontSize: 12.5, lineHeight: 1.75, color: "#d4d4d8" }}>
-      <div style={{ marginBottom: 4 }}><Prompt />{"./portfolio"}</div>
+      
+      {/* Initial run — crashes */}
+      <div style={{ marginBottom: 4 }}><Prompt />{"./shanjid_arefin"}</div>
+
+      {/* Segfault with animated flicker */}
       <motion.div
         animate={{ opacity: [1, 0.5, 1, 0.72, 1, 0.58, 1, 0.8, 1, 1] }}
         transition={{ duration: 1.1, times: [0, 0.07, 0.14, 0.26, 0.38, 0.52, 0.63, 0.78, 0.9, 1], repeat: Infinity, repeatDelay: 0.9 }}
@@ -354,48 +453,69 @@ export default function Hero() {
       >
         Segmentation Fault (Core dumped)
       </motion.div>
-      <div style={{ color: "#ff7070", fontSize: "0.82rem", opacity: 0.82 }}>
-        Error: Cannot access memory at 0x0000004D
+      <div style={{ color: "#ff6060", fontSize: "0.80rem", opacity: 0.9, marginBottom: 2 }}>
+        Signal: SIGSEGV — invalid memory access
+      </div>
+      <div style={{ color: "#4b4b5a", fontSize: "0.78rem", marginBottom: 2 }}>
+        #0  0x000000 in main () at shanjid_arefin.c:17
+      </div>
+      <div style={{ color: "#3d3d50", fontSize: "0.77rem" }}>
+        &nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;Hello World! I am %s\n&quot;, dev-&gt;name);&nbsp;&nbsp;
+        <span style={{ color: "#ff4444", fontSize: "0.74rem" }}>← dev is NULL</span>
       </div>
 
-      {(["typing-nano","compiling","output"] as Phase[]).includes(phase) && (
-        <div style={{ marginTop: 10 }}>
+      {/* nano command */}
+      {(["typing-nano","compiling","output","done"] as Phase[]).includes(phase) && (
+        <div style={{ marginTop: 12 }}>
           <Prompt />
-          <span style={{ color: phase === "typing-nano" ? "#d4d4d8" : "#52525b" }}>{nanoTyped}</span>
+          <span style={{ color: (phase === "typing-nano") ? "#d4d4d8" : "#3d3d50" }}>
+            {nanoTyped}
+          </span>
           {phase === "typing-nano" && <Cursor />}
         </div>
       )}
-      {(["compiling","output"] as Phase[]).includes(phase) && (
+
+      {/* compile command */}
+      {(["compiling","output","done"] as Phase[]).includes(phase) && (
         <div>
           <Prompt />
-          <span style={{ color: phase === "compiling" ? "#d4d4d8" : "#52525b" }}>{compileTyped}</span>
+          <span style={{ color: phase === "compiling" ? "#d4d4d8" : "#3d3d50" }}>
+            {compileTyped}
+          </span>
           {phase === "compiling" && <Cursor />}
         </div>
       )}
-      {phase === "output" && (
+
+      {/* Multi-line output — lines appear sequentially */}
+      {(["output","done"] as Phase[]).includes(phase) && outputLines.length > 0 && (
         <div style={{ marginTop: 10 }}>
-          {outLen < OUTPUT_TEXT.length
-            ? <div><span style={{ color: "#c8ccd8" }}>{OUTPUT_TEXT.slice(0, outLen)}</span><Cursor color="#00d4ff" /></div>
-            : <div>
-                <span style={{ color: "#c8ccd8" }}>Hello World! I am </span>
-                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }} style={{ color: "#818cf8", fontWeight: 700, fontSize: 14 }}>
-                  MD. SHANJID AREFIN
-                </motion.span>
-              </div>
-          }
-          {outputDone && <div style={{ marginTop: 8 }}><Prompt /><Cursor /></div>}
+          {outputLines.map((line, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -6 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.2 }}
+              style={{ color: line.color, fontFamily: "monospace", fontSize: "0.80rem", lineHeight: 1.8 }}
+            >
+              {line.text}
+            </motion.div>
+          ))}
         </div>
       )}
-      {phase === "done" && (
-        <div style={{ marginTop: 10 }}>
-          <div>
-            <span style={{ color: "#c8ccd8" }}>Hello World! I am </span>
-            <span style={{ color: "#818cf8", fontWeight: 700, fontSize: 14 }}>MD. SHANJID AREFIN</span>
-          </div>
-          <div style={{ marginTop: 6 }}><Prompt /><Cursor /></div>
+
+      {/* Idle cursor after done */}
+      {(phase === "done" || (phase === "output" && outputLines.length === OUTPUT_LINES.length)) && (
+        <div style={{ marginTop: 8 }}>
+          <Prompt /><Cursor />
         </div>
       )}
-      {phase === "segfault" && <div style={{ marginTop: 10 }}><Prompt /><Cursor /></div>}
+
+      {/* Idle cursor during segfault phase */}
+      {phase === "segfault" && (
+        <div style={{ marginTop: 12 }}>
+          <Prompt /><Cursor />
+        </div>
+      )}
     </div>
   );
 
