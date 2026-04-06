@@ -38,7 +38,7 @@ function Prompt() {
     <span className="shrink-0 select-none font-mono text-sm">
       <span className="text-emerald-500 dark:text-emerald-400">visitor</span>
       <span className="text-sky-400 dark:text-zinc-500">@</span>
-      <span className="text-violet-600 dark:text-violet-400">shanjid</span>
+      <span className="text-violet-600 dark:text-violet-400">shanjid-portfolio</span>
       <span className="text-sky-400 dark:text-zinc-500">:~$ </span>
     </span>
   );
@@ -94,7 +94,7 @@ export default function FloatingTerminal() {
       return;
     }
 
-    if (cmd === "help") {
+    if (cmd === "help" || cmd === "?") {
       addEntry({ cmd: raw, ok: true, isInfo: true, output:
         Object.entries(COMMANDS)
           .map(([c, { description }]) => `  ${c.padEnd(28)} # ${description}`)
@@ -333,7 +333,7 @@ export default function FloatingTerminal() {
           >
             <Terminal size={15} className="group-hover:scale-110 transition-transform" />
             <span className="font-mono text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              visitor@shanjid:~$
+              visitor@shanjid-portfolio:~$
             </span>
             <motion.span
               animate={{ opacity: [1, 0] }}
@@ -389,7 +389,7 @@ export default function FloatingTerminal() {
               {/* Title */}
               <div className="flex-1 text-center">
                 <span className="font-mono text-xs text-zinc-500">
-                  visitor@shanjid — bash
+                  visitor@shanjid-portfolio — bash
                 </span>
               </div>
 
@@ -418,8 +418,8 @@ export default function FloatingTerminal() {
                   >
                     {/* Welcome message */}
                     {history.length === 0 && (
-                      <div className="text-zinc-600 text-xs mb-3 space-y-0.5">
-                        <div>Welcome to <span className="text-violet-400">shanjid</span>&apos;s portfolio terminal.</div>
+                      <div className="text-zinc-300 text-xs mb-3 space-y-0.5">
+                        <div>Welcome to <span className="text-violet-400">MD SHANJID AREFIN</span>&apos;s portfolio terminal.</div>
                         <div>Type <span className="text-yellow-400 font-bold">help</span> for commands · <span className="text-yellow-400 font-bold">ls</span> to list sections · <span className="text-yellow-400 font-bold">Tab</span> to autocomplete</div>
                         <div className="text-zinc-700">────────────────────────────────────</div>
                       </div>
