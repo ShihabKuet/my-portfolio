@@ -31,12 +31,29 @@ export default function About() {
             transition={{ duration: 0.6 }}
           >
             <p className="text-zinc-700 text-sky-800 dark:text-zinc-300 text-lg leading-relaxed mb-6">
-              {personalInfo.bio}
+              {personalInfo.aboutBio}
             </p>
-            <p className="text-zinc-900 text-sky-700 dark:text-zinc-400 leading-relaxed mb-8">
-              When I&apos;m not engineering software, I enjoy exploring new technologies,
-              contributing to open source, and writing about what I learn.
-            </p>
+
+            {/* Quote box */}
+            <div className="relative mb-8">
+              <div className="backdrop-blur-xl bg-white/10 dark:bg-blue-900/30 border border-white/20 dark:border-zinc-800/50 rounded-2xl p-6 shadow-lg">
+                
+                {/* Big quote mark */}
+                <span className="absolute -top-4 -left-2 text-6xl text-violet-500/30 font-serif select-none">
+                  “
+                </span>
+
+                <p className="text-sky-700 dark:text-zinc-300 italic leading-relaxed">
+                  When I&apos;m not engineering software, I enjoy exploring new technologies,
+                  contributing to open source, and writing about what I learn.
+                </p>
+
+                {/* Closing quote */}
+                <div className="flex justify-end mt-4">
+                  <span className="text-2xl text-violet-500/40 font-serif">”</span>
+                </div>
+              </div>
+            </div>
 
             {/* Quick stat pills */}
             <div className="grid grid-cols-2 gap-3">

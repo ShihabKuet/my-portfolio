@@ -11,10 +11,9 @@ export const personalInfo = {
   medium:       "https://medium.com/@shihabkuetcse",
   blog:         "https://sanzidarefin.wordpress.com",
   location:     "Dhaka, Bangladesh",
-  bio: `Software Engineer (R&D) at Shanghai BDCOM with a passion for building 
-  scalable systems and exploring emerging technologies. 
-  Graduated from KUET in 2024 with a degree in Computer Science & Engineering. 
-  I love turning complex problems into elegant solutions.`,
+  bio: `Software Engineer (R&D) at Shanghai BDCOM, working on network systems and low-level infrastructure.
+  KUET CSE graduate (2024). I focus on turning complex system problems into efficient, scalable solutions.`,
+  aboutBio:     "I graduated from KUET in 2024 with a degree in Computer Science & Engineering. Over time, I’ve become particularly interested in how systems work beneath the surface — from networking protocols to backend architecture",
   shortBio:     "Building scalable systems & exploring emerging tech.",
   availableForWork: false,
 };
