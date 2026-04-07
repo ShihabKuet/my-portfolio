@@ -16,8 +16,8 @@ export default function EducationEndian() {
     <section id="education" className="py-24 px-4">
       <div className="max-w-5xl mx-auto">
         <SectionHeading
-          title="Education (Endian View)"
-          subtitle="Same data, different ordering — just like Little vs Big Endian."
+          title="ACADEMIC QUALIFICATIONS"
+          subtitle="My educational background and achievements"
         />
 
         {/* Toggle */}
@@ -31,7 +31,7 @@ export default function EducationEndian() {
                   : "text-sky-700 dark:text-zinc-400 hover:text-white"
               }`}
             >
-              Little Endian
+              Little Endian View
             </button>
             <button
               onClick={() => setMode("big")}
@@ -41,7 +41,7 @@ export default function EducationEndian() {
                   : "text-sky-700 dark:text-zinc-400 hover:text-white"
               }`}
             >
-              Big Endian
+              Big Endian View
             </button>
           </div>
         </div>
@@ -70,13 +70,36 @@ export default function EducationEndian() {
                       isLeft ? "justify-start" : "justify-end"
                     }`}
                   >
-                    {/* Dot */}
-                    <div className="absolute left-1/2 -translate-x-1/2 top-6 w-5 h-5 rounded-full bg-violet-600 border-4 border-zinc-950 z-10" />
+
+                    {/* Arrow */}
+                    <div className="absolute left-1/2 -translate-x-1/2 top-4 z-10">
+                      <svg
+                        width="36"
+                        height="28"
+                        viewBox="0 0 36 28"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        style={{
+                          transform: isLeft ? "scaleX(-1)" : "scaleX(1)",
+                          filter: "drop-shadow(0 0 6px rgba(139,92,246,0.7))",
+                        }}
+                      >
+                        {/* Tail line */}
+                        <line x1="2" y1="14" x2="24" y2="14" stroke="#7c3aed" strokeWidth="2" strokeLinecap="round" />
+                        {/* Arrowhead — filled chevron */}
+                        <path d="M18 5 L34 14 L18 23 L22 14 Z" fill="#7c3aed" />
+                        {/* Inner highlight on arrowhead */}
+                        <path d="M22 9 L30 14 L22 19 L24.5 14 Z" fill="#a78bfa" opacity="0.5" />
+                        {/* Tail accent dots */}
+                        <circle cx="8"  cy="14" r="1.5" fill="#a78bfa" opacity="0.6" />
+                        <circle cx="14" cy="14" r="1.5" fill="#a78bfa" opacity="0.4" />
+                      </svg>
+                    </div>
 
                     {/* Card */}
                     <motion.div
                       layout
-                      className="w-[45%] p-6 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-zinc-700/50 transition"
+                      className="w-[45%] p-6 rounded-xl bg-white dark:bg-zinc-500/30 border border-sky-200 dark:border-zinc-800/50 hover:border-blue-700/50 hover:bg-amber-100/90 dark:hover:bg-blue-900/50 transition"
                     >
                       <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                         <div>
