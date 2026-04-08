@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   // URL bar icon
   icons: {
     icon: "/icon.svg",
-    shortcut: "/icon.svg",
+    shortcut: "/favicon.ico",
     apple: "/icon.svg",
   },
 
@@ -45,6 +45,9 @@ export const metadata: Metadata = {
     description: personalInfo.shortBio,
     type: "website",
   },
+
+  // This controls Google Search appearance specifically
+  metadataBase: new URL("https://shanjidarefin.vercel.app"),
 };
 
 export default function RootLayout({
