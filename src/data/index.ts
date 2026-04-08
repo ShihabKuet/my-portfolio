@@ -59,6 +59,31 @@ export const experiences: Experience[] = [
       "PAM"
     ],
   },
+  {
+    company: "KUET FILM SOCIETY",
+    role: "Design Secretary",
+    duration: "2022 – 2024",
+    location: "Khulna, Bangladesh",
+    link: "https://www.bdcom.cn",
+    description: [
+      "Developing and optimizing networking features for embedded systems, focusing on access control and packet-level policy enforcement",
+      "Worked on RPC-based synchronization mechanisms between control and line cards in VxWorks, improving reliability of distributed configurations",
+      "Designed and enhanced IPACL modules, ensuring efficient rule updates and consistency across hardware components",
+      "Integrated and debugged low-level networking protocols using C in Linux/VxWorks environments",
+      "Collaborated with cross-functional teams to analyze system behavior, troubleshoot performance issues, and deliver production-grade solutions",
+    ],
+    technologies: [
+      "C",
+      "Python",
+      "Linux",
+      "VxWorks",
+      "Networking",
+      "RPC",
+      "IPACL",
+      "RADIUS",
+      "PAM"
+    ],
+  },
 ];
 
 export const education: Education[] = [
