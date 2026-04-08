@@ -15,6 +15,7 @@ export const personalInfo = {
   KUET CSE graduate (2024). I focus on turning complex system problems into efficient, scalable solutions.`,
   aboutBio:     "I graduated from KUET in 2024 with a degree in Computer Science & Engineering. Over time, I’ve become particularly interested in how systems work beneath the surface — from networking protocols to backend architecture",
   shortBio:     "Building scalable systems & exploring emerging tech.",
+  quote:        "When I'm not engineering software, I enjoy exploring new technologies, contributing to open source, and writing about what I learn.",
   availableForWork: false,
 };
 
