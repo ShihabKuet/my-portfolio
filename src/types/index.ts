@@ -25,6 +25,7 @@ export interface Experience {
   location: string;
   description: string[];
   technologies: string[];
+  link?: string;
 }
 
 export interface Education {

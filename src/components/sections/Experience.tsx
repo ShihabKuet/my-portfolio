@@ -16,7 +16,7 @@ export default function Experience() {
 
         <div className="relative">
           {/* Vertical timeline line */}
-          <div className="absolute left-6 top-0 bottom-0 w-px bg-sky-100 dark:bg-zinc-800" />
+          <div className="absolute left-6 top-0 bottom-0 w-px bg-zinc-400 dark:bg-sky-700" />
 
           <div className="space-y-8">
             {experiences.map((exp, i) => (
@@ -29,7 +29,7 @@ export default function Experience() {
                 className="relative pl-16"
               >
                 {/* Timeline dot */}
-                <div className="absolute left-3.5 top-5 w-5 h-5 rounded-full bg-violet-600 border-4 border-zinc-950" />
+                <div className="absolute left-3.5 top-5 w-5 h-5 rounded-full bg-violet-600 border-4 border-zinc-950 dark:border-amber-300" />
 
                 <div className="p-6 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:border-zinc-700/50 transition-colors">
 
@@ -40,8 +40,22 @@ export default function Experience() {
                         <Briefcase size={18} className="text-violet-400" />
                         {exp.role}
                       </h3>
-                      <p className="text-violet-400 font-medium mt-1">{exp.company}</p>
+
+                      {/* Company name with optional link */}
+                      {exp.link ? (
+                        <a
+                          href={exp.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-violet-400 font-medium mt-1 hover:underline hover:text-violet-300 transition"
+                        >
+                          {exp.company}
+                        </a>
+                      ) : (
+                        <p className="text-violet-400 font-medium mt-1">{exp.company}</p>
+                      )}
                     </div>
+                    
                     <div className="flex flex-col items-end gap-1.5">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-100 dark:bg-zinc-800 text-sky-700 dark:text-zinc-400 text-xs font-mono">
                         <Calendar size={11} />

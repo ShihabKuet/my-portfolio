@@ -16,7 +16,7 @@ export default function EducationEndian() {
     <section id="education" className="py-24 px-4">
       <div className="max-w-5xl mx-auto">
         <SectionHeading
-          title="ACADEMIC QUALIFICATIONS"
+          title="Academic Qualifications"
           subtitle="My educational background and achievements"
         />
 

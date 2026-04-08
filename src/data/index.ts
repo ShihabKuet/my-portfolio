@@ -38,13 +38,26 @@ export const experiences: Experience[] = [
     company: "Shanghai BDCOM (Bangladesh)",
     role: "Software Engineer (R&D)",
     duration: "2024 – Present",
-    location: "Bangladesh",
+    location: "Dhaka, Bangladesh",
+    link: "https://www.bdcom.cn",
     description: [
-      "Describe your key responsibility here",
-      "Another impactful contribution",
-      "Mention any research or product you worked on",
+      "Developing and optimizing networking features for embedded systems, focusing on access control and packet-level policy enforcement",
+      "Worked on RPC-based synchronization mechanisms between control and line cards in VxWorks, improving reliability of distributed configurations",
+      "Designed and enhanced IPACL modules, ensuring efficient rule updates and consistency across hardware components",
+      "Integrated and debugged low-level networking protocols using C in Linux/VxWorks environments",
+      "Collaborated with cross-functional teams to analyze system behavior, troubleshoot performance issues, and deliver production-grade solutions",
     ],
-    technologies: ["C", "Python", "Linux", "Networking"], // ← Update these
+    technologies: [
+      "C",
+      "Python",
+      "Linux",
+      "VxWorks",
+      "Networking",
+      "RPC",
+      "IPACL",
+      "RADIUS",
+      "PAM"
+    ],
   },
 ];
 
