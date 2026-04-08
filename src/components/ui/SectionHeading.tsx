@@ -5,10 +5,6 @@
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-// Section counter — auto-increments across the page
-// Keeps the 0x01, 0x02... address accurate without manual tracking
-let _sectionCounter = 0;
-
 interface SectionHeadingProps {
   title:     string;
   subtitle?: string;
@@ -23,13 +19,15 @@ export default function SectionHeading({
   const ref     = useRef<HTMLDivElement>(null);
   const inView  = useInView(ref, { once: true, margin: "-60px" });
 
-  // Stable per-instance address — increments on first render only
-  const addrRef = useRef<string | null>(null);
-  if (!addrRef.current) {
-    _sectionCounter++;
-    addrRef.current = `0x${_sectionCounter.toString(16).padStart(2, "0").toUpperCase()}`;
-  }
-  const addr = addrRef.current;
+  // Derives a stable hex address from the section title's character codes —
+  // deterministic on both server and client, preventing hydration mismatches.
+  const addr = `0x${title
+    .split("")
+    .reduce((acc, c) => acc + c.charCodeAt(0), 0)
+    .toString(16)
+    .slice(-2)
+    .toUpperCase()
+    .padStart(2, "0")}`;
 
   const isCentered = align === "center";
 
