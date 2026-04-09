@@ -424,187 +424,118 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
 
   return (
     <div
-      style={{
-        fontFamily: "'JetBrains Mono','Fira Code',monospace",
-        background: "#05080f",
-        border: "1px solid #1a2035",
-        borderRadius: 12,
-        overflow: "hidden",
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        boxShadow: isReady
-          ? "0 0 0 1px rgba(99,102,241,0.3), 0 4px 32px rgba(99,102,241,0.1)"
-          : "0 4px 24px rgba(0,0,0,0.4)",
-        transition: "box-shadow 0.5s ease",
-      }}
+      className={`
+        font-mono rounded-xl overflow-hidden h-full flex flex-col transition-shadow duration-500
+        bg-white border border-gray-200 shadow-md
+        dark:bg-[#05080f] dark:border-[#1a2035]
+        ${isReady 
+          ? "dark:shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_4px_32px_rgba(99,102,241,0.1)]"
+          : "shadow-lg dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]"
+        }
+      `}
+      style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace" }}
     >
       {/* Title bar */}
-      <div style={{
-        background: "#0a0f1e",
-        borderBottom: "1px solid #141830",
-        padding: "8px 12px",
-        display: "flex",
-        alignItems: "center",
-        gap: 8,
-      }}>
+      <div className="flex items-center gap-2 px-3 py-2 border-b 
+        bg-gray-100 border-gray-200
+        dark:bg-[#0a0f1e] dark:border-[#141830]"
+      >
         {/* Traffic lights */}
-        <div style={{ display: "flex", gap: 5 }}>
-          <div style={{ width: 9, height: 9, borderRadius: "50%", background: "#ef4444", opacity: 0.8 }}/>
-          <div style={{ width: 9, height: 9, borderRadius: "50%", background: "#eab308", opacity: 0.8 }}/>
-          <div style={{ width: 9, height: 9, borderRadius: "50%", background: "#22c55e", opacity: 0.8 }}/>
+        <div className="flex gap-[5px]">
+          <div className="w-[9px] h-[9px] rounded-full bg-red-500 opacity-80"/>
+          <div className="w-[9px] h-[9px] rounded-full bg-yellow-500 opacity-80"/>
+          <div className="w-[9px] h-[9px] rounded-full bg-green-500 opacity-80"/>
         </div>
+
         {/* Title */}
-        <span style={{ color: "#4a5568", fontSize: "0.70rem", marginLeft: 4 }}>SMTP/2.0</span>
-        <span style={{ color: "#2d3561", fontSize: "0.68rem", marginLeft: 2 }}>DATA PACKET</span>
+        <span className="text-[0.70rem] ml-1 text-gray-500 dark:text-[#4a5568]">SMTP/2.0</span>
+        <span className="text-[0.68rem] ml-1 text-gray-400 dark:text-[#2d3561]">DATA PACKET</span>
+
         {/* Status pill */}
-        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 5 }}>
+        <div className="ml-auto flex items-center gap-1">
           <motion.div
             animate={{ opacity: isReady ? [0.6, 1, 0.6] : [0.3, 0.5, 0.3] }}
             transition={{ duration: 1.4, repeat: Infinity }}
-            style={{
-              width: 6, height: 6, borderRadius: "50%",
-              background: isReady ? "#22c55e" : "#4b5563",
-            }}
+            className={`w-[6px] h-[6px] rounded-full ${isReady ? "bg-green-500" : "bg-gray-500"}`}
           />
-          <span style={{ color: isReady ? "#22c55e" : "#4b5563", fontSize: "0.65rem" }}>
+          <span className={`text-[0.65rem] ${isReady ? "text-green-500" : "text-gray-500"}`}>
             {isReady ? "READY" : "BUILDING"}
           </span>
         </div>
       </div>
 
       {/* Hex gutter decoration */}
-      <div style={{ position: "relative", flex: 1 }}>
+      <div className="relative flex-1">
         {/* Left hex gutter */}
-        <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: "1.8rem",
-          background: "#070b14",
-          borderRight: "1px solid #0f1628",
-          display: "flex", flexDirection: "column",
-          paddingTop: 6, paddingBottom: 6,
-          overflowY: "hidden",
-          userSelect: "none",
-        }}>
+        <div className="absolute left-0 top-0 bottom-0 w-[1.8rem] flex flex-col py-1 overflow-hidden select-none
+          bg-gray-100 border-r border-gray-200
+          dark:bg-[#070b14] dark:border-[#0f1628]"
+        >
           {Array.from({ length: 24 }, (_, i) => (
-            <div key={i} style={{ color: "#1a2035", fontSize: "0.56rem", lineHeight: 1.9, textAlign: "center", fontFamily: "monospace" }}>
+            <div key={i} className="text-[0.56rem] leading-[1.9] text-center font-mono
+              text-gray-300 dark:text-[#1a2035]"
+            >
               {(i * 16).toString(16).padStart(2, "0")}
             </div>
           ))}
         </div>
 
         {/* Packet content */}
-        <div style={{ paddingLeft: "1.8rem", paddingTop: 6, paddingBottom: 6 }}>
+        <div className="pl-[1.8rem] py-1">
 
           {/* SMTP preamble — static */}
-          <div style={{ padding: "2px 10px", fontSize: "0.70rem", lineHeight: 1.9, color: "#2d3b55" }}>
+          <div className="px-[10px] text-[0.70rem] leading-[1.9]
+            text-gray-500 dark:text-[#2d3b55]">
             EHLO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; portfolio.shanjid.dev
           </div>
-          <div style={{ height: 1, background: "#0f1628", margin: "2px 10px" }}/>
+
+          <div className="h-px mx-[10px] my-[2px]
+            bg-gray-200 dark:bg-[#0f1628]" />
 
           {/* Headers — live */}
-          <PacketRow
-            label="FROM:"
-            value="visitor@web.client"
-            flashKey={0}
-            labelColor="#7c3aed"
-            valueColor="#a78bfa"
-          />
-          <PacketRow
-            label="TO:"
-            value={personalInfo.email}
-            flashKey={0}
-            labelColor="#7c3aed"
-            valueColor="#a78bfa"
-          />
-          <PacketRow
-            label="DATE:"
-            value={dateRef.current}
-            flashKey={0}
-            labelColor="#334155"
-            valueColor="#1e2d42"
-          />
-          <PacketRow
-            label="MESSAGE-ID:"
-            value={msgIdRef.current}
-            flashKey={0}
-            labelColor="#334155"
-            valueColor="#1e2d42"
-          />
-          <PacketRow
-            label="X-SENDER:"
-            value={name}
-            flashKey={flashKeys.name}
-            dim={!name}
-            labelColor="#0e7490"
-            valueColor="#67e8f9"
-          />
-          <PacketRow
-            label="REPLY-TO:"
-            value={email}
-            flashKey={flashKeys.email}
-            dim={!email}
-            labelColor="#0e7490"
-            valueColor="#67e8f9"
-          />
-          <PacketRow
-            label="SUBJECT:"
-            value={subject}
-            flashKey={flashKeys.subject}
-            dim={!subject}
-            labelColor="#b45309"
-            valueColor="#fcd34d"
-          />
-          <PacketRow
-            label="MIME-VER:"
-            value="1.0"
-            flashKey={0}
-            labelColor="#334155"
-            valueColor="#1e2d42"
-          />
-          <PacketRow
-            label="CONTENT:"
-            value="text/plain; charset=utf-8"
-            flashKey={0}
-            labelColor="#334155"
-            valueColor="#1e2d42"
-          />
+          <PacketRow label="FROM:" value="visitor@web.client" flashKey={0} labelColor="#7c3aed" valueColor="#a78bfa" />
+          <PacketRow label="TO:" value={personalInfo.email} flashKey={0} labelColor="#7c3aed" valueColor="#a78bfa" />
+          <PacketRow label="DATE:" value={dateRef.current} flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
+          <PacketRow label="MESSAGE-ID:" value={msgIdRef.current} flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
+          <PacketRow label="X-SENDER:" value={name} flashKey={flashKeys.name} dim={!name} labelColor="#0e7490" valueColor="#67e8f9" />
+          <PacketRow label="REPLY-TO:" value={email} flashKey={flashKeys.email} dim={!email} labelColor="#0e7490" valueColor="#67e8f9" />
+          <PacketRow label="SUBJECT:" value={subject} flashKey={flashKeys.subject} dim={!subject} labelColor="#b45309" valueColor="#fcd34d" />
+          <PacketRow label="MIME-VER:" value="1.0" flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
+          <PacketRow label="CONTENT:" value="text/plain; charset=utf-8" flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
 
           {/* Body section */}
-          <div style={{ height: 1, background: "#0f1628", margin: "4px 10px" }}/>
-          <div style={{ padding: "2px 10px", fontSize: "0.64rem", color: "#334155", lineHeight: 1.6, fontFamily: "monospace" }}>
+          <div className="h-px mx-[10px] my-1 bg-gray-200 dark:bg-[#0f1628]" />
+
+          <div className="px-[10px] text-[0.64rem] font-mono leading-[1.6]
+            text-gray-500 dark:text-[#334155]">
             ── BODY ──
           </div>
+
           <motion.div
             key={flashKeys.message}
             initial={{ backgroundColor: "rgba(80,250,123,0.14)" }}
             animate={{ backgroundColor: "rgba(80,250,123,0)" }}
             transition={{ duration: 1.1 }}
-            style={{
-              padding: "4px 10px",
-              fontSize: "0.68rem",
-              color: message ? "#94a3b8" : "#1e2d42",
-              fontFamily: "monospace",
-              lineHeight: 1.7,
-              fontStyle: message ? "normal" : "italic",
-              minHeight: 54,
-              wordBreak: "break-word",
-              whiteSpace: "pre-wrap",
-            }}
+            className={`px-[10px] py-1 text-[0.68rem] font-mono leading-[1.7] min-h-[54px] break-words whitespace-pre-wrap
+              ${message ? "text-gray-600 dark:text-[#94a3b8]" : "text-gray-400 dark:text-[#1e2d42] italic"}
+            `}
           >
             {bodyPreview || "— awaiting message body —"}
           </motion.div>
 
           {/* Footer */}
-          <div style={{ height: 1, background: "#0f1628", margin: "4px 10px" }}/>
-          <div style={{
-            display: "flex", justifyContent: "space-between",
-            padding: "4px 10px 6px",
-            fontSize: "0.63rem",
-            color: "#334155",
-            fontFamily: "monospace",
-          }}>
-            <span>SIZE: <span style={{ color: totalBytes > 0 ? "#6272a4" : "#1e2d42" }}>{totalBytes} bytes</span></span>
-            <span style={{ color: isReady ? "#22c55e" : "#374151" }}>
+          <div className="h-px mx-[10px] my-1 bg-gray-200 dark:bg-[#0f1628]" />
+
+          <div className="flex justify-between px-[10px] pb-1 text-[0.63rem] font-mono
+            text-gray-500 dark:text-[#334155]">
+            <span>
+              SIZE:{" "}
+              <span className={totalBytes > 0 ? "text-indigo-500 dark:text-[#6272a4]" : "text-gray-400 dark:text-[#1e2d42]"}>
+                {totalBytes} bytes
+              </span>
+            </span>
+
+            <span className={isReady ? "text-green-500" : "text-gray-400 dark:text-gray-600"}>
               {isReady ? "● READY TO SEND" : "○ INCOMPLETE"}
             </span>
           </div>
@@ -707,7 +638,7 @@ export default function Contact() {
         {/* 3-column grid: info | form | packet/postbox */}
         <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr_200px] xl:grid-cols-[390px_1fr_200px] gap-8 items-start">
 
-          {/* ── Column 3: SMTP Packet Card / Postbox ── */}
+          {/* ── Column 1: SMTP Packet Card / Postbox ── */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -749,7 +680,7 @@ export default function Contact() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="rounded-2xl border border-zinc-800/60 bg-zinc-950/80 dark:bg-zinc-950"
+                  className="rounded-2xl border border-zinc-800/60 bg-sky-200 dark:bg-zinc-950"
                   style={{ minHeight: 480, display: "flex", alignItems: "center", justifyContent: "center" }}
                 >
                   <PostboxScene phase={postboxPhase} />
@@ -815,7 +746,7 @@ export default function Contact() {
             </form>
           </motion.div>
 
-          {/* ── Column 1: Contact info ── */}
+          {/* ── Column 3: Contact info ── */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
