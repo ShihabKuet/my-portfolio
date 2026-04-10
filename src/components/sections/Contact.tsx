@@ -48,7 +48,7 @@ function getSmtpDate() {
 }
 
 function getMsgId() {
-  return `<${Math.random().toString(36).slice(2,10)}.${Date.now()}@portfolio.shanjid.dev>`;
+  return `<${Math.random().toString(36).slice(2,10)}.${Date.now()}@client.shanjid.dev>`;
 }
 
 function byteSize(str: string) {
@@ -360,43 +360,44 @@ function PacketRow({
   value,
   flashKey,
   dim,
-  labelColor = "#6272a4",
-  valueColor = "#e2e8f0",
+  labelClass = "text-slate-500 dark:text-slate-400",
+  valueClass = "text-slate-400 dark:text-slate-500",
 }: {
-  label: string;
-  value: string;
-  flashKey: string | number;
-  dim?: boolean;
-  labelColor?: string;
-  valueColor?: string;
+  label:      string;
+  value:      string;
+  flashKey:   string | number;
+  dim?:       boolean;
+  labelClass?: string;
+  valueClass?: string;
 }) {
   return (
     <motion.div
-      key={flashKey}         // new key → re-mount → fresh initial animation
+      key={flashKey}
       initial={{ backgroundColor: "rgba(80,250,123,0.18)" }}
       animate={{ backgroundColor: "rgba(80,250,123,0)" }}
       transition={{ duration: 0.9 }}
-      style={{
-        display: "flex",
-        gap: "0.5rem",
-        padding: "2px 10px",
-        fontFamily: "'JetBrains Mono','Fira Code',monospace",
-        fontSize: "0.70rem",
-        lineHeight: 1.9,
-        opacity: dim ? 0.38 : 1,
-        transition: "opacity 0.3s ease",
-      }}
+      className={cn(
+        "flex gap-2 px-2.5 font-mono text-[0.70rem] leading-[1.9] transition-opacity duration-300",
+        dim ? "opacity-40" : "opacity-100"
+      )}
     >
-      <span style={{ color: labelColor, minWidth: "5.8rem", flexShrink: 0 }}>{label}</span>
-      <span style={{ color: valueColor, wordBreak: "break-all" }}>{value || <span style={{ color: "#3d3d5c", fontStyle: "italic" }}>—</span>}</span>
+      <span className={cn("shrink-0 min-w-[5.8rem]", labelClass)}>
+        {label}
+      </span>
+      <span className={cn("break-all", valueClass)}>
+        {value || (
+          <span className="text-[#3d3d5c] dark:text-[#3d3d5c] italic">—</span>
+        )}
+      </span>
     </motion.div>
   );
 }
 
 function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCardProps) {
   // Stable-across-render values for generated SMTP fields
-  const msgIdRef   = useRef(getMsgId());
-  const dateRef    = useRef(getSmtpDate());
+  // ── Initialize with empty string — same on server and client ──
+  const msgIdRef = useRef("");
+  const dateRef  = useRef("");
 
   // Flash keys — incrementing key forces PacketRow to re-mount → retrigger animation
   const [flashKeys, setFlashKeys] = useState({ name: 0, email: 0, subject: 0, message: 0 });
@@ -415,8 +416,14 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
     }
   }, [name, email, subject, message]);
 
+  // ── Fix hydration mismatch: generate time-sensitive values client-side only ──
+  useEffect(() => {
+    msgIdRef.current = getMsgId();
+    dateRef.current  = getSmtpDate();
+  }, []);
+
   const totalBytes = byteSize(
-    `FROM: visitor@web.client\r\nTO: ${personalInfo.email}\r\nSUBJECT: ${subject}\r\n\r\n${message}`
+    `FROM: visitor@shanjid.client\r\nTO: ${personalInfo.email}\r\nSUBJECT: ${subject}\r\n\r\n${message}`
   );
   const bodyPreview = message
     ? message.length > 90 ? message.slice(0, 90) + "…" : message
@@ -438,7 +445,7 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
       {/* Title bar */}
       <div className="flex items-center gap-2 px-3 py-2 border-b 
         bg-gray-100 border-gray-200
-        dark:bg-[#0a0f1e] dark:border-[#141830]"
+        dark:bg-[#0b0072] dark:border-[#141830]"
       >
         {/* Traffic lights */}
         <div className="flex gap-[5px]">
@@ -448,8 +455,8 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
         </div>
 
         {/* Title */}
-        <span className="text-[0.70rem] ml-1 text-gray-500 dark:text-[#4a5568]">SMTP/2.0</span>
-        <span className="text-[0.68rem] ml-1 text-gray-400 dark:text-[#2d3561]">DATA PACKET</span>
+        <span className="text-[0.70rem] ml-1 text-gray-500 dark:text-[#c4fcaa]">SMTP/2.0</span>
+        <span className="text-[0.68rem] ml-1 text-gray-400 dark:text-[#8b9cfa]">DATA PACKET</span>
 
         {/* Status pill */}
         <div className="ml-auto flex items-center gap-1">
@@ -469,11 +476,11 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
         {/* Left hex gutter */}
         <div className="absolute left-0 top-0 bottom-0 w-[1.8rem] flex flex-col py-1 overflow-hidden select-none
           bg-gray-100 border-r border-gray-200
-          dark:bg-[#070b14] dark:border-[#0f1628]"
+          dark:bg-[#0b0072] dark:border-[#0f1628]"
         >
           {Array.from({ length: 24 }, (_, i) => (
             <div key={i} className="text-[0.56rem] leading-[1.9] text-center font-mono
-              text-gray-300 dark:text-[#1a2035]"
+              text-gray-300 dark:text-[#a4ffc38e]"
             >
               {(i * 16).toString(16).padStart(2, "0")}
             </div>
@@ -485,29 +492,94 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
 
           {/* SMTP preamble — static */}
           <div className="px-[10px] text-[0.70rem] leading-[1.9]
-            text-gray-500 dark:text-[#2d3b55]">
-            EHLO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; portfolio.shanjid.dev
+            text-gray-500 dark:text-[#e00404]">
+            EHLO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; client.shanjid.dev
           </div>
 
           <div className="h-px mx-[10px] my-[2px]
-            bg-gray-200 dark:bg-[#0f1628]" />
+            bg-sky-300/60" />
 
           {/* Headers — live */}
-          <PacketRow label="FROM:" value="visitor@web.client" flashKey={0} labelColor="#7c3aed" valueColor="#a78bfa" />
-          <PacketRow label="TO:" value={personalInfo.email} flashKey={0} labelColor="#7c3aed" valueColor="#a78bfa" />
-          <PacketRow label="DATE:" value={dateRef.current} flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
-          <PacketRow label="MESSAGE-ID:" value={msgIdRef.current} flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
-          <PacketRow label="X-SENDER:" value={name} flashKey={flashKeys.name} dim={!name} labelColor="#0e7490" valueColor="#67e8f9" />
-          <PacketRow label="REPLY-TO:" value={email} flashKey={flashKeys.email} dim={!email} labelColor="#0e7490" valueColor="#67e8f9" />
-          <PacketRow label="SUBJECT:" value={subject} flashKey={flashKeys.subject} dim={!subject} labelColor="#b45309" valueColor="#fcd34d" />
-          <PacketRow label="MIME-VER:" value="1.0" flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
-          <PacketRow label="CONTENT:" value="text/plain; charset=utf-8" flashKey={0} labelColor="#334155" valueColor="#1e2d42" />
+          <PacketRow 
+            label="FROM:" 
+            value="visitor@shanjid.client" 
+            flashKey={0} 
+            labelClass="text-violet-600 dark:text-violet-400"
+            valueClass="text-violet-500 dark:text-violet-300"
+          />
+
+          <PacketRow 
+            label="TO:" 
+            value={personalInfo.email} 
+            flashKey={0} 
+            labelClass="text-violet-600 dark:text-violet-400"
+            valueClass="text-violet-500 dark:text-violet-300"
+          />
+
+          <PacketRow 
+            label="DATE:" 
+            value={dateRef.current} 
+            flashKey={0} 
+            labelClass="text-gray-500 dark:text-gray-400"
+            valueClass="text-gray-400 dark:text-gray-500"
+          />
+
+          <PacketRow 
+            label="MESSAGE-ID:" 
+            value={msgIdRef.current} 
+            flashKey={0} 
+            labelClass="text-gray-500 dark:text-gray-400"
+            valueClass="text-gray-400 dark:text-gray-500"
+          />
+
+          <PacketRow 
+            label="X-SENDER:" 
+            value={name} 
+            flashKey={flashKeys.name} 
+            dim={!name} 
+            labelClass="text-cyan-600 dark:text-cyan-400"
+            valueClass="text-cyan-500 dark:text-cyan-300"
+          />
+
+          <PacketRow 
+            label="REPLY-TO:" 
+            value={email} 
+            flashKey={flashKeys.email} 
+            dim={!email} 
+            labelClass="text-cyan-600 dark:text-cyan-400"
+            valueClass="text-cyan-500 dark:text-cyan-300"
+          />
+
+          <PacketRow 
+            label="SUBJECT:" 
+            value={subject} 
+            flashKey={flashKeys.subject} 
+            dim={!subject} 
+            labelClass="text-amber-600 dark:text-amber-400"
+            valueClass="text-amber-500 dark:text-amber-300"
+          />
+
+          <PacketRow 
+            label="MIME-VER:" 
+            value="1.0" 
+            flashKey={0} 
+            labelClass="text-gray-500 dark:text-gray-400"
+            valueClass="text-gray-400 dark:text-gray-500"
+          />
+
+          <PacketRow 
+            label="CONTENT:" 
+            value="text/plain; charset=utf-8" 
+            flashKey={0} 
+            labelClass="text-gray-500 dark:text-gray-400"
+            valueClass="text-gray-400 dark:text-gray-500"
+          />
 
           {/* Body section */}
-          <div className="h-px mx-[10px] my-1 bg-gray-200 dark:bg-[#0f1628]" />
+          <div className="h-px mx-[10px] my-1 bg-sky-300/60" />
 
           <div className="px-[10px] text-[0.64rem] font-mono leading-[1.6]
-            text-gray-500 dark:text-[#334155]">
+            text-gray-500 dark:text-amber-200">
             ── BODY ──
           </div>
 
@@ -680,7 +752,7 @@ export default function Contact() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="rounded-2xl border border-zinc-800/60 bg-sky-200 dark:bg-zinc-950"
+                  className="rounded-2xl border border-zinc-800/60 bg-sky-200 dark:bg-violet-900"
                   style={{ minHeight: 480, display: "flex", alignItems: "center", justifyContent: "center" }}
                 >
                   <PostboxScene phase={postboxPhase} />
