@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Terminal, X, Minus, Square } from "lucide-react";
+import { X, Minus, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // ── Command map — extend this freely ─────────────────────────────────────────
@@ -23,6 +23,16 @@ const COMMANDS: Record<string, { target: string; description: string }> = {
   "cd /home/osi":          { target: "/osi",           description: "OSI demo page"       },
 };
 
+// Quick-access chips shown on the welcome screen + bottom bar
+const QUICK_CMDS = [
+  { label: "about",      cmd: "cd /home/about",      desc: "Who I am"     },
+  { label: "projects",   cmd: "cd /home/projects",   desc: "My work"      },
+  { label: "skills",     cmd: "cd /home/skills",     desc: "Tech stack"   },
+  { label: "blog",       cmd: "cd /home/blog",       desc: "Articles"     },
+  { label: "contact",    cmd: "cd /home/contact",    desc: "Get in touch" },
+  { label: "experience", cmd: "cd /home/experience", desc: "Work history" },
+];
+
 // ── Types ─────────────────────────────────────────────────────────────────────
 interface HistoryEntry {
   id:      number;
@@ -38,7 +48,7 @@ function Prompt() {
     <span className="shrink-0 select-none font-mono text-sm">
       <span className="text-emerald-500 dark:text-emerald-400">visitor</span>
       <span className="text-sky-400 dark:text-zinc-500">@</span>
-      <span className="text-violet-600 dark:text-violet-400">shanjid-portfolio</span>
+      <span className="text-violet-600 dark:text-violet-400">shanjid</span>
       <span className="text-sky-400 dark:text-zinc-500">:~$ </span>
     </span>
   );
@@ -46,19 +56,18 @@ function Prompt() {
 
 // ── Main component ────────────────────────────────────────────────────────────
 export default function FloatingTerminal() {
-  const router                          = useRouter();
-  const [isOpen, setIsOpen]             = useState(false);
-  const [isMinimized, setIsMinimized]   = useState(false);
-  const [input, setInput]               = useState("");
-  const [history, setHistory]           = useState<HistoryEntry[]>([]);
-  const [cmdHistory, setCmdHistory]     = useState<string[]>([]);
-  const [histIdx, setHistIdx]           = useState(-1);
-  const [redirecting, setRedirecting]   = useState(false);
-  const [idCounter, setIdCounter]       = useState(0);
-  const inputRef                        = useRef<HTMLInputElement>(null);
-  const bodyRef                         = useRef<HTMLDivElement>(null);
+  const router                        = useRouter();
+  const [isOpen, setIsOpen]           = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [input, setInput]             = useState("");
+  const [history, setHistory]         = useState<HistoryEntry[]>([]);
+  const [cmdHistory, setCmdHistory]   = useState<string[]>([]);
+  const [histIdx, setHistIdx]         = useState(-1);
+  const [redirecting, setRedirecting] = useState(false);
+  const inputRef                      = useRef<HTMLInputElement>(null);
+  const bodyRef                       = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll terminal body (not the page) when history grows
+  // Auto-scroll terminal body when history grows
   useEffect(() => {
     if (!bodyRef.current) return;
     bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
@@ -71,11 +80,6 @@ export default function FloatingTerminal() {
     }
   }, [isOpen, isMinimized]);
 
-  const newId = useCallback(() => {
-    setIdCounter(c => c + 1);
-    return idCounter;
-  }, [idCounter]);
-
   const addEntry = useCallback((entry: Omit<HistoryEntry, "id">) => {
     setHistory(prev => [...prev, { ...entry, id: Date.now() + Math.random() }]);
   }, []);
@@ -87,12 +91,7 @@ export default function FloatingTerminal() {
     setCmdHistory(prev => [cmd, ...prev]);
     setHistIdx(-1);
 
-    // ── built-in commands ──
-    if (cmd === "clear") {
-      setHistory([]);
-      setInput("");
-      return;
-    }
+    if (cmd === "clear") { setHistory([]); setInput(""); return; }
 
     if (cmd === "help" || cmd === "?") {
       addEntry({ cmd: raw, ok: true, isInfo: true, output:
@@ -113,55 +112,48 @@ export default function FloatingTerminal() {
         "\n  exit / quit                  # Close terminal" +
         "\n  help                         # This message"
       });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "whoami") {
       addEntry({ cmd: raw, ok: true, output: "visitor — guest session on shanjid's portfolio" });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "ls") {
       addEntry({ cmd: raw, ok: true, isInfo: true, output:
         "about/  skills/  experience/  projects/  research/\neducation/  expertise/  achievements/  coding/  blog/  contact/"
       });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "pwd") {
       addEntry({ cmd: raw, ok: true, output: "/home/visitor" });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "exit" || cmd === "quit") {
       setInput("");
-      setTimeout(() => setIsOpen(false), 300);
       addEntry({ cmd: raw, ok: true, output: "Closing terminal..." });
+      setTimeout(() => setIsOpen(false), 300);
       return;
     }
 
     if (cmd === "top" || cmd === "scroll top" || cmd === "go top") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       addEntry({ cmd: raw, ok: true, output: "Scrolled to top." });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "bottom" || cmd === "scroll bottom" || cmd === "go bottom") {
       window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
       addEntry({ cmd: raw, ok: true, output: "Scrolled to bottom." });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "date") {
       addEntry({ cmd: raw, ok: true, output: new Date().toString() });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "uname" || cmd === "uname -a") {
@@ -169,8 +161,7 @@ export default function FloatingTerminal() {
         "PortfolioOS 1.0.0 — Next.js 16 · TypeScript · Tailwind v4\n" +
         "Arch: web · Kernel: react-18 · Shell: bash (portfolio edition)"
       });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "history") {
@@ -178,21 +169,17 @@ export default function FloatingTerminal() {
         addEntry({ cmd: raw, ok: true, output: "No commands in history yet." });
       } else {
         addEntry({ cmd: raw, ok: true, isInfo: true, output:
-          cmdHistory
-            .slice()
-            .reverse()
+          cmdHistory.slice().reverse()
             .map((c, i) => `  ${String(i + 1).padStart(3)}  ${c}`)
             .join("\n")
         });
       }
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd.startsWith("echo ")) {
       addEntry({ cmd: raw, ok: true, output: raw.slice(5) });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd.startsWith("open ")) {
@@ -203,8 +190,7 @@ export default function FloatingTerminal() {
       } else {
         addEntry({ cmd: raw, ok: false, output: `open: invalid URL — must start with http:// or https://` });
       }
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "man" || cmd === "man help") {
@@ -233,8 +219,7 @@ export default function FloatingTerminal() {
         "  Tab                  Autocomplete command\n" +
         "  ↑ / ↓               Browse command history"
       });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     if (cmd === "neofetch") {
@@ -249,8 +234,7 @@ export default function FloatingTerminal() {
         "                   Company: Shanghai BDCOM\n" +
         "                   Degree: B.Sc CSE · KUET '24"
       });
-      setInput("");
-      return;
+      setInput(""); return;
     }
 
     // ── navigation commands ──
@@ -274,13 +258,11 @@ export default function FloatingTerminal() {
       output: `bash: ${cmd}: command not found. Type 'help' to see available commands.`,
     });
     setInput("");
-  }, [addEntry, router]);
+  }, [addEntry, router, cmdHistory]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      execute(input);
-      return;
-    }
+    if (e.key === "Enter") { execute(input); return; }
+
     if (e.key === "ArrowUp") {
       e.preventDefault();
       const next = Math.min(histIdx + 1, cmdHistory.length - 1);
@@ -288,6 +270,7 @@ export default function FloatingTerminal() {
       setInput(cmdHistory[next] ?? "");
       return;
     }
+
     if (e.key === "ArrowDown") {
       e.preventDefault();
       const next = Math.max(histIdx - 1, -1);
@@ -295,14 +278,15 @@ export default function FloatingTerminal() {
       setInput(next === -1 ? "" : cmdHistory[next] ?? "");
       return;
     }
+
     if (e.key === "Tab") {
       e.preventDefault();
-      // Tab autocomplete
       const partial = input.trim().toLowerCase();
       const match   = Object.keys(COMMANDS).find(c => c.startsWith(partial));
       if (match) setInput(match);
       return;
     }
+
     if (e.key === "l" && e.ctrlKey) {
       e.preventDefault();
       setHistory([]);
@@ -312,57 +296,94 @@ export default function FloatingTerminal() {
 
   return (
     <>
-      {/* ── Floating trigger button ── */}
+      {/* ── Trigger pill ─────────────────────────────────────────────────────── */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
+          <motion.div
             key="trigger"
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0,  scale: 1   }}
-            exit={{    opacity: 0, y: 20, scale: 0.9 }}
+            initial={{ opacity: 0, y: 16, scale: 0.92 }}
+            animate={{ opacity: 1, y: 0,  scale: 1    }}
+            exit={{    opacity: 0, y: 16, scale: 0.92 }}
             transition={{ type: "spring", stiffness: 260, damping: 22 }}
-            onClick={() => setIsOpen(true)}
-            className={cn(
-              "fixed bottom-6 left-6 z-50",
-              "flex items-center gap-2.5 px-4 py-2.5 rounded-xl",
-              "bg-zinc-900 dark:bg-zinc-950 border border-zinc-700 dark:border-zinc-800",
-              "text-emerald-400 hover:text-emerald-300",
-              "hover:border-violet-500/50 hover:shadow-lg hover:shadow-violet-500/10",
-              "transition-all duration-200 group"
-            )}
+            className="fixed bottom-6 left-6 z-50"
           >
-            <Terminal size={15} className="group-hover:scale-110 transition-transform" />
-            <span className="font-mono text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors">
-              visitor@shanjid-portfolio:~$
-            </span>
-            <motion.span
-              animate={{ opacity: [1, 0] }}
-              transition={{ duration: 0.7, repeat: Infinity }}
-              className="inline-block w-1.5 h-3.5 bg-emerald-400 rounded-sm"
-            />
-          </motion.button>
+            {/* ── >_ corner badge ── */}
+            <div className={cn(
+              "absolute -top-1.5 left-1 z-10",
+              "flex items-center justify-center w-[22px] h-[18px]",
+              "rounded-sm bg-amber-200 border border-emerald-500/50",
+              "shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+            )}>
+              <span className="font-mono text-[9px] text-blue-900 font-bold leading-none select-none">
+                &gt;_
+              </span>
+            </div>
+
+            {/* ── Spinning gradient border wrapper ── */}
+            <div className="relative rounded-full p-[1.5px] overflow-hidden">
+              {/* Rotating conic-gradient — creates the "running" border glow */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                className="absolute pointer-events-none"
+                style={{
+                  inset:      "-50%",
+                  width:      "200%",
+                  height:     "200%",
+                  background: "conic-gradient(from 0deg, transparent 0deg, #7c3aed 70deg, #22d3ee 130deg, transparent 200deg)",
+                }}
+              />
+
+              {/* Inner button — sits on top of the gradient */}
+              <button
+                onClick={() => setIsOpen(true)}
+                className={cn(
+                  "relative flex items-center gap-3 px-4 py-2.5 rounded-full",
+                  "bg-zinc-900 dark:bg-zinc-950",
+                  "transition-all duration-200 group"
+                )}
+              >
+                {/* Pulsing live dot */}
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+
+                <span className="font-mono text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors">
+                  visitor@shanjid ~$
+                </span>
+
+                {/* Blinking cursor */}
+                <motion.span
+                  animate={{ opacity: [1, 0] }}
+                  transition={{ duration: 0.7, repeat: Infinity }}
+                  className="inline-block w-1.5 h-3.5 bg-violet-400 rounded-sm"
+                />
+              </button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── Floating terminal window ── */}
+      {/* ── Terminal window ───────────────────────────────────────────────────── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             key="terminal"
-            initial={{ opacity: 0, y: 30, scale: 0.96 }}
+            initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0,  scale: 1    }}
-            exit={{    opacity: 0, y: 20, scale: 0.97 }}
+            exit={{    opacity: 0, y: 16, scale: 0.97 }}
             transition={{ type: "spring", stiffness: 280, damping: 26 }}
             className={cn(
-              "fixed bottom-6 left-6 z-50 w-[min(560px,calc(100vw-48px))]",
+              "fixed bottom-6 left-6 z-50 w-[min(580px,calc(100vw-48px))]",
               "rounded-2xl overflow-hidden",
-              "border border-zinc-700/80 dark:border-zinc-800",
-              "shadow-2xl shadow-black/40 dark:shadow-black/60",
+              "border border-violet-500/25 dark:border-violet-500/20",
+              "shadow-2xl shadow-black/50",
               isMinimized ? "h-auto" : ""
             )}
           >
-            {/* ── Window chrome ── */}
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-zinc-900 dark:bg-zinc-950 border-b border-zinc-800">
+            {/* ── Title bar ── */}
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-zinc-900 dark:bg-zinc-950 border-b border-white/5">
               {/* Traffic lights */}
               <button
                 onClick={() => setIsOpen(false)}
@@ -379,21 +400,18 @@ export default function FloatingTerminal() {
                 <Minus size={7} className="opacity-0 group-hover:opacity-100 text-yellow-900" />
               </button>
               <button
-                onClick={() => {}}
                 className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 transition-colors flex items-center justify-center group"
                 title="Expand (coming soon)"
               >
                 <Square size={6} className="opacity-0 group-hover:opacity-100 text-green-900" />
               </button>
 
-              {/* Title */}
               <div className="flex-1 text-center">
                 <span className="font-mono text-xs text-zinc-500">
                   visitor@shanjid-portfolio — bash
                 </span>
               </div>
 
-              {/* Close text button */}
               <button
                 onClick={() => setIsOpen(false)}
                 className="font-mono text-xs text-zinc-600 hover:text-zinc-400 transition-colors px-1"
@@ -402,38 +420,85 @@ export default function FloatingTerminal() {
               </button>
             </div>
 
-            {/* ── Terminal body (hidden when minimized) ── */}
+            {/* ── Terminal body ── */}
             <AnimatePresence>
               {!isMinimized && (
                 <motion.div
-                  initial={{ height: 0   }}
+                  initial={{ height: 0      }}
                   animate={{ height: "auto" }}
-                  exit={{    height: 0   }}
+                  exit={{    height: 0      }}
                   transition={{ duration: 0.2 }}
                 >
                   <div
                     ref={bodyRef}
-                    className="bg-zinc-950 p-4 h-64 overflow-y-auto cursor-text font-mono text-sm"
+                    className="bg-zinc-950 p-4 h-72 overflow-y-auto cursor-text font-mono text-sm"
                     onClick={() => inputRef.current?.focus()}
                   >
-                    {/* Welcome message */}
+                    {/* ── Welcome screen (shown until first command) ── */}
                     {history.length === 0 && (
-                      <div className="text-zinc-300 text-xs mb-3 space-y-0.5">
-                        <div>Welcome to <span className="text-violet-400">MD SHANJID AREFIN</span>&apos;s portfolio terminal.</div>
-                        <div>Type <span className="text-yellow-400 font-bold">help</span> for commands · <span className="text-yellow-400 font-bold">ls</span> to list sections · <span className="text-yellow-400 font-bold">Tab</span> to autocomplete</div>
-                        <div className="text-zinc-700">────────────────────────────────────</div>
+                      <div className="mb-4">
+                        {/* Info box */}
+                        <div className="border border-violet-500/20 rounded-lg px-3.5 py-3 mb-4 bg-violet-500/5">
+                          <div className="text-violet-400 text-[10px] uppercase tracking-widest mb-1.5">
+                            MD Shanjid Arefin · Portfolio Terminal
+                          </div>
+                          <div className="text-zinc-500 text-[11px] leading-relaxed">
+                            Click a command below or type your own.{" "}
+                            <span className="text-amber-400">Tab</span> to autocomplete ·{" "}
+                            <span className="text-amber-400">↑↓</span> to browse history
+                          </div>
+                        </div>
+
+                        {/* Quick command chips */}
+                        <div className="text-[10px] text-zinc-600 uppercase tracking-widest mb-2">
+                          Quick commands
+                        </div>
+                        <div className="grid grid-cols-2 gap-1.5 mb-3">
+                          {QUICK_CMDS.map(({ label, cmd, desc }) => (
+                            <button
+                              key={label}
+                              onClick={() => execute(cmd)}
+                              className={cn(
+                                "flex items-center gap-2 px-3 py-2 rounded-md text-left",
+                                "border border-zinc-800 bg-zinc-900/60",
+                                "hover:border-violet-500/40 hover:bg-violet-500/5",
+                                "transition-all duration-150 group"
+                              )}
+                            >
+                              <span className="text-amber-400 text-[11px]">{label}</span>
+                              <span className="text-zinc-600 text-[10px] group-hover:text-zinc-500 transition-colors">
+                                {desc}
+                              </span>
+                            </button>
+                          ))}
+                        </div>
+
+                        <div className="text-[10px] text-zinc-700 border-t border-zinc-800/60 pt-2.5">
+                          ── or type any command · try{" "}
+                          <span
+                            className="text-amber-500 cursor-pointer hover:text-amber-300 transition-colors"
+                            onClick={() => execute("help")}
+                          >
+                            help
+                          </span>
+                          {" "}or{" "}
+                          <span
+                            className="text-amber-500 cursor-pointer hover:text-amber-300 transition-colors"
+                            onClick={() => execute("neofetch")}
+                          >
+                            neofetch
+                          </span>{" "}──
+                        </div>
                       </div>
                     )}
 
-                    {/* History */}
+                    {/* ── Command history ── */}
                     {history.map((entry) => (
                       <div key={entry.id} className="mb-2">
-                        {/* Command line */}
                         <div className="flex items-center gap-0">
                           <Prompt />
                           <span className="text-zinc-200">{entry.cmd}</span>
                         </div>
-                        {/* Output */}
                         {entry.output && (
                           <div className={cn(
                             "mt-0.5 whitespace-pre-wrap text-xs leading-relaxed pl-1",
@@ -443,7 +508,7 @@ export default function FloatingTerminal() {
                               ? "text-emerald-400"
                               : "text-red-400"
                           )}>
-                            {!entry.ok && <span className="mr-1">✗</span>}
+                            {!entry.ok         && <span className="mr-1">✗</span>}
                             {entry.ok && !entry.isInfo && <span className="mr-1">→</span>}
                             {entry.output}
                           </div>
@@ -451,7 +516,7 @@ export default function FloatingTerminal() {
                       </div>
                     ))}
 
-                    {/* Active input */}
+                    {/* ── Active input / redirecting ── */}
                     {!redirecting ? (
                       <div className="flex items-center">
                         <Prompt />
@@ -476,6 +541,29 @@ export default function FloatingTerminal() {
                         redirecting...
                       </motion.div>
                     )}
+                  </div>
+
+                  {/* ── Quick bar ── */}
+                  <div className="flex items-center gap-1.5 px-3 py-2 bg-zinc-900 border-t border-white/5 flex-wrap">
+                    <span className="text-[10px] text-zinc-600 font-mono shrink-0 mr-1">run →</span>
+                    {[...QUICK_CMDS.map(q => ({ label: q.label, cmd: q.cmd })),
+                       { label: "help", cmd: "help" },
+                       { label: "clear", cmd: "clear" },
+                    ].map(({ label, cmd }) => (
+                      <button
+                        key={label}
+                        onClick={() => execute(cmd)}
+                        className={cn(
+                          "font-mono text-[10px] px-2 py-1 rounded-md",
+                          "border border-zinc-800 bg-transparent",
+                          "text-zinc-500 hover:text-violet-300",
+                          "hover:border-violet-500/40 hover:bg-violet-500/5",
+                          "transition-all duration-150"
+                        )}
+                      >
+                        {label}
+                      </button>
+                    ))}
                   </div>
                 </motion.div>
               )}
