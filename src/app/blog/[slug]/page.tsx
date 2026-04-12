@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPostBySlug, getAllPosts, formatDate } from "@/lib/mdx";
+import { getComponentsForSlug } from "@/lib/blog-components";
 import MDXContent from "@/components/blog/MDXContent";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
@@ -29,6 +30,8 @@ export default async function BlogPostPage({ params }: Props) {
   const post = getPostBySlug(slug);
 
   if (!post) notFound();
+
+  const components = getComponentsForSlug(slug); // ← only addition
 
   return (
     <main className="min-h-screen py-24 px-4">
@@ -69,8 +72,7 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        {/* Pass raw string directly — no serialize() needed anymore */}
-        <MDXContent source={post.content} />
+        <MDXContent source={post.content} components={components} />
 
         <div className="mt-16 pt-8 border-t border-zinc-800">
           <Link href="/blog" className="inline-flex items-center gap-2 text-sky-700 dark:text-zinc-400 hover:text-violet-400 transition-colors font-mono text-sm">
