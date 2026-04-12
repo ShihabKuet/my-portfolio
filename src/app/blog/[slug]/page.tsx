@@ -51,6 +51,7 @@ export default async function BlogPostPage({ params }: Props) {
                 src={post.coverImage}
                 alt={post.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 768px"
                 className="object-cover"
                 priority
               />
