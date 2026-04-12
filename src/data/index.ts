@@ -59,31 +59,31 @@ export const experiences: Experience[] = [
       "PAM"
     ],
   },
-  {
-    company: "KUET FILM SOCIETY",
-    role: "Design Secretary",
-    duration: "2022 – 2024",
-    location: "Khulna, Bangladesh",
-    link: "https://www.bdcom.cn",
-    description: [
-      "Developing and optimizing networking features for embedded systems, focusing on access control and packet-level policy enforcement",
-      "Worked on RPC-based synchronization mechanisms between control and line cards in VxWorks, improving reliability of distributed configurations",
-      "Designed and enhanced IPACL modules, ensuring efficient rule updates and consistency across hardware components",
-      "Integrated and debugged low-level networking protocols using C in Linux/VxWorks environments",
-      "Collaborated with cross-functional teams to analyze system behavior, troubleshoot performance issues, and deliver production-grade solutions",
-    ],
-    technologies: [
-      "C",
-      "Python",
-      "Linux",
-      "VxWorks",
-      "Networking",
-      "RPC",
-      "IPACL",
-      "RADIUS",
-      "PAM"
-    ],
-  },
+  // {
+  //   company: "KUET FILM SOCIETY",
+  //   role: "Design Secretary",
+  //   duration: "2022 – 2024",
+  //   location: "Khulna, Bangladesh",
+  //   link: "https://www.bdcom.cn",
+  //   description: [
+  //     "Developing and optimizing networking features for embedded systems, focusing on access control and packet-level policy enforcement",
+  //     "Worked on RPC-based synchronization mechanisms between control and line cards in VxWorks, improving reliability of distributed configurations",
+  //     "Designed and enhanced IPACL modules, ensuring efficient rule updates and consistency across hardware components",
+  //     "Integrated and debugged low-level networking protocols using C in Linux/VxWorks environments",
+  //     "Collaborated with cross-functional teams to analyze system behavior, troubleshoot performance issues, and deliver production-grade solutions",
+  //   ],
+  //   technologies: [
+  //     "C",
+  //     "Python",
+  //     "Linux",
+  //     "VxWorks",
+  //     "Networking",
+  //     "RPC",
+  //     "IPACL",
+  //     "RADIUS",
+  //     "PAM"
+  //   ],
+  // },
 ];
 
 export const education: Education[] = [
@@ -108,11 +108,13 @@ import {
   SiCplusplus, SiPython, SiJavascript, SiTypescript,
   SiPostgresql, SiGnubash, SiReact, SiNextdotjs,
   SiTailwindcss, SiNodedotjs, SiLinux, SiGit, SiWireshark,
+  SiSubversion ,
 } from "react-icons/si";
 import { 
   TbBrandJavascript, TbBrandTypescript 
 } from "react-icons/tb";
 import { Database, Globe, Cpu, Wrench } from "lucide-react";
+import { BsCpuFill } from "react-icons/bs";
 
 export const skills: Skill[] = [
   // Languages
@@ -129,9 +131,12 @@ export const skills: Skill[] = [
   // Backend
   { name: "Node.js",       stars: 3, category: "backend",   icon: SiNodedotjs         },
   { name: "REST API",      stars: 4, category: "backend",   icon: Globe               },
+  // Operating System
+  { name: "Linux",         stars: 5, category: "os",        icon: SiLinux             },
+  { name: "VxWorks",       stars: 5, category: "os",        icon: BsCpuFill           },
   // Tools
-  { name: "Linux",         stars: 5, category: "tools",     icon: SiLinux             },
   { name: "Git",           stars: 4, category: "tools",     icon: SiGit               },
+  { name: "SVN",           stars: 5, category: "tools",     icon: SiSubversion        },
   { name: "GCC / GDB",     stars: 4, category: "tools",     icon: Cpu                 },
   { name: "Wireshark",     stars: 4, category: "tools",     icon: SiWireshark         },
 ];
@@ -219,22 +224,32 @@ export const codingProfiles = {
 // Update these whenever you solve more problems.
 export const manualCodingStats = {
   hackerrank: {
-    solved:     120,
+    solved:     100,
     stars:      "5 Star",
-    badges:     8,
-    certificate: "Problem Solving (Intermediate)",
+    badges:     4,
+    certificate: "Problem Solving & SQL (Basic)",
   },
   codeforces: {
-    solved:  200,
-    rating:  1200,
-    rank:   "Pupil",
+    solved:  17,
+    rating:  858,
+    rank:   "Newbie",
   },
 };
 
 export const achievements = [
   {
-    title: "Fundamentals of Engineering (FE) Exam",
-    issuer: "IEEE / NCEES",
+    title: "Certificate of Excellence (ITEE)",
+    issuer: "ITEE",
+    date: "October 2024",
+    description: "Ranked 2nd in Bangladesh in the ITEE FE Exam",
+    credentialUrl: "",           // ← add URL if available
+    image: "/certs/fe-exam.jpg", // ← add certificate image if you have it
+    category: "certification",
+    highlight: true,             // marks it as a featured achievement
+  },
+  {
+    title: "ITEE Level-2 FE Certificate",
+    issuer: "ITEE",
     date: "October 2024",
     description: "Passed the FE Computer Engineering exam — a nationally recognized engineering certification. Physical certificate pending collection.",
     credentialUrl: "",           // ← add URL if available
@@ -243,21 +258,21 @@ export const achievements = [
     highlight: true,             // marks it as a featured achievement
   },
   {
-    title: "Problem Solving (Intermediate)",
+    title: "Problem Solving (Basic)",
     issuer: "HackerRank",
     date: "2024",
-    description: "Certified in intermediate-level problem solving covering data structures and algorithms.",
-    credentialUrl: "https://www.hackerrank.com/certificates/your-cert-id", // ← replace
+    description: "Certified in basic-level problem solving covering data structures and algorithms.",
+    credentialUrl: "https://www.hackerrank.com/certificates/73ac4ebac062", // ← replace
     image: "",
     category: "certification",
     highlight: false,
   },
   {
-    title: "Your Other HackerRank Certificate",
+    title: "SQL (Basic)",
     issuer: "HackerRank",
     date: "2024",
-    description: "Brief description of what this certificate covers.",
-    credentialUrl: "https://www.hackerrank.com/certificates/your-cert-id",
+    description: "Certifiedn in basic-level SQL",
+    credentialUrl: "https://www.hackerrank.com/certificates/5ecb69d47dcb",
     image: "",
     category: "certification",
     highlight: false,

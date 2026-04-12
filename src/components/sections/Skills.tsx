@@ -10,11 +10,12 @@ import { Skill } from "@/types";
 // ── Category filters ──────────────────────────────────────────────────────────
 
 const categories: { label: string; value: Skill["category"] | "all" }[] = [
-  { label: "All",       value: "all"       },
-  { label: "Languages", value: "languages" },
-  { label: "Frontend",  value: "frontend"  },
-  { label: "Backend",   value: "backend"   },
-  { label: "Tools",     value: "tools"     },
+  { label: "All",                  value: "all"       },
+  { label: "Languages",            value: "languages" },
+  { label: "Frontend",             value: "frontend"  },
+  { label: "Backend",              value: "backend"   },
+  { label: "Operating System",     value: "os"        },
+  { label: "Tools",                value: "tools"     },
 ];
 
 // ── Per-category color palettes ───────────────────────────────────────────────
@@ -53,8 +54,16 @@ const PALETTES: Record<Skill["category"], Palette> = {
     starOffDark: "#021d18",  starOffLight: "#a7f3d0",
     textDark:    "#d1fae5",  textLight:    "#021d18",
   },
+  os: {
+    fillDark:    "#9ea100",  fillLight:    "#879fc0",
+    glossDark:   "#873844",  glossLight:   "#b4f42b",
+    borderDark:  "#4c0519",  borderLight:  "#be123c",
+    starOnDark:  "#ffe4e6",  starOnLight:  "#4c0519",
+    starOffDark: "#3f0011",  starOffLight: "#fecdd3",
+    textDark:    "#ffe4e6",  textLight:    "#3f0011",
+  },
   tools: {
-    fillDark:    "#9f1239",  fillLight:    "#e11d48",
+    fillDark:    "#9f1239",  fillLight:    "#1d82e1",
     glossDark:   "#fb7185",  glossLight:   "#ffe4e6",
     borderDark:  "#4c0519",  borderLight:  "#be123c",
     starOnDark:  "#ffe4e6",  starOnLight:  "#4c0519",

@@ -14,7 +14,7 @@ export interface NavItem {
 export interface Skill {
   name:     string;
   stars:    1 | 2 | 3 | 4 | 5;   // 1–5 star rating
-  category: "frontend" | "backend" | "tools" | "languages";
+  category: "frontend" | "backend" | "tools" | "languages" | "os";
   icon?:    SkillIcon;
 }
 
