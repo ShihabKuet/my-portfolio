@@ -33,17 +33,13 @@ const FIXED_LINE  = 'Engineer *dev = &profile;';
 
 // Multi-line output — each line typed after previous completes
 const OUTPUT_LINES = [
-  { text: "[BOOT]  Initializing engineer profile...",                          color: "#6b7280", delay: 0    },
-  { text: "[OK]    Hello World! I'm MD. SHANJID AREFIN",                      color: "#818cf8", delay: 380  },
-  { text: "[OK]    Role     : Software R&D Engineer @ Shanghai BDCOM",         color: "#4ade80", delay: 320  },
-  { text: "[OK]    Stack    : C · Embedded Systems · Network Protocols",       color: "#4ade80", delay: 300  },
-  { text: "[OK]    Skills   : RADIUS · TACACS+ · AAA · ACL · SNMP · 802.1X", color: "#4ade80", delay: 320  },
-  { text: "[OK]    IEEE     : Published — Network Security Research",          color: "#4ade80", delay: 300  },
-  { text: "[OK]    RFC      : TFTP (RFC 1350) · Implemented from spec",        color: "#4ade80", delay: 300  },
-  { text: "[OK]    Degree   : B.Sc CSE — KUET, 2024",                         color: "#4ade80", delay: 280  },
-  { text: "[INFO]  Fixing bugs in the network stack...",                       color: "#fbbf24", delay: 500  },
-  { text: "[INFO]  Status   : Ready to build something great.",                color: "#fbbf24", delay: 400  },
-  { text: "[DONE]  All systems operational. Uptime: ∞",                        color: "#22c55e", delay: 500  },
+  { text: "[SYS]   Boot sequence initialized...",               color: "#6b7280", delay: 0   },
+  { text: "[ID]    MD. Shanjid Arefin — engineer loaded",       color: "#a78bfa", delay: 440 },
+  { text: "[ROLE]  R&D Engineer · Shanghai BDCOM",              color: "#4ade80", delay: 300 },
+  { text: "[STACK] C · Embedded Linux · Network Protocols",     color: "#4ade80", delay: 280 },
+  { text: "[PUB]   IEEE Research · RFC 1350 Implementor",       color: "#4ade80", delay: 320 },
+  { text: "[EDU]   B.Sc CSE · KUET 2024",                      color: "#4ade80", delay: 260 },
+  { text: "[READY] Operational. Let's build something great ∞", color: "#22d3ee", delay: 640 },
 ];
 
 // ─── Social links (defined at module level — stable reference) ────────────────
@@ -348,14 +344,14 @@ export default function Hero() {
           <span style={{ display: "inline-block", width: 7, height: "0.85em", background: "#050510", marginLeft: 2, verticalAlign: "middle" }} />
         </span>
       );
-      if (savingStep === 3) return <span style={{ color: "#155724" }}>[ Wrote 24 lines ]</span>;
+      if (savingStep === 3) return <span style={{ color: "#4ade80" }}>[ Wrote 24 lines ]</span>;
     })();
 
     return (
       <div style={{ fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace", width: "100%" }}>
         
         {/* nano title bar */}
-        <div style={{ background: "#c4c8d4", color: "#050510", fontSize: "0.78rem", fontWeight: 700, padding: "0.2rem 0.8rem", display: "flex", justifyContent: "space-between" }}>
+        <div style={{ background: "#130d2b", color: "#a78bfa", fontSize: "0.78rem", fontWeight: 600, padding: "0.2rem 0.8rem", display: "flex", justifyContent: "space-between" }}>
           <span>GNU nano 5.4</span>
           <span>shanjid_arefin.c{modified && <span style={{ color: "#6b2e00" }}> [Modified]</span>}</span>
           <span />
@@ -425,7 +421,7 @@ export default function Hero() {
         </div>
 
         {/* Status bar */}
-        <div style={{ background: "#c4c8d4", color: "#050510", fontSize: "0.75rem", fontWeight: 700, padding: "0.15rem 0.8rem", minHeight: "1.4rem" }}>
+        <div style={{ background: "#130d2b", color: "#7c6aad", fontSize: "0.75rem", fontWeight: 500, padding: "0.15rem 0.8rem", minHeight: "1.4rem" }}>
           {statusContent ?? "\u00a0"}
         </div>
 
@@ -443,62 +439,84 @@ export default function Hero() {
 
   // ── bash terminal ─────────────────────────────────────────────────────────
   const renderBash = () => (
-    <div style={{ padding: "14px 18px", fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace", fontSize: 12.5, lineHeight: 1.75, color: "#d4d4d8" }}>
-      
-      {/* Initial run — crashes */}
-      <div style={{ marginBottom: 4 }}><Prompt />{"./shanjid_arefin"}</div>
+    <div style={{
+      padding: "16px 20px",
+      fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace",
+      fontSize: 12.5, lineHeight: 1.75, color: "#d4d4d8",
+      backgroundImage: "radial-gradient(rgba(124,58,237,0.05) 1px, transparent 1px)",
+      backgroundSize: "22px 22px",
+    }}>
 
-      {/* Segfault with animated flicker */}
-      <motion.div
-        animate={{ opacity: [1, 0.5, 1, 0.72, 1, 0.58, 1, 0.8, 1, 1] }}
-        transition={{ duration: 1.1, times: [0, 0.07, 0.14, 0.26, 0.38, 0.52, 0.63, 0.78, 0.9, 1], repeat: Infinity, repeatDelay: 0.9 }}
-        style={{ color: "#ff3333", fontWeight: 700, fontSize: "0.92rem", textShadow: "0 0 14px rgba(255,40,40,0.6)" }}
-      >
-        Segmentation Fault (Core dumped)
-      </motion.div>
-      <div style={{ color: "#ff6060", fontSize: "0.80rem", opacity: 0.9, marginBottom: 2 }}>
-        Signal: SIGSEGV — invalid memory access
-      </div>
-      <div style={{ color: "#4b4b5a", fontSize: "0.78rem", marginBottom: 2 }}>
-        #0  0x000000 in main () at shanjid_arefin.c:17
-      </div>
-      <div style={{ color: "#3d3d50", fontSize: "0.77rem" }}>
-        &nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;Hello World! I am %s\n&quot;, dev-&gt;name);&nbsp;&nbsp;
-        <span style={{ color: "#ff4444", fontSize: "0.74rem" }}>← dev is NULL</span>
+      {/* ── Crash card ── */}
+      <div style={{
+        border: "1px solid rgba(58, 44, 205, 0.18)",
+        borderRadius: 8, padding: "10px 14px", marginBottom: 14,
+        background: "rgba(37, 117, 245, 0.04)",
+      }}>
+        <div style={{ marginBottom: 6 }}>
+          <Prompt /><span style={{ color: "#4a4a66" }}>./shanjid_arefin</span>
+        </div>
+
+        <motion.div
+          animate={{ opacity: [1, 0.3, 1, 0.5, 1] }}
+          transition={{ duration: 1.6, repeat: Infinity, repeatDelay: 1.0 }}
+          style={{
+            color: "#ff3333", fontWeight: 700, fontSize: "0.92rem",
+            letterSpacing: "0.03em", textShadow: "0 0 18px rgba(255,40,40,0.5)",
+          }}
+        >
+          ✗ Segmentation Fault
+          <span style={{ color: "#5a2a2a", fontWeight: 400, fontSize: "0.75rem", marginLeft: 10 }}>
+            SIGSEGV · core dumped
+          </span>
+        </motion.div>
+
+        <div style={{
+          fontSize: "0.73rem", color: "#3a3a52", marginTop: 6,
+          borderTop: "1px solid rgba(255,85,85,0.1)", paddingTop: 6,
+          display: "flex", gap: 16,
+        }}>
+          <span>#0 main() · shanjid_arefin.c:17</span>
+          <span style={{ color: "#ff4444" }}>← dev is NULL</span>
+        </div>
       </div>
 
-      {/* nano command */}
+      {/* ── nano command ── */}
       {(["typing-nano","compiling","output","done"] as Phase[]).includes(phase) && (
-        <div style={{ marginTop: 12 }}>
+        <div style={{ marginBottom: 4 }}>
           <Prompt />
-          <span style={{ color: (phase === "typing-nano") ? "#d4d4d8" : "#3d3d50" }}>
+          <span style={{ color: phase === "typing-nano" ? "#d4d4d8" : "#3d3d55" }}>
             {nanoTyped}
           </span>
           {phase === "typing-nano" && <Cursor />}
         </div>
       )}
 
-      {/* compile command */}
+      {/* ── compile command ── */}
       {(["compiling","output","done"] as Phase[]).includes(phase) && (
-        <div>
+        <div style={{ marginBottom: 4 }}>
           <Prompt />
-          <span style={{ color: phase === "compiling" ? "#d4d4d8" : "#3d3d50" }}>
+          <span style={{ color: phase === "compiling" ? "#d4d4d8" : "#3d3d55" }}>
             {compileTyped}
           </span>
           {phase === "compiling" && <Cursor />}
         </div>
       )}
 
-      {/* Multi-line output — lines appear sequentially */}
+      {/* ── Output lines with left accent border ── */}
       {(["output","done"] as Phase[]).includes(phase) && outputLines.length > 0 && (
-        <div style={{ marginTop: 10 }}>
+        <div style={{ marginTop: 12 }}>
           {outputLines.map((line, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: -6 }}
+              initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.2 }}
-              style={{ color: line.color, fontFamily: "monospace", fontSize: "0.80rem", lineHeight: 1.8 }}
+              transition={{ duration: 0.25 }}
+              style={{
+                color: line.color, fontSize: "0.80rem", lineHeight: 1.95,
+                borderLeft: `2px solid ${line.color}45`,
+                paddingLeft: 10, marginBottom: 1,
+              }}
             >
               {line.text}
             </motion.div>
@@ -506,18 +524,14 @@ export default function Hero() {
         </div>
       )}
 
-      {/* Idle cursor after done */}
+      {/* ── Idle cursor after done ── */}
       {(phase === "done" || (phase === "output" && outputLines.length === OUTPUT_LINES.length)) && (
-        <div style={{ marginTop: 8 }}>
-          <Prompt /><Cursor />
-        </div>
+        <div style={{ marginTop: 8 }}><Prompt /><Cursor /></div>
       )}
 
-      {/* Idle cursor during segfault phase */}
+      {/* ── Idle cursor during segfault ── */}
       {phase === "segfault" && (
-        <div style={{ marginTop: 12 }}>
-          <Prompt /><Cursor />
-        </div>
+        <div style={{ marginTop: 14 }}><Prompt /><Cursor /></div>
       )}
     </div>
   );
@@ -581,22 +595,69 @@ export default function Hero() {
                 )}
 
                 {/* Terminal window */}
+                {/* Spinning gradient border wrapper */}
                 <div
-                  className="rounded-xl overflow-hidden shadow-2xl shadow-violet-500/10 dark:shadow-black/60 w-full"
-                  style={{ border: "1px solid #3f3f46", background: "#18181b" }}
+                  className="relative rounded-xl p-[1.5px] overflow-hidden w-full"
+                  style={{ boxShadow: "0 24px 64px rgba(124,58,237,0.18), 0 0 0 0px transparent" }}
                 >
-                  <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "10px 14px", background: "#27272a", borderBottom: "1px solid #3f3f46" }}>
-                    <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#ef4444", opacity: 0.85 }} />
-                    <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#eab308", opacity: 0.85 }} />
-                    <div style={{ width: 12, height: 12, borderRadius: "50%", background: "#22c55e", opacity: 0.85 }} />
-                    <span style={{ marginLeft: 10, color: "#71717a", fontSize: 12, fontFamily: "monospace" }}>
-                      {isEditorPhase ? "nano — Portfolio.c" : "bash — user@portfolio"}
-                    </span>
-                  </div>
-                  <div style={{ minHeight: 280 }}>
-                    {isEditorPhase ? renderEditor() : renderBash()}
+                  {/* Rotating conic gradient — the "running" border */}
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                    className="absolute pointer-events-none"
+                    style={{
+                      inset: "-50%", width: "200%", height: "200%",
+                      background: "conic-gradient(from 0deg, transparent 0deg, #7c3aed 80deg, #06b6d4 150deg, #4ade80 210deg, transparent 290deg)",
+                    }}
+                  />
+
+                  {/* Inner terminal */}
+                  <div className="relative rounded-[10px] overflow-hidden w-full" style={{ background: "#06060f" }}>
+
+                    {/* ── Title bar ── */}
+                    <div style={{
+                      display: "flex", alignItems: "center", gap: 7,
+                      padding: "10px 16px",
+                      background: "linear-gradient(90deg, #09091e 0%, #130d2b 100%)",
+                      borderBottom: "1px solid rgba(124,58,237,0.2)",
+                    }}>
+                      {/* Traffic lights with glow */}
+                      <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#ff5f57", boxShadow: "0 0 6px rgba(255,95,87,0.55)" }} />
+                      <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#febc2e", boxShadow: "0 0 6px rgba(254,188,46,0.55)" }} />
+                      <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#28c840", boxShadow: "0 0 6px rgba(40,200,64,0.55)" }} />
+
+                      <span style={{
+                        marginLeft: 10, color: "#6b5f9e", fontSize: 11,
+                        fontFamily: "monospace", letterSpacing: "0.06em",
+                      }}>
+                        {isEditorPhase ? "nano · shanjid_arefin.c" : "bash · visitor@shanjid"}
+                      </span>
+
+                      {/* Live pulse indicator */}
+                      <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
+                        <motion.div
+                          animate={{ opacity: [1, 0.2, 1] }}
+                          transition={{ duration: 1.8, repeat: Infinity }}
+                          style={{
+                            width: 6, height: 6, borderRadius: "50%",
+                            background: "#4ade80", boxShadow: "0 0 7px rgba(74,222,128,0.8)",
+                          }}
+                        />
+                        <span style={{ fontSize: 10, fontFamily: "monospace", color: "#2d4a35", letterSpacing: "0.1em" }}>
+                          LIVE
+                        </span>
+                      </div>
+                    </div>
+
+                    <div style={{ minHeight: 280 }}>
+                      {isEditorPhase ? renderEditor() : renderBash()}
+                    </div>
                   </div>
                 </div>
+
+                {/* Enhanced ambient glow layers */}
+                <div className="absolute -inset-6 bg-violet-600/10 rounded-2xl blur-3xl -z-10 pointer-events-none" />
+                <div className="absolute -inset-2 bg-cyan-500/5 rounded-2xl blur-xl -z-10 pointer-events-none" />
 
                 <div className="absolute -inset-4 bg-violet-500/5 rounded-2xl blur-2xl -z-10 pointer-events-none" />
               </motion.div>
