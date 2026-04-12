@@ -5,6 +5,7 @@ import { getComponentsForSlug } from "@/lib/blog-components";
 import MDXContent from "@/components/blog/MDXContent";
 import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -43,6 +44,19 @@ export default async function BlogPostPage({ params }: Props) {
         </Link>
 
         <header className="mb-12">
+          {/* Cover Image */}
+          {post.coverImage && (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-8">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-2 mb-4">
             {post.tags.map((tag) => (
               <span key={tag} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-violet-500/10 text-violet-400 text-xs font-mono border border-violet-500/20">

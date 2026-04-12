@@ -12,6 +12,7 @@ export interface PostMeta {
   date: string;
   tags: string[];
   readTime: string;
+  coverImage?: string;
 }
 
 export interface Post extends PostMeta {
@@ -39,6 +40,7 @@ export function getAllPosts(): PostMeta[] {
         date: data.date,
         tags: data.tags ?? [],
         readTime: readingTime(content).text,
+        coverImage: data.coverImage ?? null,
       };
     })
     .filter(Boolean) as PostMeta[];
@@ -61,6 +63,7 @@ export function getPostBySlug(slug: string): Post | null {
       date: data.date,
       tags: data.tags ?? [],
       readTime: readingTime(content).text,
+      coverImage: data.coverImage ?? null,
       content,
     };
   } catch {
