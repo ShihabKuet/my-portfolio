@@ -152,7 +152,7 @@ export const projects: Project[] = [
     live: "",
     featured: true,
     category: "thesis",
-    image: "thesis_paper.png",
+    image: "thesis_paper_cover.png",
   },
   {
     title: "3D Dynamic Airport - OpenGL",

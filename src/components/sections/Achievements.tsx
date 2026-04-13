@@ -6,6 +6,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { ExternalLink, Award, BadgeCheck, Star, Calendar } from "lucide-react";
 import { SiHackerrank, SiIeee } from "react-icons/si";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 // ── Maps issuer name to icon + color ─────────────────────────────────────────
 function IssuerBadge({ issuer }: { issuer: string }) {
@@ -55,9 +56,13 @@ function FeaturedAchievementCard({
       <div className="relative flex flex-col sm:flex-row sm:items-start gap-6">
 
         {/* Icon */}
-        <div className="shrink-0 w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-          <SiIeee size={28} className="text-blue-400" />
-        </div>
+        <Image
+          src="icons/itee_fe.svg"
+          alt="ITEE FE"
+          width={48}
+          height={48}
+          className="object-contain dark:invert"
+        />
 
         {/* Content */}
         <div className="flex-1 min-w-0">
