@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Minus, Square } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 // ── Command map — extend this freely ─────────────────────────────────────────
 const COMMANDS: Record<string, { target: string; description: string }> = {
@@ -343,6 +344,18 @@ export default function FloatingTerminal() {
                   "transition-all duration-200 group"
                 )}
               >
+                {/* Image before pulsing dot */}
+                <div className="relative flex items-center justify-center w-[24px] h-[24px] shrink-0">
+                  <Image
+                    src="/profile.png"
+                    alt="terminal status"
+                    width={24}
+                    height={24}
+                    className="object-contain"
+                  />
+                  {/* <span className="absolute inset-0 rounded-full bg-emerald-400/30 blur-[4px] animate-pulse" /> */}
+                </div>
+                
                 {/* Pulsing live dot */}
                 <span className="relative flex h-2 w-2 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
