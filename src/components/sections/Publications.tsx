@@ -127,8 +127,8 @@ export default function Publications() {
     <section id="publications" className="py-24 px-4 bg-sky-100/60 dark:bg-zinc-900/30">
       <div className="max-w-4xl mx-auto">
         <SectionHeading
-          title="Research"
-          subtitle="Peer-reviewed publications and academic contributions."
+          title="Publications"
+          subtitle="Internationally recognized publications and academic research contributions."
         />
 
         <div className="space-y-6">

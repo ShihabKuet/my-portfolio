@@ -24,7 +24,7 @@ export const navItems: NavItem[] = [
   { label: "Skills",       href: "/#skills",       icon: "Wrench"        },
   { label: "Experience",   href: "/#experience",   icon: "Briefcase"     },
   { label: "Expertise",    href: "/#expertise",    icon: "Network"       },
-  { label: "Research",     href: "/#publications", icon: "FlaskConical"  },
+  { label: "Publications", href: "/#publications", icon: "FlaskConical"  },
   { label: "Projects",     href: "/#projects",     icon: "FolderOpen"    },
   { label: "Education",    href: "/#education",    icon: "GraduationCap" },
   { label: "Coding",       href: "/#coding",       icon: "Terminal"      },
