@@ -1,0 +1,609 @@
+---
+title: "UTF-8: The Encoding That Quietly Holds the Internet Together"
+excerpt: "A deep dive into UTF-8 — how variable-length encoding works, why string.length lies to you, what surrogate pairs are, and why truncating a string at a byte boundary can silently corrupt data. Includes an interactive encoder to step through any character bit by bit."
+description: "A deep, interactive dive into how UTF-8 works at the bit level — from code points to bytes, encoding rules, memory layout, and everything in between."
+date: "2026-04-16"
+author: "Your Name"
+tags: ["utf-8", "unicode", "encoding", "deep-dive", "computer-science"]
+readingTime: "18 min read"
+---
+
+import {
+  InteractiveEncoder,
+  EncodingRulesCard,
+  MemoryLayout,
+  EncodingComparison,
+  CommonPitfalls,
+} from "./UTF8DeepDive";
+
+# UTF-8: The Encoding That Quietly Holds the Internet Together
+
+*There's a piece of technology that billions of people use every single second. It processes your tweets, stores your emoji, powers your emails, and renders this very sentence you're reading. You've probably never thought about it. It has no logo, no marketing team, and no fan club. It's called UTF-8, and I think it's one of the most elegant pieces of engineering in all of computing.*
+
+Let me show you how it works — from the raw bits in memory all the way up to the `😊` on your screen.
+
+---
+
+## The Problem: Computers Only Understand Numbers
+
+Here's the thing people forget: computers don't understand text. They understand numbers. Binary numbers, specifically — long strings of `0`s and `1`s. When you type the letter `A`, your computer isn't storing an `A`. It's storing a number. The question is: *which* number?
+
+This seems simple enough. Just assign every letter a number and call it a day. And for a long time, that's basically what happened. The ASCII standard (1963) mapped 128 characters — the English alphabet, digits, punctuation, and some control characters — to numbers 0 through 127. Seven bits. Clean, elegant, and entirely useless for anyone who needed to write in, say, Chinese.
+
+By the late 1980s, computing had gone global, and every region was doing its own thing. Japan had Shift-JIS. China had GB2312. Europe had ISO 8859-1. Opening a file from another country was a gamble. Mojibake — that garbled mess of `Ã©` instead of `é` — became a universal programmer experience.
+
+Someone needed to build a universal character system. That someone turned out to be a committee.
+
+---
+
+## Unicode: One Ring to Rule Them All
+
+In 1991, the Unicode Consortium published the first version of the **Unicode Standard** — a project to assign a unique number to every character in every writing system on earth.
+
+The Unicode Standard doesn't define how characters are stored. It defines **code points**: abstract numbers associated with characters. Each code point is written as `U+` followed by a hexadecimal number. So:
+
+- `A` → `U+0041`
+- `é` → `U+00E9`
+- `中` → `U+4E2D`
+- `😊` → `U+1F60A`
+
+The current Unicode standard covers **149,813 characters** across 161 writing systems, plus symbols, emoji, mathematical notation, musical symbols, ancient scripts, and even some fictional alphabets (Klingon was proposed but rejected, for the record).
+
+The entire Unicode space spans from `U+0000` to `U+10FFFF` — that's 1,114,112 possible code points, organized into 17 "planes" of 65,536 characters each:
+
+| Plane | Range | Name |
+|-------|-------|------|
+| 0 | U+0000–U+FFFF | Basic Multilingual Plane (BMP) — most everyday characters |
+| 1 | U+10000–U+1FFFF | Supplementary Multilingual Plane — historic scripts, emoji |
+| 2 | U+20000–U+2FFFF | Supplementary Ideographic Plane — rare CJK characters |
+| 3–13 | Unassigned | Reserved for future use |
+| 14 | U+E0000–U+EFFFF | Supplementary Special-purpose Plane |
+| 15–16 | U+F0000–U+10FFFF | Private Use Areas |
+
+But Unicode is just the *map*. We still need a way to actually *store* these numbers as bytes. Enter encoding formats.
+
+---
+
+## Three Ways to Store a Number
+
+Imagine you want to store every Unicode code point. The highest possible code point is `U+10FFFF` — that's 1,114,111 in decimal, which needs 21 bits. The naive solution: just use 4 bytes (32 bits) for every character. Done.
+
+That's UTF-32. It works, but here's the problem: the letter `A` (`U+0041`) becomes:
+
+```
+00 00 00 41
+```
+
+Three wasted bytes for every ASCII character. A plain English document gets 4× bigger overnight. For a world where most web content was English-heavy, this was a disaster waiting to happen. It also breaks every C function that terminates strings at null bytes (`0x00`), since UTF-32 encodes `A` with three of them.
+
+UTF-16 splits the difference: 2 bytes for the BMP (covers most everyday characters), 4 bytes for the rest. Better, but still not ASCII-compatible.
+
+<EncodingComparison />
+
+And then there's UTF-8. Designed by Ken Thompson and Rob Pike in September 1992 over a diner table in New Jersey (the story goes they sketched it on a placemat), UTF-8 is the answer to all these problems. It's:
+
+- **Variable-width**: 1 to 4 bytes per character, depending on the code point
+- **ASCII-compatible**: The first 128 Unicode code points encode *identically* to ASCII — a single byte, unchanged
+- **Self-synchronizing**: You can start reading a byte stream at any point and immediately tell whether you're at the beginning of a character
+- **Backward compatible**: Every valid ASCII file is a valid UTF-8 file
+
+UTF-8 now accounts for **over 98% of web pages** as of 2024. It won.
+
+---
+
+## How UTF-8 Actually Works
+
+This is the part most tutorials skip. Let me walk you through it properly.
+
+UTF-8 is a **variable-length encoding**. Each Unicode code point is encoded into 1, 2, 3, or 4 bytes, depending on the size of the code point. The rule is simple:
+
+<EncodingRulesCard />
+
+Let's break this down:
+
+### The Single-Byte Case: ASCII Land (U+0000–U+007F)
+
+If your code point fits in 7 bits (0–127), UTF-8 stores it as a single byte, with the leading bit set to `0`:
+
+```
+0 xxxxxxx
+```
+
+That leading `0` is the signal: *"this is a complete character, one byte only."*
+
+So `A` (`U+0041` = decimal 65 = binary `1000001`) encodes as:
+
+```
+Byte: 0 1000001
+Hex:  0x41
+```
+
+Exactly what ASCII uses. This is not a coincidence — it was designed this way for backward compatibility.
+
+### Multi-Byte Sequences: Where the Magic Happens
+
+For code points above 127, we need more bytes. Here's where UTF-8 gets clever.
+
+**The leading byte** tells the decoder how many bytes to expect:
+- `110xxxxx` → 2-byte sequence
+- `1110xxxx` → 3-byte sequence
+- `11110xxx` → 4-byte sequence
+
+**Continuation bytes** always have the form `10xxxxxx`. This is crucial — it means any byte starting with `10` is *not* the start of a character. This is what makes UTF-8 self-synchronizing: if you jump into the middle of a stream, you can immediately tell which bytes are leading and which are continuations.
+
+The `x` bits are where the actual code point data lives. Let me show you with a real example.
+
+### Worked Example: Encoding `é` (U+00E9)
+
+`é` has code point `U+00E9` = decimal 233 = binary `11101001`.
+
+Step 1: Check the range. 233 > 127, so we need 2 bytes. The 2-byte template is:
+```
+110xxxxx 10xxxxxx
+```
+
+Step 2: We have 11 payload bits total (5 in byte 1, 6 in byte 2). Our code point needs 8 significant bits: `11101001`. Pad to 11 bits: `00011101001`.
+
+Step 3: Distribute bits, MSB first:
+```
+110xxxxx  →  110 00011  →  0xC3
+10xxxxxx  →  10 101001  →  0xA9
+```
+
+Result: `é` = `0xC3 0xA9` in UTF-8.
+
+### Worked Example: Encoding `中` (U+4E2D)
+
+`中` has code point `U+4E2D` = decimal 19,981 = binary `100111000101101`.
+
+Step 1: 19,981 > 2047, so we need 3 bytes. Template:
+```
+1110xxxx 10xxxxxx 10xxxxxx
+```
+
+Step 2: 16 payload bits total. Pad binary to 16 bits: `0100111000101101`.
+
+Step 3: Distribute in groups of 4, 6, 6:
+```
+1110xxxx  →  1110 0100  →  0xE4
+10xxxxxx  →  10 111000  →  0xB8
+10xxxxxx  →  10 101101  →  0xAD
+```
+
+Result: `中` = `0xE4 0xB8 0xAD` — three bytes.
+
+### Worked Example: Encoding `😊` (U+1F60A)
+
+`😊` is at code point `U+1F60A` = decimal 128,522 = binary `11111011000001010`.
+
+Step 1: 128,522 > 65,535, so we need 4 bytes. Template:
+```
+11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+```
+
+Step 2: 21 payload bits. Pad: `000011111011000001010`.
+
+Step 3: Distribute in groups of 3, 6, 6, 6:
+```
+11110xxx  →  11110 000  →  0xF0
+10xxxxxx  →  10 011111  →  0x9F
+10xxxxxx  →  10 011000  →  0x98
+10xxxxxx  →  10 001010  →  0x8A
+```
+
+Result: `😊` = `0xF0 0x9F 0x98 0x8A` — four bytes for an emoji.
+
+---
+
+## Step Through It Yourself
+
+The best way to understand encoding is to watch it happen. Type any character below — an emoji, a letter in any language, a currency symbol — and step through the encoding process one stage at a time:
+
+<InteractiveEncoder />
+
+---
+
+## How Bytes Sit in Memory
+
+When your program stores a UTF-8 string, those bytes are laid out sequentially in memory. Each character takes its 1–4 bytes, one after another, no padding, no separators.
+
+<MemoryLayout text="Hi 中 😊" />
+
+A few things worth noticing here:
+
+1. `H` and `i` each take 1 byte (pure ASCII range)
+2. The space ` ` is 1 byte (`0x20`)
+3. `中` takes 3 consecutive bytes (`0xE4 0xB8 0xAD`)
+4. `😊` takes 4 consecutive bytes (`0xF0 0x9F 0x98 0x8A`)
+
+This is why `string.length` in most languages doesn't give you what you think. JavaScript counts UTF-16 code units. Python 3 counts Unicode code points. Rust's `.len()` counts bytes. None of them count what you might intuitively call "characters."
+
+---
+
+## The Encoding Algorithm in Code
+
+Let's implement UTF-8 encoding from scratch. This is the heart of it:
+
+```typescript
+function encodeToUTF8(codePoint: number): Uint8Array {
+  if (codePoint < 0 || codePoint > 0x10FFFF) {
+    throw new RangeError(`Invalid code point: ${codePoint}`);
+  }
+
+  // Surrogate pairs are invalid in UTF-8
+  if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
+    throw new RangeError(`Surrogates are not valid Unicode scalar values`);
+  }
+
+  if (codePoint <= 0x7F) {
+    // Single byte: 0xxxxxxx
+    return new Uint8Array([codePoint]);
+  }
+
+  if (codePoint <= 0x7FF) {
+    // Two bytes: 110xxxxx 10xxxxxx
+    return new Uint8Array([
+      0b11000000 | (codePoint >> 6),          // top 5 bits
+      0b10000000 | (codePoint & 0b00111111),  // bottom 6 bits
+    ]);
+  }
+
+  if (codePoint <= 0xFFFF) {
+    // Three bytes: 1110xxxx 10xxxxxx 10xxxxxx
+    return new Uint8Array([
+      0b11100000 | (codePoint >> 12),                  // top 4 bits
+      0b10000000 | ((codePoint >> 6) & 0b00111111),   // middle 6 bits
+      0b10000000 | (codePoint & 0b00111111),           // bottom 6 bits
+    ]);
+  }
+
+  // Four bytes: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+  return new Uint8Array([
+    0b11110000 | (codePoint >> 18),                   // top 3 bits
+    0b10000000 | ((codePoint >> 12) & 0b00111111),   // bits 12–17
+    0b10000000 | ((codePoint >> 6)  & 0b00111111),   // bits 6–11
+    0b10000000 | (codePoint & 0b00111111),            // bits 0–5
+  ]);
+}
+```
+
+And decoding — reading bytes back into code points:
+
+```typescript
+function* decodeUTF8(bytes: Uint8Array): Generator<number> {
+  let i = 0;
+  while (i < bytes.length) {
+    const byte = bytes[i];
+
+    if ((byte & 0b10000000) === 0) {
+      // Single byte: 0xxxxxxx
+      yield byte;
+      i += 1;
+    } else if ((byte & 0b11100000) === 0b11000000) {
+      // Two bytes: 110xxxxx 10xxxxxx
+      const cp = ((byte & 0b00011111) << 6) | (bytes[i + 1] & 0b00111111);
+      yield cp;
+      i += 2;
+    } else if ((byte & 0b11110000) === 0b11100000) {
+      // Three bytes: 1110xxxx 10xxxxxx 10xxxxxx
+      const cp =
+        ((byte & 0b00001111) << 12) |
+        ((bytes[i + 1] & 0b00111111) << 6) |
+        (bytes[i + 2] & 0b00111111);
+      yield cp;
+      i += 3;
+    } else {
+      // Four bytes: 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+      const cp =
+        ((byte & 0b00000111) << 18) |
+        ((bytes[i + 1] & 0b00111111) << 12) |
+        ((bytes[i + 2] & 0b00111111) << 6) |
+        (bytes[i + 3] & 0b00111111);
+      yield cp;
+      i += 4;
+    }
+  }
+}
+```
+
+The magic of the bitmasks: `byte & 0b00111111` strips the leading `10` from continuation bytes, leaving just the 6 payload bits. Then bit-shifting assembles them into the original code point. Clean. Elegant.
+
+---
+
+## The BOM: That Invisible Troublemaker
+
+UTF-8 files sometimes start with three bytes: `EF BB BF`. This is the **Byte Order Mark (BOM)**, and it's the source of more mysterious bugs than perhaps any other three bytes in computing history.
+
+The BOM character is `U+FEFF`, originally designed to indicate byte order in UTF-16. In UTF-8, byte order is irrelevant (it's byte-by-byte, after all), so the BOM serves only as a "this is UTF-8" signal. It's optional. And it's *invisible* — it renders as nothing.
+
+The problem: some programs write it, others don't know how to skip it. If your JSON file starts with `EF BB BF`, a strict parser will fail because `﻿{` is not valid JSON. Your CSV might have an extra invisible character in the first column header.
+
+```python
+# Python: strip BOM if present
+import codecs
+
+with open("file.csv", encoding="utf-8-sig") as f:  # "utf-8-sig" handles BOM
+    content = f.read()
+
+# Or manually:
+text = open("file.csv", encoding="utf-8").read()
+if text.startswith("\ufeff"):
+    text = text[1:]
+```
+
+My rule: write UTF-8 *without* BOM unless a downstream system requires it.
+
+---
+
+## Self-Synchronization: Why UTF-8 is Robust
+
+One of UTF-8's most underappreciated properties is **self-synchronization**. If you receive a corrupt stream, or jump into the middle of a byte sequence, you can immediately determine the structure:
+
+```
+byte starts with...    |  meaning
+-----------------------|---------------------------
+0xxxxxxx               |  single-byte character (ASCII)
+10xxxxxx               |  continuation byte (NOT a sequence start)
+110xxxxx               |  start of 2-byte sequence
+1110xxxx               |  start of 3-byte sequence
+11110xxx               |  start of 4-byte sequence
+```
+
+Any byte starting with `10` is *always* a continuation byte, never a leading byte. This means:
+
+1. You can skip forward to the next character start by looking for a byte that doesn't start with `10`
+2. You can validate sequences without context from earlier in the stream
+3. You can detect corruption: if you see a continuation byte where a leading byte should be, something's wrong
+
+This property is so useful that it was intentional. The designers considered it essential for robustness in a world where data gets truncated, corrupted, and transmitted over lossy channels.
+
+---
+
+## Surrogate Pairs: The UTF-16 Scar
+
+Here's something that trips up JavaScript developers frequently: **surrogate pairs**.
+
+Unicode code points U+D800 through U+DFFF (2,048 code points total) are permanently reserved and are not valid characters. They're called **surrogate code points**, and they exist entirely because of UTF-16's history.
+
+UTF-16 needed a way to encode code points above U+FFFF (the supplementary planes). Its solution: use two 16-bit "surrogate" values — a high surrogate (U+D800–U+DBFF) and a low surrogate (U+DC00–U+DFFF) — in sequence, forming a **surrogate pair**.
+
+JavaScript strings are UTF-16 internally. So when you have an emoji:
+
+```javascript
+const emoji = "😊"; // U+1F60A
+
+// UTF-16 internals:
+emoji.length;              // → 2 (two UTF-16 code units!)
+emoji.charCodeAt(0);       // → 0xD83D (high surrogate)
+emoji.charCodeAt(1);       // → 0xDE0A (low surrogate)
+
+// But code-point aware APIs give the right answer:
+emoji.codePointAt(0);      // → 0x1F60A ✓
+[...emoji].length;         // → 1 ✓
+```
+
+This is why string operations on emoji are so treacherous in JavaScript. Slicing at index 1 gives you half an emoji — a lone surrogate — which is invalid Unicode.
+
+Rust handles this differently: `String` in Rust is always valid UTF-8. The compiler makes it physically impossible to store a lone surrogate. There's something almost poetic about that.
+
+---
+
+## Real-World UTF-8 Across Languages
+
+Here's how you work with UTF-8 correctly in the languages you actually use:
+
+### JavaScript / TypeScript
+
+```typescript
+// Encoding a string to UTF-8 bytes
+const encoder = new TextEncoder(); // always UTF-8
+const bytes: Uint8Array = encoder.encode("Hello 中文 😊");
+// Uint8Array [72, 101, 108, 108, 111, 32, 228, 184, 173, 230, 150, 135, 32, 240, 159, 152, 138]
+
+// Decoding UTF-8 bytes back to a string
+const decoder = new TextDecoder("utf-8");
+const text: string = decoder.decode(bytes);
+
+// Counting actual characters (not code units):
+const str = "Hello 中文 😊";
+const charCount = [...str].length;  // 10 characters
+
+// Safe character iteration:
+for (const char of str) {
+  const cp = char.codePointAt(0)!;
+  console.log(`${char} → U+${cp.toString(16).toUpperCase().padStart(4, "0")}`);
+}
+```
+
+### Python
+
+```python
+# Python 3 strings are Unicode by default (code points)
+text = "Hello 中文 😊"
+
+# Encode to bytes
+utf8_bytes = text.encode("utf-8")
+print(len(utf8_bytes))   # 20 bytes (not 10 characters)
+print(len(text))          # 10 characters
+
+# Decode bytes back
+decoded = utf8_bytes.decode("utf-8")
+
+# Reading files — always specify encoding
+with open("data.txt", "r", encoding="utf-8") as f:
+    content = f.read()
+
+# Handling encoding errors gracefully
+with open("data.txt", "r", encoding="utf-8", errors="replace") as f:
+    content = f.read()  # invalid bytes replaced with U+FFFD (replacement char)
+```
+
+### Rust
+
+```rust
+// Rust Strings are guaranteed to be valid UTF-8
+let text = "Hello 中文 😊";
+
+// Byte length vs character count
+println!("{}", text.len());           // 20 bytes
+println!("{}", text.chars().count()); // 10 characters
+
+// Iterating over characters
+for c in text.chars() {
+    println!("{} → U+{:04X}", c, c as u32);
+}
+
+// Iterating over bytes
+for byte in text.bytes() {
+    print!("{:02X} ", byte);
+}
+
+// Converting between bytes and &str
+let bytes = text.as_bytes();                     // &[u8]
+let back = std::str::from_utf8(bytes).unwrap();  // validates UTF-8
+
+// Writing to file
+use std::io::Write;
+let mut file = std::fs::File::create("out.txt").unwrap();
+file.write_all(text.as_bytes()).unwrap();
+```
+
+### Go
+
+```go
+// Go source files are always UTF-8
+text := "Hello 中文 😊"
+
+// len() gives byte count
+fmt.Println(len(text))                   // 20 bytes
+
+// Range over string iterates runes (Unicode code points)
+count := 0
+for _, r := range text {
+    fmt.Printf("%c → U+%04X\n", r, r)
+    count++
+}
+fmt.Println(count) // 10 characters
+
+// Convert to []byte and back
+bytes := []byte(text)
+backToString := string(bytes)
+
+// Validate UTF-8
+import "unicode/utf8"
+utf8.Valid(bytes)         // true
+utf8.RuneCountInString(text)  // 10
+```
+
+---
+
+## Common Pitfalls (and How to Avoid Them)
+
+After years of debugging encoding issues, here are the ones that get even experienced developers:
+
+<CommonPitfalls />
+
+---
+
+## The Grapheme Cluster Problem
+
+I want to leave you with something that goes even deeper than UTF-8.
+
+Even after you understand code points and bytes, there's another layer: **grapheme clusters**. A grapheme cluster is what a human would call a single "character" — but it might be composed of multiple code points.
+
+Consider:
+
+```
+é  →  could be U+00E9 (one code point, precomposed form)
+   →  could be e (U+0065) + ◌́ (U+0301, combining acute accent)
+       → two code points, one visual character
+```
+
+Or:
+
+```
+👨‍👩‍👧‍👦  →  five code points joined by Zero Width Joiners (U+200D)
+            U+1F468 + ZWJ + U+1F469 + ZWJ + U+1F467 + ZWJ + U+1F466
+            11 code points, 1 visual "character"
+```
+
+This is why correctly handling text is genuinely hard. You need Unicode-aware libraries, not just UTF-8 encoding. In JavaScript, the `Intl.Segmenter` API handles grapheme clusters. In Rust, the `unicode-segmentation` crate. In Python, `grapheme` or `unicodedata.normalize`.
+
+```javascript
+// JavaScript: Intl.Segmenter for grapheme clusters
+const segmenter = new Intl.Segmenter("en", { granularity: "grapheme" });
+const family = "👨‍👩‍👧‍👦";
+
+// Wrong: counts code units
+console.log(family.length);          // 11
+
+// Wrong: counts code points
+console.log([...family].length);     // 7
+
+// Correct: counts grapheme clusters
+const segments = [...segmenter.segment(family)];
+console.log(segments.length);        // 1 ✓
+```
+
+---
+
+## Why This All Matters
+
+You might be thinking: *"This is interesting, but I use libraries for this stuff. Why do I need to understand it?"*
+
+Here's why:
+
+**Security.** Encoding vulnerabilities are real. Overlong UTF-8 sequences (encoding `U+0000` as `0xC0 0x80` instead of `0x00`) have been used to bypass path traversal checks. Lone surrogates can crash parsers. Understanding the encoding helps you understand the attack surface.
+
+**Performance.** Knowing that CJK text takes 3 bytes per character affects your buffer sizing, your database column widths, your API payload estimates. The developer who allocates `n * 4` bytes for a UTF-8 buffer of `n` characters (worst case) is different from the one who allocates `n` and wonders why things crash.
+
+**Debugging.** When you see `0xC3 0xA9` in a hex dump, you now know that's `é`. When a string comparison fails mysteriously, you know to check for NFC vs NFD normalization. When a JSON parse fails, you check for a BOM.
+
+**Appreciation.** There's something genuinely beautiful about the design of UTF-8. The bit-level elegance — the way the leading bits of each byte encode the structure of the whole sequence, the self-synchronizing property, the perfect backward compatibility with ASCII — it's the work of engineers who cared deeply about getting things right.
+
+Ken Thompson and Rob Pike designed the core of UTF-8 in a single evening. They submitted it as an internet draft. It quietly became the dominant encoding for all human communication online.
+
+Not bad for a diner placemat.
+
+---
+
+## Quick Reference
+
+### UTF-8 Encoding Rules
+
+| Code Point Range | Bytes | Byte 1 | Byte 2 | Byte 3 | Byte 4 |
+|-----------------|-------|--------|--------|--------|--------|
+| U+0000–U+007F | 1 | `0xxxxxxx` | — | — | — |
+| U+0080–U+07FF | 2 | `110xxxxx` | `10xxxxxx` | — | — |
+| U+0800–U+FFFF | 3 | `1110xxxx` | `10xxxxxx` | `10xxxxxx` | — |
+| U+10000–U+10FFFF | 4 | `11110xxx` | `10xxxxxx` | `10xxxxxx` | `10xxxxxx` |
+
+### Common Code Points
+
+| Character | Code Point | UTF-8 Hex | Bytes |
+|-----------|-----------|-----------|-------|
+| `A` | U+0041 | `41` | 1 |
+| `\n` | U+000A | `0A` | 1 |
+| `©` | U+00A9 | `C2 A9` | 2 |
+| `é` | U+00E9 | `C3 A9` | 2 |
+| `€` | U+20AC | `E2 82 AC` | 3 |
+| `中` | U+4E2D | `E4 B8 AD` | 3 |
+| `😊` | U+1F60A | `F0 9F 98 8A` | 4 |
+
+### Bit Pattern Cheat Sheet
+
+```
+Byte type      Starts with    Range          Payload bits
+─────────────────────────────────────────────────────────
+ASCII          0xxx xxxx      0x00 – 0x7F    7 bits
+Leading-2      110x xxxx      0xC0 – 0xDF    5 bits
+Leading-3      1110 xxxx      0xE0 – 0xEF    4 bits
+Leading-4      1111 0xxx      0xF0 – 0xF7    3 bits
+Continuation   10xx xxxx      0x80 – 0xBF    6 bits
+```
+
+---
+
+*If you made it this far — genuinely, thank you. Unicode is one of those foundational things that most people use every day without realising the engineering that went into it. I hope the next time your terminal renders `∑` correctly or your app handles `हिन्दी` without exploding, you feel just a tiny bit of appreciation for the bit-level plumbing underneath.*
+
+*Got questions, corrections, or war stories about encoding bugs? I'd love to hear them.*
