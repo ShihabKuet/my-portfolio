@@ -1056,11 +1056,11 @@ export function InteractiveEncoder() {
                 sequence:
               </div>
               <div
+                className="byte-blocks-row"
                 style={{
                   display: "flex",
                   gap: 16,
                   flexWrap: "wrap",
-                  className: "byte-blocks-row",
                 }}
               >
                 {groups.map((g, byteIdx) => {
