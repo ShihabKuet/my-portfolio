@@ -263,14 +263,6 @@ function LogoAnimator() {
           </motion.span>
         )}
       </AnimatePresence>
-
-      {/* Blinking cursor — always visible, trails the text */}
-      <motion.span
-        animate={{ opacity: [1, 1, 0, 0] }}
-        transition={{ duration: 0.8, repeat: Infinity, times: [0, 0.45, 0.5, 1] }}
-        className="inline-block w-[2px] h-[0.85em] bg-violet-500 ml-[3px] align-middle shrink-0"
-        aria-hidden
-      />
     </span>
   );
 }
