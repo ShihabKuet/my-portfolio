@@ -27,7 +27,10 @@ export default function MDXContent({
       prose-code:bg-sky-100 dark:prose-code:bg-zinc-800/50
       prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded
       prose-code:text-sm prose-code:before:content-none prose-code:after:content-none
-      prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-zinc-700
+      prose-pre:bg-zinc-900 prose-pre:border prose-pre:border-zinc-700 prose-pre:rounded-lg
+      [&_pre_code]:bg-transparent [&_pre_code]:p-0 [&_pre_code]:text-inherit
+      [&_pre_code]:rounded-none [&_pre_code]:text-sm [&_pre_code]:before:content-none
+      [&_pre_code]:after:content-none
       prose-blockquote:border-violet-500
       prose-blockquote:text-sky-700 dark:prose-blockquote:text-zinc-400
       prose-th:text-sky-900 dark:prose-th:text-zinc-200
