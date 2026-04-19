@@ -19,162 +19,10 @@ const THEMES = [
 
 export default function BlogPage() {
   const posts = getAllPosts();
+  const allTags = Array.from(new Set(posts.flatMap((p) => p.tags))).slice(0, 6);
 
   return (
     <main className="min-h-screen py-24 px-4">
-      <style>{`
-        /* ── Book card ──────────────────────────────────── */
-
-        .bk { display: block; }
-
-        .bk-body {
-          position: relative;
-          display: flex;
-          border-radius: 12px;
-          overflow: hidden;
-          min-height: 164px;
-          transition: transform 0.32s ease, box-shadow 0.32s ease;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-          /* Card background lives here so the image can sit on top of it */
-          background: #ffffff;
-        }
-        .dark .bk-body { background: #0f172a; }
-
-        .bk-body.has-cover { min-height: 210px; }
-
-        .bk:hover .bk-body {
-          transform: translateY(-6px);
-          box-shadow: 0 20px 40px -6px rgba(0,0,0,0.14), 0 6px 14px -6px rgba(0,0,0,0.07);
-        }
-
-        /* ── Cover image background ── */
-        /*
-          Sits between the spine and page-edge, behind the content.
-          Gradient mask: fully visible (65%) on the right, fading to
-          invisible at ~52% from the right — so the left reading area
-          stays clean against the card background.
-        */
-        .bk-bg {
-          position: absolute;
-          inset: 0;
-          left: 44px;  /* clear the spine */
-          right: 6px;  /* clear the page-edge stripe */
-          background-size: cover;
-          background-position: right center;
-          -webkit-mask-image: linear-gradient(
-            to left,
-            rgba(0, 0, 0, 0.65) 0%,
-            rgba(0, 0, 0, 0.35) 25%,
-            transparent 52%
-          );
-          mask-image: linear-gradient(
-            to left,
-            rgba(0, 0, 0, 0.65) 0%,
-            rgba(0, 0, 0, 0.35) 25%,
-            transparent 52%
-          );
-          opacity: 1;
-          transition: opacity 0.32s ease;
-          z-index: 0;
-        }
-        .bk:hover .bk-bg { opacity: 0.15; }
-
-        /* ── Cover panel (content sits above the image) ── */
-        .bk-cover {
-          flex: 1;
-          overflow: hidden;
-          padding: 20px 28px;
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          background: transparent; /* let bk-body bg + image show through */
-          position: relative;
-          z-index: 1;
-        }
-
-        /* Title nudges up on hover */
-        .bk-title {
-          font-size: 1.2rem;
-          font-weight: 700;
-          line-height: 1.35;
-          transition: transform 0.32s ease;
-        }
-        .bk:hover .bk-title { transform: translateY(-3px); }
-
-        /* Excerpt slides up into view */
-        .bk-excerpt-wrap {
-          display: grid;
-          grid-template-rows: 0fr;
-          opacity: 0;
-          transition: grid-template-rows 0.36s ease, opacity 0.28s ease;
-        }
-        .bk:hover .bk-excerpt-wrap {
-          grid-template-rows: 1fr;
-          opacity: 1;
-        }
-        .bk-excerpt-inner { overflow: hidden; }
-        .bk-excerpt {
-          padding-top: 6px;
-          font-size: 0.82rem;
-          line-height: 1.75;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-
-        /* Meta row */
-        .bk-meta {
-          font-family: monospace;
-          font-size: 11px;
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          transition: opacity 0.28s ease;
-        }
-        .bk:hover .bk-meta { opacity: 0.65; }
-
-        /* "Read →" CTA fades in */
-        .bk-cta {
-          margin-left: auto;
-          font-weight: 700;
-          letter-spacing: 0.08em;
-          font-size: 11px;
-          opacity: 0;
-          transition: opacity 0.28s ease 0.08s;
-        }
-        .bk:hover .bk-cta { opacity: 1; }
-
-        /* ── Page-edge stripe ── */
-        .bk-edge {
-          flex-shrink: 0;
-          width: 6px;
-          position: relative;
-          z-index: 1;
-          background: repeating-linear-gradient(
-            to bottom,
-            #e2e8f0 0, #e2e8f0 2px,
-            #f8fafc 2px, #f8fafc 4px
-          );
-        }
-        .dark .bk-edge {
-          background: repeating-linear-gradient(
-            to bottom,
-            #334155 0, #334155 2px,
-            #1e293b 2px, #1e293b 4px
-          );
-        }
-
-        /* ── Light / dark text ── */
-        .bk-title         { color: #0f172a; }
-        .dark .bk-title   { color: #f1f5f9; }
-
-        .bk-meta          { color: #94a3b8; }
-
-        .bk-excerpt       { color: #475569; }
-        .dark .bk-excerpt { color: #94a3b8; }
-      `}</style>
-
       <div className="max-w-4xl mx-auto">
 
         {/* ── Back link ── */}
@@ -187,18 +35,72 @@ export default function BlogPage() {
         </Link>
 
         {/* ── Header ── */}
-        <div className="mb-16">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="h-px w-8 bg-violet-500" />
-            <span className="text-violet-400 text-sm font-mono tracking-widest uppercase">Blog</span>
-            <div className="h-px w-8 bg-violet-500" />
+        <div className="mb-16 relative">
+
+          {/* Ghost watermark */}
+          <div
+            aria-hidden
+            className="absolute -top-6 -left-4 select-none pointer-events-none leading-none tracking-[-0.06em] font-black z-0"
+            style={{
+              fontSize: "clamp(80px, 18vw, 148px)",
+              color: "transparent",
+              WebkitTextStroke: "1px rgba(139,92,246,0.12)",
+              fontFamily: "system-ui, sans-serif",
+            }}
+          >
+            BLOG
           </div>
-          <h1 className="text-4xl font-bold text-sky-950 dark:text-zinc-100 mb-3">
-            Writing & Thoughts
-          </h1>
-          <p className="text-sky-700 dark:text-zinc-400">
-            Articles on software engineering, networking, and things I find interesting.
-          </p>
+
+          <div className="relative z-10 pt-6">
+
+            {/* Top label row */}
+            <div className="flex items-center gap-3 mb-5">
+              <span className="font-mono text-xs tracking-[0.22em] uppercase text-violet-400">
+                ✦ Writing
+              </span>
+              <div className="flex-1 h-px bg-gradient-to-r from-violet-500/50 to-transparent" />
+              <span className="font-mono text-xs text-zinc-400 dark:text-zinc-600">
+                {posts.length} article{posts.length !== 1 ? "s" : ""}
+              </span>
+            </div>
+
+            {/* Split-weight title */}
+            <h1 className="mb-4 leading-[1.1]">
+              <span
+                className="block text-sky-950 dark:text-zinc-100 font-light tracking-[-0.02em]"
+                style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}
+              >
+                Things I write
+              </span>
+              <span
+                className="block text-violet-500 dark:text-violet-400 font-extrabold tracking-[-0.04em]"
+                style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}
+              >
+                about &amp; explore.
+              </span>
+            </h1>
+
+            {/* Tapered divider + subtitle */}
+            <div className="flex items-start gap-4 mt-5">
+              <div className="shrink-0 mt-1 w-[3px] h-9 rounded-sm bg-gradient-to-b from-violet-700 to-transparent" />
+              <p className="text-sky-700 dark:text-zinc-400 text-sm leading-relaxed max-w-md">
+                Software engineering, networking internals, and the occasional deep-dive
+                into things that quietly hold the internet together.
+              </p>
+            </div>
+
+            {/* Topic chips */}
+            <div className="flex flex-wrap gap-2 mt-6">
+              {allTags.map((tag) => (
+                <span
+                  key={tag}
+                  className="font-mono text-xs px-3 py-1 rounded-full border border-violet-500/20 text-violet-400 bg-violet-500/5"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* ── Book shelf ── */}
@@ -208,24 +110,33 @@ export default function BlogPage() {
             const hasCover = !!post.coverImage;
 
             return (
-              <Link key={post.slug} href={`/blog/${post.slug}`} className="bk">
-                <div className={`bk-body ${hasCover ? "has-cover" : ""}`}>
-
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="block group"
+              >
+                <div
+                  className={[
+                    "relative flex rounded-xl overflow-hidden",
+                    "bg-white dark:bg-[#0f172a]",
+                    "shadow-sm",
+                    "transition-all duration-300 ease-out",
+                    "group-hover:-translate-y-1.5",
+                    "group-hover:shadow-[0_20px_40px_-6px_rgba(0,0,0,0.14),0_6px_14px_-6px_rgba(0,0,0,0.07)]",
+                    hasCover ? "min-h-[210px]" : "min-h-[164px]",
+                  ].join(" ")}
+                >
                   {/* ── Spine ── */}
                   <div
+                    className="relative z-10 flex shrink-0 items-center justify-center"
                     style={{
                       width: 44,
-                      flexShrink: 0,
                       background: t.spine,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
                       boxShadow: "inset -4px 0 10px rgba(0,0,0,0.18)",
-                      position: "relative",
-                      zIndex: 1,
                     }}
                   >
                     <span
+                      className="font-bold uppercase select-none"
                       style={{
                         writingMode: "vertical-rl",
                         transform: "rotate(180deg)",
@@ -233,42 +144,37 @@ export default function BlogPage() {
                         fontSize: 10,
                         fontFamily: "monospace",
                         letterSpacing: "0.18em",
-                        textTransform: "uppercase",
-                        fontWeight: 700,
-                        userSelect: "none",
                       }}
                     >
                       {post.tags[0] ?? "post"}
                     </span>
                   </div>
 
-                  {/* ── Cover image background (only when present) ── */}
+                  {/* ── Cover image background ── */}
                   {hasCover && (
                     <div
-                      className="bk-bg"
-                      style={{ backgroundImage: `url(${post.coverImage})` }}
+                      className="absolute z-0 inset-0 left-[44px] right-[6px] bg-cover bg-right opacity-100 group-hover:opacity-15 transition-opacity duration-300"
+                      style={{
+                        backgroundImage: `url(${post.coverImage})`,
+                        WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 25%, transparent 52%)",
+                        maskImage: "linear-gradient(to left, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 25%, transparent 52%)",
+                      }}
                     />
                   )}
 
                   {/* ── Cover content ── */}
-                  <div className="bk-cover">
+                  <div className="relative z-10 flex-1 overflow-hidden px-7 py-5 flex flex-col gap-3">
 
                     {/* Tags */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                    <div className="flex flex-wrap gap-1.5">
                       {post.tags.map((tag) => (
                         <span
                           key={tag}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[11px]"
                           style={{
-                            display: "inline-flex",
-                            alignItems: "center",
-                            gap: 4,
-                            padding: "2px 8px",
-                            borderRadius: 4,
                             background: `${t.spine}18`,
                             color: t.accent,
                             border: `1px solid ${t.spine}40`,
-                            fontFamily: "monospace",
-                            fontSize: 11,
                           }}
                         >
                           <Tag size={9} />
@@ -279,32 +185,50 @@ export default function BlogPage() {
 
                     {/* Title + sliding excerpt */}
                     <div>
-                      <h2 className="bk-title line-clamp-2">{post.title}</h2>
-                      <div className="bk-excerpt-wrap">
-                        <div className="bk-excerpt-inner">
-                          <p className="bk-excerpt">{post.excerpt}</p>
+                      <h2
+                        className="text-xl font-bold leading-snug line-clamp-2 text-[#0f172a] dark:text-[#f1f5f9] transition-transform duration-300 group-hover:-translate-y-[3px]"
+                      >
+                        {post.title}
+                      </h2>
+
+                      {/* grid-template-rows trick for smooth height animation */}
+                      <div
+                        className="grid transition-all duration-300 ease-out opacity-0 group-hover:opacity-100 [grid-template-rows:0fr] group-hover:[grid-template-rows:1fr]"
+                      >
+                        <div className="overflow-hidden">
+                          <p className="pt-1.5 text-[0.82rem] leading-[1.75] line-clamp-2 text-[#475569] dark:text-[#94a3b8]">
+                            {post.excerpt}
+                          </p>
                         </div>
                       </div>
                     </div>
 
                     {/* Meta + CTA */}
-                    <div className="bk-meta">
-                      <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                    <div className="flex items-center gap-4 font-mono text-[11px] text-[#94a3b8] transition-opacity duration-300 group-hover:opacity-65">
+                      <span className="flex items-center gap-1.5">
                         <Calendar size={11} />
                         {formatDate(post.date)}
                       </span>
-                      <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                      <span className="flex items-center gap-1.5">
                         <Clock size={11} />
                         {post.readTime}
                       </span>
-                      <span className="bk-cta" style={{ color: t.accent }}>
+                      <span
+                        className="ml-auto font-bold tracking-wide text-[11px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75"
+                        style={{ color: t.accent }}
+                      >
                         Read →
                       </span>
                     </div>
                   </div>
 
-                  {/* ── Page edge ── */}
-                  <div className="bk-edge" />
+                  {/* ── Page-edge stripe ── */}
+                  <div
+                    className="relative z-10 shrink-0 w-[6px]"
+                    style={{
+                      background: "repeating-linear-gradient(to bottom, #e2e8f0 0, #e2e8f0 2px, #f8fafc 2px, #f8fafc 4px)",
+                    }}
+                  />
                 </div>
               </Link>
             );
