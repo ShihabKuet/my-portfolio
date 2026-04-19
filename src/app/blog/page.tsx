@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { getAllPosts, formatDate } from "@/lib/mdx";
-import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
-import BlogCard from "@/components/blog/BlogCard";
+import BlogSearch from "@/components/blog/BlogSearch";
 
 export const metadata: Metadata = {
   title: "Blog | Portfolio",
@@ -19,26 +18,56 @@ const THEMES = [
 ];
 
 export default function BlogPage() {
-  const posts = getAllPosts();
-  const allTags = Array.from(new Set(posts.flatMap((p) => p.tags))).slice(0, 6);
+  const raw     = getAllPosts();
+  const allTags = Array.from(new Set(raw.flatMap((p) => p.tags))).slice(0, 6);
+
+  // Assign stable themes by original index before any filtering happens
+  const posts = raw.map((post, idx) => ({
+    ...post,
+    date:  formatDate(post.date),
+    theme: THEMES[idx % THEMES.length],
+  }));
 
   return (
     <main className="min-h-screen py-24 px-4">
       <div className="max-w-4xl mx-auto">
 
-        {/* ── Back link ── */}
-        <Link
-          href="/#blog"
-          className="inline-flex items-center gap-2 text-sky-500 dark:text-zinc-500 hover:text-violet-400 transition-colors text-sm mb-10 font-mono"
-        >
-          <ArrowLeft size={15} />
-          Back to Portfolio
-        </Link>
+        {/* ── Back nav ── */}
+        <div className="inline-flex mb-10 group/nav">
+          <span
+            className="relative inline-flex items-center gap-2 px-4 py-2 rounded-xl font-mono text-xs
+              bg-zinc-50 dark:bg-zinc-900
+              transition-all duration-300 ease-out
+              group-hover/nav:-translate-y-0.5
+              group-hover/nav:bg-white dark:group-hover/nav:bg-zinc-900/80"
+            style={{
+              boxShadow: "0 0 0 1px rgba(139,92,246,0.18), 0 1px 4px rgba(0,0,0,0.06)",
+            }}
+          >
+            <span
+              className="absolute inset-0 rounded-xl opacity-0 group-hover/nav:opacity-100 transition-opacity duration-300 pointer-events-none"
+              style={{ boxShadow: "0 0 0 1.5px rgba(139,92,246,0.55), 0 4px 20px rgba(139,92,246,0.13)" }}
+            />
+            <span className="text-violet-400 dark:text-violet-500 select-none">❯</span>
+            <span className="flex items-center gap-1">
+              <span className="text-zinc-400 dark:text-zinc-600 select-none">~/</span>
+              <Link
+                href="/"
+                className="text-sky-600 dark:text-sky-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors duration-200"
+              >
+                portfolio
+              </Link>
+              <span className="text-zinc-300 dark:text-zinc-700 select-none">/</span>
+              <span className="text-zinc-500 dark:text-zinc-400">blog</span>
+            </span>
+            <span className="text-violet-400 opacity-0 translate-x-1 group-hover/nav:opacity-60 group-hover/nav:translate-x-0 transition-all duration-300 select-none">
+              ↵
+            </span>
+          </span>
+        </div>
 
         {/* ── Header ── */}
         <div className="mb-16 relative">
-
-          {/* Ghost watermark */}
           <div
             aria-hidden
             className="absolute -top-6 -left-4 select-none pointer-events-none leading-none tracking-[-0.06em] font-black z-0"
@@ -53,8 +82,6 @@ export default function BlogPage() {
           </div>
 
           <div className="relative z-10 pt-6">
-
-            {/* Top label row */}
             <div className="flex items-center gap-3 mb-5">
               <span className="font-mono text-xs tracking-[0.22em] uppercase text-violet-400">
                 ✦ Writing
@@ -65,7 +92,6 @@ export default function BlogPage() {
               </span>
             </div>
 
-            {/* Split-weight title */}
             <h1 className="mb-4 leading-[1.1]">
               <span
                 className="block text-sky-950 dark:text-zinc-100 font-light tracking-[-0.02em]"
@@ -81,7 +107,6 @@ export default function BlogPage() {
               </span>
             </h1>
 
-            {/* Tapered divider + subtitle */}
             <div className="flex items-start gap-4 mt-5">
               <div className="shrink-0 mt-1 w-[3px] h-9 rounded-sm bg-gradient-to-b from-violet-700 to-transparent" />
               <p className="text-sky-700 dark:text-zinc-400 text-sm leading-relaxed max-w-md">
@@ -89,43 +114,12 @@ export default function BlogPage() {
                 into things that quietly hold the internet together.
               </p>
             </div>
-
-            {/* Topic chips */}
-            <div className="flex flex-wrap gap-2 mt-6">
-              {allTags.map((tag) => (
-                <span
-                  key={tag}
-                  className="font-mono text-xs px-3 py-1 rounded-full border border-violet-500/20 text-violet-400 bg-violet-500/5"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
 
-        {/* ── Book shelf ── */}
-        <div className="space-y-5">
-          {posts.map((post, idx) => (
-            <BlogCard
-              key={post.slug}
-              slug={post.slug}
-              title={post.title}
-              excerpt={post.excerpt}
-              tags={post.tags}
-              date={formatDate(post.date)}
-              readTime={post.readTime}
-              coverImage={post.coverImage}
-              theme={THEMES[idx % THEMES.length]}
-            />
-          ))}
-        </div>
+        {/* ── Search + tag filters + cards (client) ── */}
+        <BlogSearch posts={posts} allTags={allTags} />
 
-        {posts.length === 0 && (
-          <p className="text-center text-sky-400 dark:text-zinc-600 py-16 font-mono">
-            No posts yet. Check back soon.
-          </p>
-        )}
       </div>
     </main>
   );
