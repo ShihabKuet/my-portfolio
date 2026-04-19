@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Search, X, SlidersHorizontal } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import BlogCard from "@/components/blog/BlogCard";
 
 interface Post {
@@ -22,7 +22,7 @@ interface BlogSearchProps {
 }
 
 // ── Animation variants ─────────────────────────────────────────────────────
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: {
     opacity: 0,
     y: 20,
@@ -49,7 +49,7 @@ const cardVariants = {
   },
 };
 
-const emptyVariants = {
+const emptyVariants: Variants = {
   hidden: { opacity: 0, y: 12 },
   visible: {
     opacity: 1,
@@ -63,7 +63,7 @@ const emptyVariants = {
   },
 };
 
-const badgeVariants = {
+const badgeVariants: Variants = {
   hidden: { opacity: 0, scale: 0.85 },
   visible: {
     opacity: 1,
@@ -283,11 +283,9 @@ export default function BlogSearch({ posts, allTags }: BlogSearchProps) {
       {/* ── Animated card list ── */}
       <AnimatePresence mode="popLayout">
         {filtered.length > 0 ? (
-          // Wrap the whole list so AnimatePresence can swap list ↔ empty state
           <motion.div
             key="results"
             className="space-y-5"
-            // No animation on the wrapper itself — children handle it
           >
             <AnimatePresence mode="popLayout">
               {filtered.map((post, i) => (
@@ -299,7 +297,6 @@ export default function BlogSearch({ posts, allTags }: BlogSearchProps) {
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  // layout animation for when cards reorder / siblings exit
                   layoutId={post.slug}
                   transition={{
                     layout: {
