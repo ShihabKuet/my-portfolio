@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { getAllPosts, formatDate } from "@/lib/mdx";
-import { Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import BlogCard from "@/components/blog/BlogCard";
 
 export const metadata: Metadata = {
   title: "Blog | Portfolio",
@@ -105,134 +106,19 @@ export default function BlogPage() {
 
         {/* ── Book shelf ── */}
         <div className="space-y-5">
-          {posts.map((post, idx) => {
-            const t = THEMES[idx % THEMES.length];
-            const hasCover = !!post.coverImage;
-
-            return (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="block group"
-              >
-                <div
-                  className={[
-                    "relative flex rounded-xl overflow-hidden",
-                    "bg-white dark:bg-[#0f172a]",
-                    "shadow-sm",
-                    "transition-all duration-300 ease-out",
-                    "group-hover:-translate-y-1.5",
-                    "group-hover:shadow-[0_20px_40px_-6px_rgba(0,0,0,0.14),0_6px_14px_-6px_rgba(0,0,0,0.07)]",
-                    hasCover ? "min-h-[210px]" : "min-h-[164px]",
-                  ].join(" ")}
-                >
-                  {/* ── Spine ── */}
-                  <div
-                    className="relative z-10 flex shrink-0 items-center justify-center"
-                    style={{
-                      width: 44,
-                      background: t.spine,
-                      boxShadow: "inset -4px 0 10px rgba(0,0,0,0.18)",
-                    }}
-                  >
-                    <span
-                      className="font-bold uppercase select-none"
-                      style={{
-                        writingMode: "vertical-rl",
-                        transform: "rotate(180deg)",
-                        color: "rgba(255,255,255,0.82)",
-                        fontSize: 10,
-                        fontFamily: "monospace",
-                        letterSpacing: "0.18em",
-                      }}
-                    >
-                      {post.tags[0] ?? "post"}
-                    </span>
-                  </div>
-
-                  {/* ── Cover image background ── */}
-                  {hasCover && (
-                    <div
-                      className="absolute z-0 inset-0 left-[44px] right-[6px] bg-cover bg-right opacity-100 group-hover:opacity-15 transition-opacity duration-300"
-                      style={{
-                        backgroundImage: `url(${post.coverImage})`,
-                        WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 25%, transparent 52%)",
-                        maskImage: "linear-gradient(to left, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.35) 25%, transparent 52%)",
-                      }}
-                    />
-                  )}
-
-                  {/* ── Cover content ── */}
-                  <div className="relative z-10 flex-1 overflow-hidden px-7 py-5 flex flex-col gap-3">
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {post.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded font-mono text-[11px]"
-                          style={{
-                            background: `${t.spine}18`,
-                            color: t.accent,
-                            border: `1px solid ${t.spine}40`,
-                          }}
-                        >
-                          <Tag size={9} />
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Title + sliding excerpt */}
-                    <div>
-                      <h2
-                        className="text-xl font-bold leading-snug line-clamp-2 text-[#0f172a] dark:text-[#f1f5f9] transition-transform duration-300 group-hover:-translate-y-[3px]"
-                      >
-                        {post.title}
-                      </h2>
-
-                      {/* grid-template-rows trick for smooth height animation */}
-                      <div
-                        className="grid transition-all duration-300 ease-out opacity-0 group-hover:opacity-100 [grid-template-rows:0fr] group-hover:[grid-template-rows:1fr]"
-                      >
-                        <div className="overflow-hidden">
-                          <p className="pt-1.5 text-[0.82rem] leading-[1.75] line-clamp-2 text-[#475569] dark:text-[#94a3b8]">
-                            {post.excerpt}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Meta + CTA */}
-                    <div className="flex items-center gap-4 font-mono text-[11px] text-[#94a3b8] transition-opacity duration-300 group-hover:opacity-65">
-                      <span className="flex items-center gap-1.5">
-                        <Calendar size={11} />
-                        {formatDate(post.date)}
-                      </span>
-                      <span className="flex items-center gap-1.5">
-                        <Clock size={11} />
-                        {post.readTime}
-                      </span>
-                      <span
-                        className="ml-auto font-bold tracking-wide text-[11px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75"
-                        style={{ color: t.accent }}
-                      >
-                        Read →
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* ── Page-edge stripe ── */}
-                  <div
-                    className="relative z-10 shrink-0 w-[6px]"
-                    style={{
-                      background: "repeating-linear-gradient(to bottom, #e2e8f0 0, #e2e8f0 2px, #f8fafc 2px, #f8fafc 4px)",
-                    }}
-                  />
-                </div>
-              </Link>
-            );
-          })}
+          {posts.map((post, idx) => (
+            <BlogCard
+              key={post.slug}
+              slug={post.slug}
+              title={post.title}
+              excerpt={post.excerpt}
+              tags={post.tags}
+              date={formatDate(post.date)}
+              readTime={post.readTime}
+              coverImage={post.coverImage}
+              theme={THEMES[idx % THEMES.length]}
+            />
+          ))}
         </div>
 
         {posts.length === 0 && (
