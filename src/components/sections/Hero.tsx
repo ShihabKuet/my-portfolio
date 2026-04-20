@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "@/data";
-import { ArrowDown, MapPin, Mail, Briefcase, SkipForward } from "lucide-react";
+import { ArrowDown, MapPin, Mail, Briefcase, SkipForward, Download, ExternalLink } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { SiResearchgate, SiMedium } from "react-icons/si";
 import { Globe } from "lucide-react";
@@ -25,13 +25,9 @@ type Phase =
 const NANO_CMD    = "nano shanjid_arefin.c";
 const COMPILE_CMD = "gcc shanjid_arefin.c -o shanjid_arefin && ./shanjid_arefin";
 
-// What the terminal animation is simulating:
-// The bug: dev pointer is NULL — dereferencing causes SIGSEGV
-// The fix: properly initialize the struct fields
 const BUGGY_LINE  = 'Engineer *dev = NULL;';
 const FIXED_LINE  = 'Engineer *dev = &profile;';
 
-// Multi-line output — each line typed after previous completes
 const OUTPUT_LINES = [
   { text: "[SYS]   Boot sequence initialized...",               color: "#6b7280", delay: 0   },
   { text: "[ID]    MD. Shanjid Arefin — engineer loaded",       color: "#a78bfa", delay: 440 },
@@ -42,16 +38,353 @@ const OUTPUT_LINES = [
   { text: "[READY] Operational. Let's build something great ∞", color: "#22d3ee", delay: 640 },
 ];
 
-// ─── Social links (defined at module level — stable reference) ────────────────
+// ─── Social links ─────────────────────────────────────────────────────────────
 
 const SOCIALS = [
-  { href: personalInfo.github,            icon: <FaGithub size={18} />,       label: "GitHub"       },
-  { href: personalInfo.linkedin,          icon: <FaLinkedin size={18} />,     label: "LinkedIn"     },
-  { href: personalInfo.researchgate,      icon: <SiResearchgate size={18} />, label: "ResearchGate" },
-  { href: personalInfo.medium,            icon: <SiMedium size={18} />,       label: "Medium"       },
-  { href: personalInfo.blog,              icon: <Globe size={18} />,          label: "Blog"         },
-  { href: `mailto:${personalInfo.email}`, icon: <Mail size={18} />,           label: "Email"        },
+  { href: personalInfo.github,            icon: <FaGithub size={16} />,       label: "GitHub"       },
+  { href: personalInfo.linkedin,          icon: <FaLinkedin size={16} />,     label: "LinkedIn"     },
+  { href: personalInfo.researchgate,      icon: <SiResearchgate size={16} />, label: "ResearchGate" },
+  { href: personalInfo.medium,            icon: <SiMedium size={16} />,       label: "Medium"       },
+  { href: personalInfo.blog,              icon: <Globe size={16} />,          label: "Blog"         },
+  { href: `mailto:${personalInfo.email}`, icon: <Mail size={16} />,           label: "Email"        },
 ];
+
+// ─── Roles that cycle in the badge ────────────────────────────────────────────
+
+const ROLES = [
+  `R&D Engineer @ ${personalInfo.company}`,
+  "Network Systems Developer",
+  "IEEE Researcher",
+  "Embedded Linux Engineer",
+];
+
+// ─── Scramble Text Hook ───────────────────────────────────────────────────────
+// Letters randomise then resolve to the real characters — no cursor needed.
+
+const SCRAMBLE_POOL = "!<>-_\\/[]{}=+*^?#01ABCXYZ░▒▓";
+
+function useScramble(target: string, startDelay = 0) {
+  const [display, setDisplay] = useState("");
+
+  useEffect(() => {
+    let frameTimer: ReturnType<typeof setTimeout>;
+    let iteration = 0;
+
+    const startTimer = setTimeout(() => {
+      const tick = () => {
+        setDisplay(
+          target
+            .split("")
+            .map((char, i) => {
+              if (char === " ") return " ";
+              if (i < Math.floor(iteration)) return target[i];
+              return SCRAMBLE_POOL[Math.floor(Math.random() * SCRAMBLE_POOL.length)];
+            })
+            .join("")
+        );
+        if (iteration < target.length + 5) {
+          iteration += 0.5;
+          frameTimer = setTimeout(tick, 38);
+        } else {
+          setDisplay(target);
+        }
+      };
+      tick();
+    }, startDelay);
+
+    return () => {
+      clearTimeout(startTimer);
+      clearTimeout(frameTimer);
+    };
+  }, [target, startDelay]);
+
+  return display;
+}
+
+// ─── Count-Up Hook ────────────────────────────────────────────────────────────
+
+function useCountUp(target: number, delay = 0, duration = 1400) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const start = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - p, 3); // cubic ease-out
+        setValue(Math.round(eased * target));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, delay);
+    return () => clearTimeout(t);
+  }, [target, delay, duration]);
+  return value;
+}
+
+// ─── Stat Item ────────────────────────────────────────────────────────────────
+
+function StatItem({
+  to, suffix, label, delay,
+}: { to: number; suffix: string; label: string; delay: number }) {
+  const count = useCountUp(to, delay);
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: delay / 1000 + 0.1, duration: 0.45 }}
+      className="flex flex-col gap-0.5"
+    >
+      <span
+        className="text-2xl font-black leading-none tabular-nums"
+        style={{
+          fontFamily: "'JetBrains Mono','Fira Code',monospace",
+          background: "linear-gradient(135deg, #7c3aed, #06b6d4)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        }}
+      >
+        {count}{suffix}
+      </span>
+      <span className="text-[11px] font-semibold tracking-widest uppercase text-sky-500/60 dark:text-zinc-600">
+        {label}
+      </span>
+    </motion.div>
+  );
+}
+
+// ─── LeftContent ──────────────────────────────────────────────────────────────
+// Defined outside Hero so React never remounts it on phase change.
+
+interface LeftContentProps { centered: boolean }
+
+function LeftContent({ centered }: LeftContentProps) {
+  const align = centered ? "items-center text-center" : "items-start text-left";
+  const wrap  = centered ? "justify-center" : "";
+
+  const [roleIndex, setRoleIndex] = useState(0);
+  const scrambled = useScramble(personalInfo.name, 300);
+
+  // Cycle roles every 3.2 s
+  useEffect(() => {
+    const id = setInterval(() => setRoleIndex(i => (i + 1) % ROLES.length), 3200);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className={`flex flex-col ${align}`}>
+
+      {/* ── Cycling role badge ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 0.5 }}
+        className="inline-flex items-center gap-2 pl-3 pr-4 py-1.5 rounded-full border border-sky-200 dark:border-zinc-700/50 bg-white/80 dark:bg-zinc-900/50 backdrop-blur-sm shadow-sm mb-6 overflow-hidden"
+        style={{ height: 34 }}
+      >
+        <motion.span
+          className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"
+          animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+        <Briefcase size={12} className="text-sky-500 dark:text-zinc-500 flex-shrink-0" />
+        {/* Sliding text slot */}
+        <div className="relative overflow-hidden" style={{ width: 220, height: 20 }}>
+          <AnimatePresence mode="wait">
+            <motion.span
+              key={roleIndex}
+              initial={{ y: 22, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -22, opacity: 0 }}
+              transition={{ duration: 0.28, ease: "easeInOut" }}
+              className="absolute inset-0 text-sm font-medium text-sky-700 dark:text-zinc-400 whitespace-nowrap"
+            >
+              {ROLES[roleIndex]}
+            </motion.span>
+          </AnimatePresence>
+        </div>
+      </motion.div>
+
+      {/* ── Terminal-style greeting ── */}
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.18, duration: 0.4 }}
+        className="flex items-center gap-2 mb-2"
+      >
+        <span
+          className="text-xs font-mono tracking-widest uppercase"
+          style={{ color: "#7c3aed", opacity: 0.7 }}
+        >
+          &gt;&gt;
+        </span>
+        <span className="text-xs font-mono tracking-[0.2em] uppercase text-sky-500/50 dark:text-zinc-600">
+          Hello, World!
+        </span>
+        {/* Tiny animated signal bars instead of cursor */}
+        <span className="flex items-end gap-[2px] h-3 ml-1">
+          {[0.4, 0.65, 0.85, 1].map((h, i) => (
+            <motion.span
+              key={i}
+              className="w-[3px] rounded-sm bg-violet-500"
+              style={{ height: `${h * 100}%` }}
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.15, ease: "easeInOut" }}
+            />
+          ))}
+        </span>
+      </motion.div>
+
+      {/* ── Name with scramble + shifting gradient ── */}
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.22, duration: 0.4 }}
+        className="text-4xl sm:text-5xl xl:text-6xl font-black leading-tight mb-4"
+      >
+        <span className="text-sky-950 dark:text-zinc-100">I&apos;m{" "}</span>
+        <motion.span
+          animate={{ backgroundPosition: ["0% center", "200% center", "0% center"] }}
+          transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
+          style={{
+            fontFamily: "'JetBrains Mono','Fira Code',monospace",
+            background:
+              "linear-gradient(90deg, #7c3aed 0%, #a855f7 25%, #06b6d4 50%, #4ade80 70%, #7c3aed 100%)",
+            backgroundSize: "250% auto",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          {scrambled || personalInfo.name}
+        </motion.span>
+      </motion.h1>
+
+      {/* ── Bio ── */}
+      <motion.p
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.38, duration: 0.55 }}
+        className={`text-base sm:text-lg text-sky-700 dark:text-zinc-400 mb-6 leading-relaxed ${centered ? "max-w-2xl" : "max-w-lg"}`}
+      >
+        {personalInfo.bio}
+      </motion.p>
+
+      {/* ── Location ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.46, duration: 0.4 }}
+        className="flex items-center gap-1.5 text-sky-500 dark:text-zinc-500 text-sm mb-7"
+      >
+        <MapPin size={13} className="text-violet-500 dark:text-violet-400" />
+        <span>{personalInfo.location}</span>
+      </motion.div>
+
+      {/* ── Stats strip ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className={`flex gap-8 mb-8 pb-7 border-b border-sky-100 dark:border-zinc-800 w-full ${wrap}`}
+      >
+        <StatItem to={2}  suffix="+"  label="Years Exp"   delay={600} />
+        <StatItem to={3}  suffix=""   label="IEEE Papers" delay={760} />
+        <StatItem to={10} suffix="+"  label="Projects"    delay={920} />
+      </motion.div>
+
+      {/* ── CTA buttons ── */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.58, duration: 0.5 }}
+        className={`flex flex-wrap gap-3 mb-8 ${wrap}`}
+      >
+        <a
+          href="/#projects"
+          className="group relative px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5 text-sm overflow-hidden"
+        >
+          {/* Shimmer sweep on hover */}
+          <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
+          View My Work
+        </a>
+
+        <a
+          href="/#contact"
+          className="px-6 py-3 border border-sky-300 dark:border-zinc-700 hover:border-violet-400 dark:hover:border-violet-600 text-sky-800 dark:text-zinc-300 hover:text-violet-700 dark:hover:text-violet-400 font-medium rounded-lg transition-all duration-200 hover:bg-sky-50 dark:hover:bg-violet-900/10 hover:-translate-y-0.5 text-sm"
+        >
+          Get In Touch
+        </a>
+
+        {/* Resume download — distinct pill style */}
+        <a
+          href={personalInfo.resume ?? "/resume.pdf"}
+          download
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group inline-flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-sm transition-all duration-200 hover:-translate-y-0.5"
+          style={{
+            border: "1px solid rgba(124,58,237,0.35)",
+            color: "#7c3aed",
+            background: "rgba(124,58,237,0.06)",
+          }}
+          onMouseEnter={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.12)";
+            (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.6)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(124,58,237,0.15)";
+          }}
+          onMouseLeave={e => {
+            (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.06)";
+            (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.35)";
+            (e.currentTarget as HTMLElement).style.boxShadow = "none";
+          }}
+        >
+          <motion.span
+            className="group-hover:animate-none"
+            animate={{ y: [0, -2, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <Download size={14} />
+          </motion.span>
+          <span>Résumé</span>
+          <ExternalLink size={11} className="opacity-50" />
+        </a>
+      </motion.div>
+
+      {/* ── Social icons — spring staggered ── */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.65 }}
+        className={`flex items-center gap-1.5 flex-wrap ${wrap}`}
+      >
+        {SOCIALS.map(({ href, icon, label }, i) => (
+          <motion.a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            title={label}
+            initial={{ opacity: 0, scale: 0.4, rotate: -15 }}
+            animate={{ opacity: 1, scale: 1,   rotate: 0   }}
+            transition={{
+              delay: 0.72 + i * 0.07,
+              type: "spring",
+              stiffness: 260,
+              damping: 18,
+            }}
+            whileHover={{ scale: 1.18, y: -2 }}
+            className="relative p-2.5 rounded-lg transition-colors duration-150 text-sky-400/70 dark:text-zinc-600 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-violet-50 dark:hover:bg-zinc-800"
+          >
+            {icon}
+          </motion.a>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
 
 // ─── Cursor ───────────────────────────────────────────────────────────────────
 
@@ -82,9 +415,9 @@ const Fn  = ({ c }: { c: string }) => <span style={{ color: "#50fa7b" }}>{c}</sp
 const St  = ({ c }: { c: string }) => <span style={{ color: "#f1fa8c" }}>{c}</span>;
 const Inc = ({ c }: { c: string }) => <span style={{ color: "#8be9fd" }}>{c}</span>;
 const Num = ({ c }: { c: string }) => <span style={{ color: "#bd93f9" }}>{c}</span>;
-const Cm   = ({ c }: { c: string }) => <span style={{ color: "#6272a4", fontStyle: "italic" }}>{c}</span>;
-const Err  = ({ c }: { c: string }) => <span style={{ color: "#ff5555", fontWeight: 700 }}>{c}</span>;
-const Ty   = ({ c }: { c: string }) => <span style={{ color: "#8be9fd" }}>{c}</span>;
+const Cm  = ({ c }: { c: string }) => <span style={{ color: "#6272a4", fontStyle: "italic" }}>{c}</span>;
+const Err = ({ c }: { c: string }) => <span style={{ color: "#ff5555", fontWeight: 700 }}>{c}</span>;
+const Ty  = ({ c }: { c: string }) => <span style={{ color: "#8be9fd" }}>{c}</span>;
 
 // ─── Nano line ────────────────────────────────────────────────────────────────
 
@@ -104,118 +437,6 @@ function NLine({ n, eof, children, highlight }: {
   );
 }
 
-// ─── LeftContent — defined OUTSIDE Hero to prevent re-animation on phase change ──
-//
-// WHY: When a component is defined inside another component, React creates a new
-// function reference on every render of the parent. React sees a different component
-// type each time and fully unmounts + remounts the child — triggering Framer Motion
-// entrance animations repeatedly. Defining it outside gives a stable reference.
-
-interface LeftContentProps {
-  centered: boolean;
-}
-
-function LeftContent({ centered }: LeftContentProps) {
-  const align = centered ? "items-center text-center" : "items-start text-left";
-  const wrap  = centered ? "justify-center" : "";
-
-  return (
-    <div className={`flex flex-col ${align}`}>
-
-      {/* Status badge */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1, duration: 0.5 }}
-        className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-sky-200 dark:border-zinc-700/50 bg-white/80 dark:bg-zinc-900/50 text-sky-600 dark:text-zinc-400 text-sm mb-6 backdrop-blur-sm shadow-sm"
-      >
-        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-        <Briefcase size={13} />
-        <span className="font-medium">{personalInfo.role} @ {personalInfo.company}</span>
-      </motion.div>
-
-      {/* Headline */}
-      <motion.h1
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2, duration: 0.6 }}
-        className="text-4xl sm:text-5xl xl:text-6xl font-black text-sky-950 dark:text-zinc-100 leading-tight mb-4"
-      >
-        Hello World!{" "}
-        {!centered && <br className="hidden sm:block" />}
-        I&apos;m{" "}
-        <span className="bg-gradient-to-r from-violet-600 via-purple-500 to-indigo-500 dark:from-violet-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
-          {personalInfo.name}
-        </span>
-      </motion.h1>
-
-      {/* Bio */}
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.35, duration: 0.6 }}
-        className={`text-base sm:text-lg text-sky-700 dark:text-zinc-400 mb-6 leading-relaxed ${centered ? "max-w-2xl" : "max-w-lg"}`}
-      >
-        {personalInfo.bio}
-      </motion.p>
-
-      {/* Location */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.45, duration: 0.5 }}
-        className="flex items-center gap-1.5 text-sky-500 dark:text-zinc-500 text-sm mb-8"
-      >
-        <MapPin size={14} className="text-violet-600 dark:text-violet-400" />
-        <span>{personalInfo.location}</span>
-      </motion.div>
-
-      {/* CTA buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.55, duration: 0.5 }}
-        className={`flex flex-wrap gap-3 mb-8 ${wrap}`}
-      >
-        <a
-          href="/#projects"
-          className="px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/25 hover:-translate-y-0.5 text-sm"
-        >
-          View My Work
-        </a>
-        <a
-          href="/#contact"
-          className="px-6 py-3 border border-sky-300 dark:border-zinc-700 hover:border-sky-400 dark:hover:border-zinc-500 text-sky-800 dark:text-zinc-300 hover:text-sky-950 dark:hover:text-zinc-100 font-medium rounded-lg transition-all duration-200 hover:bg-sky-100 dark:hover:bg-zinc-800/50 hover:-translate-y-0.5 text-sm"
-        >
-          Get In Touch
-        </a>
-      </motion.div>
-
-      {/* Social icons */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.65, duration: 0.5 }}
-        className={`flex items-center gap-2 flex-wrap ${wrap}`}
-      >
-        {SOCIALS.map(({ href, icon, label }) => (
-          <a
-            key={label}
-            href={href}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={label}
-            title={label}
-            className="p-2.5 text-sky-500 dark:text-zinc-500 hover:text-violet-600 dark:hover:text-violet-400 hover:bg-sky-100 dark:hover:bg-zinc-800 rounded-lg transition-all duration-200"
-          >
-            {icon}
-          </a>
-        ))}
-      </motion.div>
-    </div>
-  );
-}
-
 // ─── Main Hero component ──────────────────────────────────────────────────────
 
 export default function Hero() {
@@ -223,8 +444,8 @@ export default function Hero() {
   const [nanoTyped,    setNanoTyped]    = useState("");
   const [savingStep,   setSavingStep]   = useState(0);
   const [compileTyped, setCompileTyped] = useState("");
-  const [editFixed,     setEditFixed]   = useState(false);  // true = show fixed line
-  const [editProgress,  setEditProgress]= useState("");     // typewriter during fix
+  const [editFixed,     setEditFixed]   = useState(false);
+  const [editProgress,  setEditProgress]= useState("");
   const [outputLines,   setOutputLines] = useState<typeof OUTPUT_LINES>([]);
   const [showTerminal, setShowTerminal] = useState(true);
   const cancelRef                       = useRef(false);
@@ -244,33 +465,27 @@ export default function Hero() {
     };
 
     const run = async () => {
-      // 1. Segfault sits for 2.2s
       await sleep(2200);              if (abort()) return;
 
-      // 2. Type "nano shanjid_arefin.c"
       setPhase("typing-nano");
       await type(NANO_CMD, setNanoTyped, 20);
       await sleep(1300);              if (abort()) return;
 
-      // 3. Editor opens — show buggy code
       setPhase("editor");
       await sleep(900);               if (abort()) return;
 
-      // 4. Fix the bug: backspace only "NULL;" → typewrite "&profile;"
-      const FIX_PREFIX = "Engineer *dev = ";  // the part we keep
-      const FIX_REMOVE = "NULL;";             // only these chars get backspaced
-      const FIX_ADD    = "&profile;";         // then typed in
+      const FIX_PREFIX = "Engineer *dev = ";
+      const FIX_REMOVE = "NULL;";
+      const FIX_ADD    = "&profile;";
 
       setPhase("fixing");
-      setEditProgress(BUGGY_LINE);            // start from full buggy line
+      setEditProgress(BUGGY_LINE);
 
-      // Backspace only "NULL;" character by character
       for (let i = FIX_REMOVE.length; i >= 0; i--) {
         if (abort()) return;
         setEditProgress(FIX_PREFIX + FIX_REMOVE.slice(0, i));
         await sleep(60);
       }
-      // Typewrite "&profile;"
       for (let i = 1; i <= FIX_ADD.length; i++) {
         if (abort()) return;
         setEditProgress(FIX_PREFIX + FIX_ADD.slice(0, i));
@@ -280,19 +495,16 @@ export default function Hero() {
       await sleep(500);                    if (abort()) return;
       setEditFixed(true);
 
-      // 5. Ctrl+X save sequence
       setPhase("saving");
       await sleep(320); if (abort()) return; setSavingStep(1);
       await sleep(700); if (abort()) return; setSavingStep(2);
       await sleep(700); if (abort()) return; setSavingStep(3);
       await sleep(950);              if (abort()) return;
 
-      // 6. Type compile command
       setPhase("compiling");
       await type(COMPILE_CMD, setCompileTyped, 36);
       await sleep(420);              if (abort()) return;
 
-      // 7. Output lines appear one by one with individual delays
       setPhase("output");
       for (let i = 0; i < OUTPUT_LINES.length; i++) {
         if (abort()) return;
@@ -308,7 +520,6 @@ export default function Hero() {
     return () => { cancelRef.current = true; };
   }, []);
 
-  // ── Skip: stop animation + collapse terminal to reveal centered layout ────
   const skipAnimation = () => {
     cancelRef.current = true;
     setPhase("done");
@@ -322,13 +533,7 @@ export default function Hero() {
     const modified   = isFix || (isSave && savingStep < 3);
     const showCursor = phase === "editor" || isFix;
 
-      // What shows on the buggy/fixed line
-    const lineSrc = editFixed
-      ? FIXED_LINE
-      : isFix
-      ? editProgress
-      : BUGGY_LINE;
-
+    const lineSrc = editFixed ? FIXED_LINE : isFix ? editProgress : BUGGY_LINE;
     const isFixed = editFixed || (isFix && editProgress === FIXED_LINE);
 
     const statusContent = (() => {
@@ -349,17 +554,13 @@ export default function Hero() {
 
     return (
       <div style={{ fontFamily: "'JetBrains Mono','Fira Code','Courier New',monospace", width: "100%" }}>
-        
-        {/* nano title bar */}
         <div style={{ background: "#130d2b", color: "#a78bfa", fontSize: "0.78rem", fontWeight: 600, padding: "0.2rem 0.8rem", display: "flex", justifyContent: "space-between" }}>
           <span>GNU nano 5.4</span>
           <span>shanjid_arefin.c{modified && <span style={{ color: "#6b2e00" }}> [Modified]</span>}</span>
           <span />
         </div>
 
-        {/* Code body */}
         <div style={{ background: "#06060d", padding: "0.35rem 0", minHeight: 230 }}>
-
           <NLine n={1}><Inc c="#include" /> <St c="&lt;stdio.h&gt;" /></NLine>
           <NLine n={2}><Inc c="#include" /> <St c="&lt;string.h&gt;" /></NLine>
           <NLine n={3}><Inc c="#include" /> <St c='"profile_info.h"' /></NLine>
@@ -376,7 +577,6 @@ export default function Hero() {
           <NLine n={14}>{"        "}<St c={'"C · Networking · Embedded"'} />{", "}<Num c="2" /></NLine>
           <NLine n={15}>{"    "}{"}"}</NLine>
 
-          {/* Line 16 — the buggy/fixed line, highlighted in red while buggy */}
           <div style={{
             display: "flex", lineHeight: 1.75, fontSize: "0.80rem",
             background: isFixed ? "rgba(80,250,123,0.06)" : "rgba(255,85,85,0.09)",
@@ -402,8 +602,6 @@ export default function Hero() {
           </div>
 
           <NLine n={17} />
-
-          {/* The crash line — highlighted red before fix */}
           <NLine n={18} highlight={!isFixed}>
             {"    "}
             {isFixed ? <Fn c="printf" /> : <Err c="printf" />}
@@ -412,7 +610,6 @@ export default function Hero() {
             {", dev->name);"}
             {!isFixed && <Cm c="  // SIGSEGV: null ptr!" />}
           </NLine>
-
           <NLine n={19}>{"    "}<Fn c="load_profile_info" />{"("}
             <Kw c="void" />{");"}</NLine>
           <NLine n={20}>{"    "}<Kw c="return" /> <Num c="0" />{";"}</NLine>
@@ -420,12 +617,10 @@ export default function Hero() {
           <NLine eof /><NLine eof />
         </div>
 
-        {/* Status bar */}
         <div style={{ background: "#130d2b", color: "#7c6aad", fontSize: "0.75rem", fontWeight: 500, padding: "0.15rem 0.8rem", minHeight: "1.4rem" }}>
           {statusContent ?? "\u00a0"}
         </div>
 
-        {/* Shortcut grid */}
         <div style={{ background: "#06060d", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", borderTop: "1px solid #0e0e1e" }}>
           {[["^G","Help"],["^X","Exit"],["^O","Write Out"],["^W","Search"],["^K","Cut"],["^U","Paste"]].map(([k, l]) => (
             <span key={k} style={{ display: "flex", gap: "0.4rem", alignItems: "center", fontSize: "0.7rem", padding: "0.2rem 0.6rem", color: "#7880a0", fontFamily: "inherit" }}>
@@ -447,7 +642,6 @@ export default function Hero() {
       backgroundSize: "22px 22px",
     }}>
 
-      {/* ── Crash card ── */}
       <div style={{
         border: "1px solid rgba(58, 44, 205, 0.18)",
         borderRadius: 8, padding: "10px 14px", marginBottom: 14,
@@ -481,7 +675,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* ── nano command ── */}
       {(["typing-nano","compiling","output","done"] as Phase[]).includes(phase) && (
         <div style={{ marginBottom: 4 }}>
           <Prompt />
@@ -492,7 +685,6 @@ export default function Hero() {
         </div>
       )}
 
-      {/* ── compile command ── */}
       {(["compiling","output","done"] as Phase[]).includes(phase) && (
         <div style={{ marginBottom: 4 }}>
           <Prompt />
@@ -503,7 +695,6 @@ export default function Hero() {
         </div>
       )}
 
-      {/* ── Output lines with left accent border ── */}
       {(["output","done"] as Phase[]).includes(phase) && outputLines.length > 0 && (
         <div style={{ marginTop: 12 }}>
           {outputLines.map((line, i) => (
@@ -524,12 +715,10 @@ export default function Hero() {
         </div>
       )}
 
-      {/* ── Idle cursor after done ── */}
       {(phase === "done" || (phase === "output" && outputLines.length === OUTPUT_LINES.length)) && (
         <div style={{ marginTop: 8 }}><Prompt /><Cursor /></div>
       )}
 
-      {/* ── Idle cursor during segfault ── */}
       {phase === "segfault" && (
         <div style={{ marginTop: 14 }}><Prompt /><Cursor /></div>
       )}
@@ -550,7 +739,6 @@ export default function Hero() {
       <div className="relative z-10 w-full max-w-7xl mx-auto py-24">
         <AnimatePresence mode="wait">
 
-          {/* ── TWO-COLUMN: left=content, right=terminal ── */}
           {showTerminal ? (
             <motion.div
               key="two-col"
@@ -560,47 +748,32 @@ export default function Hero() {
               transition={{ duration: 0.35 }}
               className="grid grid-cols-1 lg:grid-cols-2 gap-10 xl:gap-20 items-center"
             >
-              {/* Left — stable, never remounts */}
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, ease: "easeOut" }}
               >
-                {/*
-                  KEY INSIGHT: LeftContent is defined outside Hero.
-                  React keeps the same component instance across all Hero re-renders
-                  caused by phase changes — so Framer Motion only plays entrance
-                  animations ONCE on initial mount, never again.
-                */}
                 <LeftContent centered={false} />
               </motion.div>
 
-              {/* Right — terminal */}
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.7, delay: 0.15, ease: "easeOut" }}
                 className="relative flex flex-col"
               >
-                {/* Skip button - Uncomment the bottom line & remove the line after it, if I want the disappear the button after all the Animations are completes */}
-                {/* {phase !== "done" && ( */}
-                {(
-                  <button
-                    onClick={skipAnimation}
-                    className="absolute -top-8 right-0 flex items-center gap-1.5 text-sky-400 dark:text-zinc-500 hover:text-violet-500 dark:hover:text-zinc-300 text-xs font-mono transition-colors group z-10"
-                  >
-                    <SkipForward size={12} className="group-hover:text-violet-400 transition-colors" />
-                    skip intro
-                  </button>
-                )}
+                <button
+                  onClick={skipAnimation}
+                  className="absolute -top-8 right-0 flex items-center gap-1.5 text-sky-400 dark:text-zinc-500 hover:text-violet-500 dark:hover:text-zinc-300 text-xs font-mono transition-colors group z-10"
+                >
+                  <SkipForward size={12} className="group-hover:text-violet-400 transition-colors" />
+                  skip intro
+                </button>
 
-                {/* Terminal window */}
-                {/* Spinning gradient border wrapper */}
                 <div
                   className="relative rounded-xl p-[1.5px] overflow-hidden w-full"
                   style={{ boxShadow: "0 24px 64px rgba(124,58,237,0.18), 0 0 0 0px transparent" }}
                 >
-                  {/* Rotating conic gradient — the "running" border */}
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
@@ -611,17 +784,13 @@ export default function Hero() {
                     }}
                   />
 
-                  {/* Inner terminal */}
                   <div className="relative rounded-[10px] overflow-hidden w-full" style={{ background: "#06060f" }}>
-
-                    {/* ── Title bar ── */}
                     <div style={{
                       display: "flex", alignItems: "center", gap: 7,
                       padding: "10px 16px",
                       background: "linear-gradient(90deg, #09091e 0%, #130d2b 100%)",
                       borderBottom: "1px solid rgba(124,58,237,0.2)",
                     }}>
-                      {/* Traffic lights with glow */}
                       <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#ff5f57", boxShadow: "0 0 6px rgba(255,95,87,0.55)" }} />
                       <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#febc2e", boxShadow: "0 0 6px rgba(254,188,46,0.55)" }} />
                       <div style={{ width: 11, height: 11, borderRadius: "50%", background: "#28c840", boxShadow: "0 0 6px rgba(40,200,64,0.55)" }} />
@@ -633,7 +802,6 @@ export default function Hero() {
                         {isEditorPhase ? "nano · shanjid_arefin.c" : "bash · visitor@shanjid"}
                       </span>
 
-                      {/* Live pulse indicator */}
                       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
                         <motion.div
                           animate={{ opacity: [1, 0.2, 1] }}
@@ -655,17 +823,14 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* Enhanced ambient glow layers */}
                 <div className="absolute -inset-6 bg-violet-600/10 rounded-2xl blur-3xl -z-10 pointer-events-none" />
                 <div className="absolute -inset-2 bg-cyan-500/5 rounded-2xl blur-xl -z-10 pointer-events-none" />
-
                 <div className="absolute -inset-4 bg-violet-500/5 rounded-2xl blur-2xl -z-10 pointer-events-none" />
               </motion.div>
             </motion.div>
 
           ) : (
 
-            /* ── ONE-COLUMN: centered after skip ── */
             <motion.div
               key="one-col"
               initial={{ opacity: 0, scale: 0.96, y: 16 }}
@@ -673,12 +838,6 @@ export default function Hero() {
               transition={{ duration: 0.55, ease: "easeOut" }}
               className="max-w-3xl mx-auto"
             >
-              {/*
-                Same LeftContent component, different `centered` prop.
-                AnimatePresence mode="wait" unmounts two-col first, then mounts
-                one-col — so this IS a fresh mount, and entrance animations
-                playing here is intentional and expected.
-              */}
               <LeftContent centered={true} />
             </motion.div>
           )}
@@ -686,7 +845,6 @@ export default function Hero() {
         </AnimatePresence>
       </div>
 
-      {/* Scroll arrow */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

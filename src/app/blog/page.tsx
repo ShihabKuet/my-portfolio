@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import BlogSearch from "@/components/blog/BlogSearch";
 
 export const metadata: Metadata = {
-  title: "Blog | Portfolio",
+  title: "Blog | MD SHANJID AREFIN",
   description: "Thoughts on software engineering, networking, and technology.",
 };
 
@@ -84,7 +84,7 @@ export default function BlogPage() {
           <div className="relative z-10 pt-6">
             <div className="flex items-center gap-3 mb-5">
               <span className="font-mono text-xs tracking-[0.22em] uppercase text-violet-400">
-                ✦ Writing
+                ✦ ARTICLES
               </span>
               <div className="flex-1 h-px bg-gradient-to-r from-violet-500/50 to-transparent" />
               <span className="font-mono text-xs text-zinc-400 dark:text-zinc-600">
@@ -97,13 +97,13 @@ export default function BlogPage() {
                 className="block text-sky-950 dark:text-zinc-100 font-light tracking-[-0.02em]"
                 style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}
               >
-                Things I write
+                Thoughts, Ideas I
               </span>
               <span
                 className="block text-violet-500 dark:text-violet-400 font-extrabold tracking-[-0.04em]"
                 style={{ fontSize: "clamp(2rem, 5vw, 3.2rem)" }}
               >
-                about &amp; explore.
+                examine &amp; push further.
               </span>
             </h1>
 
