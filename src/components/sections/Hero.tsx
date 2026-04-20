@@ -319,7 +319,7 @@ function LeftContent({ centered }: LeftContentProps) {
 
         {/* Resume download — distinct pill style */}
         <a
-          href={personalInfo.resume ?? "/resume.pdf"}
+          href="/cv.pdf"
           download
           target="_blank"
           rel="noopener noreferrer"
