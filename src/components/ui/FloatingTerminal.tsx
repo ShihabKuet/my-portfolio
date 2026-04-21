@@ -49,7 +49,7 @@ function Prompt() {
     <span className="shrink-0 select-none font-mono text-sm">
       <span className="text-emerald-500 dark:text-emerald-400">visitor</span>
       <span className="text-sky-400 dark:text-zinc-500">@</span>
-      <span className="text-violet-600 dark:text-violet-400">shanjid</span>
+      <span className="text-amber-300">shanjid.bd</span>
       <span className="text-sky-400 dark:text-zinc-500">:~$ </span>
     </span>
   );
@@ -363,7 +363,7 @@ export default function FloatingTerminal() {
                 </span>
 
                 <span className="font-mono text-xs text-zinc-400 group-hover:text-zinc-200 transition-colors">
-                  visitor@shanjid ~$
+                  visitor@shanjid.bd ~$
                 </span>
 
                 {/* Blinking cursor */}
@@ -390,13 +390,13 @@ export default function FloatingTerminal() {
             className={cn(
               "fixed bottom-6 left-6 z-50 w-[min(580px,calc(100vw-48px))]",
               "rounded-2xl overflow-hidden",
-              "border border-violet-500/25 dark:border-violet-500/20",
+              "border border-blue-600/80 dark:border-amber-200/80",
               "shadow-2xl shadow-black/50",
               isMinimized ? "h-auto" : ""
             )}
           >
             {/* ── Title bar ── */}
-            <div className="flex items-center gap-2 px-4 py-2.5 bg-zinc-900 dark:bg-zinc-950 border-b border-white/5">
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-sky-100 dark:bg-blue-950 border-b border-white/5">
               {/* Traffic lights */}
               <button
                 onClick={() => setIsOpen(false)}
@@ -420,14 +420,14 @@ export default function FloatingTerminal() {
               </button>
 
               <div className="flex-1 text-center">
-                <span className="font-mono text-xs text-zinc-500">
-                  visitor@shanjid-portfolio — bash
+                <span className="font-mono text-xs text-sky-600 dark:text-sky-200">
+                  visitor@shanjid.bd — bash
                 </span>
               </div>
 
               <button
                 onClick={() => setIsOpen(false)}
-                className="font-mono text-xs text-zinc-600 hover:text-zinc-400 transition-colors px-1"
+                className="font-mono text-xs text-sky-800 dark:text-amber-50 hover:text-zinc-400 transition-colors px-1"
               >
                 exit
               </button>
@@ -451,11 +451,11 @@ export default function FloatingTerminal() {
                     {history.length === 0 && (
                       <div className="mb-4">
                         {/* Info box */}
-                        <div className="border border-violet-500/20 rounded-lg px-3.5 py-3 mb-4 bg-violet-500/5">
-                          <div className="text-violet-400 text-[10px] uppercase tracking-widest mb-1.5">
+                        <div className="border border-violet-500/20 rounded-lg px-3.5 py-3 mb-4 bg-violet-900/30">
+                          <div className="text-violet-400 text-[12px] uppercase tracking-widest mb-1.5">
                             MD Shanjid Arefin · Portfolio Terminal
                           </div>
-                          <div className="text-zinc-500 text-[11px] leading-relaxed">
+                          <div className="text-zinc-400 text-[11px] leading-relaxed">
                             Click a command below or type your own.{" "}
                             <span className="text-amber-400">Tab</span> to autocomplete ·{" "}
                             <span className="text-amber-400">↑↓</span> to browse history
@@ -463,7 +463,7 @@ export default function FloatingTerminal() {
                         </div>
 
                         {/* Quick command chips */}
-                        <div className="text-[10px] text-zinc-600 uppercase tracking-widest mb-2">
+                        <div className="text-[10px] text-zinc-200 uppercase tracking-widest mb-2">
                           Quick commands
                         </div>
                         <div className="grid grid-cols-2 gap-1.5 mb-3">
@@ -473,20 +473,20 @@ export default function FloatingTerminal() {
                               onClick={() => execute(cmd)}
                               className={cn(
                                 "flex items-center gap-2 px-3 py-2 rounded-md text-left",
-                                "border border-zinc-800 bg-zinc-900/60",
-                                "hover:border-violet-500/40 hover:bg-violet-500/5",
+                                "border border-zinc-400/50 bg-zinc-900/60",
+                                "hover:border-amber-100/80 hover:bg-violet-500/30",
                                 "transition-all duration-150 group"
                               )}
                             >
                               <span className="text-amber-400 text-[11px]">{label}</span>
-                              <span className="text-zinc-600 text-[10px] group-hover:text-zinc-500 transition-colors">
+                              <span className="text-zinc-400 text-[10px] group-hover:text-zinc-500 transition-colors">
                                 {desc}
                               </span>
                             </button>
                           ))}
                         </div>
 
-                        <div className="text-[10px] text-zinc-700 border-t border-zinc-800/60 pt-2.5">
+                        <div className="text-[10px] text-zinc-400 border-t border-zinc-800/60 pt-2.5">
                           ── or type any command · try{" "}
                           <span
                             className="text-amber-500 cursor-pointer hover:text-amber-300 transition-colors"
