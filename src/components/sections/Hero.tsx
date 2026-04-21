@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "@/data";
-import { ArrowDown, MapPin, Mail, Briefcase, SkipForward, Download, ExternalLink } from "lucide-react";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { SiResearchgate, SiMedium } from "react-icons/si";
+import { ArrowDown, MapPin, Mail, Briefcase, SkipForward, Download, ExternalLink, Wifi, Cpu, Network } from "lucide-react";
+import { FaGithub, FaLinkedin, FaLinux, FaDocker, FaGitAlt, FaNetworkWired, FaTerminal } from "react-icons/fa";
+import { SiResearchgate, SiMedium, SiWireshark, SiKubernetes, SiAnsible, SiGnubash, SiC, SiVim, SiCmake, SiMqtt } from "react-icons/si";
 import { Globe } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -34,7 +34,7 @@ const OUTPUT_LINES = [
   { text: "[ROLE]  R&D Engineer · Shanghai BDCOM",              color: "#4ade80", delay: 300 },
   { text: "[STACK] C · Embedded Linux · Network Protocols",     color: "#4ade80", delay: 280 },
   { text: "[PUB]   IEEE Research · RFC 1350 Implementor",       color: "#4ade80", delay: 320 },
-  { text: "[EDU]   B.Sc CSE · KUET 2024",                      color: "#4ade80", delay: 260 },
+  { text: "[EDU]   B.Sc CSE · KUET 2024",                       color: "#4ade80", delay: 260 },
   { text: "[READY] Operational. Let's build something great ∞", color: "#22d3ee", delay: 640 },
 ];
 
@@ -54,9 +54,88 @@ const SOCIALS = [
 const ROLES = [
   `R&D Engineer @ ${personalInfo.company}`,
   "Network Systems Developer",
-  "IEEE Researcher",
-  "Embedded Linux Engineer",
+  "Researcher",
+  "Embedded Software Engineer",
 ];
+
+// ─── Floating tech icons config ───────────────────────────────────────────────
+// All positions in %, sized & timed so nothing crowds the text.
+// Single muted violet tint so color noise stays zero.
+
+type IconEntry = {
+  el: React.ReactNode;
+  size: number;
+  x: number; y: number;       // % within the column
+  opacity: number;
+  duration: number;
+  delay: number;
+  floatY: number;             // vertical drift amplitude (px)
+  rotateRange: number;        // rotation arc (deg)
+};
+
+const FLOATING_ICONS: IconEntry[] = [
+  { el: <FaLinux />,        size: 52, x: 2,  y: 5,  opacity: 0.20, duration: 9,  delay: 0,   floatY: 18, rotateRange: 8  },
+  { el: <SiWireshark />,    size: 38, x: 78, y: 3,  opacity: 0.28, duration: 11, delay: 1.2, floatY: 22, rotateRange: 6  },
+  { el: <FaDocker />,       size: 44, x: 88, y: 29, opacity: 0.29, duration: 8,  delay: 0.5, floatY: 16, rotateRange: 10 },
+  { el: <SiKubernetes />,   size: 36, x: 60, y: 78, opacity: 0.28, duration: 13, delay: 2.0, floatY: 20, rotateRange: 12 },
+  { el: <SiAnsible />,      size: 34, x: 4,  y: 72, opacity: 0.29, duration: 10, delay: 0.8, floatY: 24, rotateRange: 5  },
+  { el: <SiGnubash />,      size: 40, x: 40, y: 88, opacity: 0.27, duration: 12, delay: 1.5, floatY: 14, rotateRange: 8  },
+  { el: <SiC />,            size: 48, x: 82, y: 62, opacity: 0.20, duration: 7,  delay: 0.3, floatY: 20, rotateRange: 4  },
+  { el: <FaGitAlt />,       size: 36, x: 22, y: 44, opacity: 0.27, duration: 14, delay: 2.5, floatY: 26, rotateRange: 15 },
+  { el: <SiVim />,          size: 30, x: 68, y: 18, opacity: 0.28, duration: 9,  delay: 1.8, floatY: 18, rotateRange: 6  },
+  { el: <FaNetworkWired />, size: 38, x: 12, y: 27, opacity: 0.29, duration: 11, delay: 0.6, floatY: 22, rotateRange: 8  },
+  { el: <SiCmake />,        size: 30, x: 48, y: 9,  opacity: 0.27, duration: 10, delay: 3.0, floatY: 16, rotateRange: 10 },
+  { el: <SiMqtt />,         size: 34, x: 91, y: 82, opacity: 0.28, duration: 8,  delay: 1.1, floatY: 20, rotateRange: 7  },
+  { el: <FaTerminal />,     size: 32, x: 30, y: 16, opacity: 0.27, duration: 13, delay: 2.2, floatY: 18, rotateRange: 5  },
+  { el: <Cpu size={30} />,  size: 30, x: 75, y: 50, opacity: 0.28, duration: 9,  delay: 0.9, floatY: 24, rotateRange: 12 },
+  { el: <Wifi size={28} />, size: 28, x: 18, y: 88, opacity: 0.27, duration: 11, delay: 1.7, floatY: 18, rotateRange: 6  },
+  { el: <Network size={28}/>,size:28, x: 55, y: 56, opacity: 0.26, duration: 15, delay: 3.5, floatY: 28, rotateRange: 9  },
+];
+
+// ─── FloatingIcons — rendered behind all LeftContent children ─────────────────
+
+function FloatingIcons() {
+  return (
+    <div aria-hidden="true" className="absolute inset-0 pointer-events-none" style={{ zIndex: 0 }}>
+      {FLOATING_ICONS.map((item, i) => (
+        <motion.div
+          key={i}
+          style={{
+            position: "absolute",
+            left:     `${item.x}%`,
+            top:      `${item.y}%`,
+            fontSize:  item.size,
+            color:    "#a78bfa",        // single violet — no color competition with text
+            lineHeight: 1,
+          }}
+          initial={{ opacity: 0 }}
+          animate={{
+            opacity: [
+              0,
+              item.opacity,
+              item.opacity * 1.5,
+              item.opacity,
+              item.opacity * 0.55,
+              item.opacity,
+            ],
+            y:      [0, -item.floatY, 0, item.floatY * 0.6, 0],
+            x:      [0, item.floatY * 0.25, -item.floatY * 0.15, 0],
+            rotate: [0, item.rotateRange, -item.rotateRange * 0.5, item.rotateRange * 0.3, 0],
+          }}
+          transition={{
+            duration: item.duration,
+            delay:    item.delay,
+            repeat:   Infinity,
+            ease:     "easeInOut",
+            times:    [0, 0.15, 0.35, 0.55, 0.78, 1],
+          }}
+        >
+          {item.el}
+        </motion.div>
+      ))}
+    </div>
+  );
+}
 
 // ─── Scramble Text Hook ───────────────────────────────────────────────────────
 // Letters randomise then resolve to the real characters — no cursor needed.
@@ -153,6 +232,122 @@ function StatItem({
   );
 }
 
+// ─── NULL *pointer glitch component ──────────────────────────────────────────
+
+const GLITCH_CHARS = "!@#$%^&*<>[]{}|01ØΔ▓░";
+const TARGET_TEXT  = "NULL *pointer";
+
+function NullPointerGlitch() {
+  const [display,  setDisplay]  = useState(TARGET_TEXT);
+  const [sliceY,   setSliceY]   = useState(50);
+  const [sliceOff, setSliceOff] = useState(0);
+  const [rgbOn,    setRgbOn]    = useState(false);
+
+  useEffect(() => {
+    let raf: number;
+    let outerTimer: ReturnType<typeof setTimeout>;
+
+    const runGlitch = () => {
+      setRgbOn(true);
+
+      let frame = 0;
+      const totalFrames = 22;
+
+      const tick = () => {
+        frame++;
+        const progress = frame / totalFrames;
+
+        const corrupt = TARGET_TEXT.split("").map((ch) => {
+          if (ch === " ") return ch;
+          if (Math.random() < (1 - progress) * 0.55)
+            return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+          return ch;
+        }).join("");
+        setDisplay(corrupt);
+
+        setSliceY(30 + Math.random() * 40);
+        setSliceOff((Math.random() - 0.5) * 10 * (1 - progress));
+
+        if (frame < totalFrames) {
+          raf = requestAnimationFrame(tick);
+        } else {
+          setDisplay(TARGET_TEXT);
+          setSliceOff(0);
+          setRgbOn(false);
+        }
+      };
+
+      raf = requestAnimationFrame(tick);
+    };
+
+    const schedule = () => {
+      const jitter = (Math.random() - 0.5) * 2000;
+      outerTimer = setTimeout(() => {
+        runGlitch();
+        schedule();
+      }, 7000 + jitter);
+    };
+
+    outerTimer = setTimeout(() => { runGlitch(); schedule(); }, 2500);
+
+    return () => { clearTimeout(outerTimer); cancelAnimationFrame(raf); };
+  }, []);
+
+  const sharedStyle: React.CSSProperties = {
+    fontFamily: "'JetBrains Mono','Fira Code',monospace",
+    fontSize: "0.88em",
+  };
+
+  return (
+    <span className="relative inline-block select-none cursor-default" style={sharedStyle}>
+
+      {/* ── Base layer ── */}
+      <span
+        className="relative inline-block font-semibold text-sky-900 dark:text-pink-300"
+        style={{
+          textShadow: rgbOn
+            ? "-3px 0 0 rgba(255,0,80,0.8), 3px 0 0 rgba(0,255,220,0.8)"
+            : "none",
+          transition: "text-shadow 0.04s",
+        }}
+      >
+        {display}
+      </span>
+
+      {/* ── Slice — top half ── */}
+      <span
+        aria-hidden
+        className="absolute inset-0 font-semibold text-sky-900 dark:text-pink-300 overflow-hidden pointer-events-none"
+        style={{
+          clipPath:  `inset(0 0 ${100 - sliceY}% 0)`,
+          transform: `translateX(${sliceOff}px)`,
+          textShadow: rgbOn
+            ? "3px 0 0 rgba(255,0,80,0.9), -3px 0 0 rgba(0,255,220,0.9)"
+            : "none",
+        }}
+      >
+        {display}
+      </span>
+
+      {/* ── Slice — bottom half ── */}
+      <span
+        aria-hidden
+        className="absolute inset-0 font-semibold text-sky-900 dark:text-pink-300 overflow-hidden pointer-events-none"
+        style={{
+          clipPath:  `inset(${sliceY}% 0 0 0)`,
+          transform: `translateX(${-sliceOff * 1.4}px)`,
+          textShadow: rgbOn
+            ? "-2px 0 0 rgba(255,0,80,0.6), 2px 0 0 rgba(0,255,220,0.6)"
+            : "none",
+        }}
+      >
+        {display}
+      </span>
+
+    </span>
+  );
+}
+
 // ─── LeftContent ──────────────────────────────────────────────────────────────
 // Defined outside Hero so React never remounts it on phase change.
 
@@ -218,7 +413,7 @@ function LeftContent({ centered }: LeftContentProps) {
         >
           &gt;&gt;
         </span>
-        <span className="text-xs font-mono tracking-[0.2em] uppercase text-sky-500/50 dark:text-zinc-600">
+        <span className="text-xs font-mono tracking-[0.2em] uppercase text-sky-900 dark:text-zinc-300">
           Hello, World!
         </span>
         {/* Tiny animated signal bars instead of cursor */}
@@ -266,9 +461,28 @@ function LeftContent({ centered }: LeftContentProps) {
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.38, duration: 0.55 }}
-        className={`text-base sm:text-lg text-sky-700 dark:text-zinc-400 mb-6 leading-relaxed ${centered ? "max-w-2xl" : "max-w-lg"}`}
+        className={`text-base sm:text-lg text-sky-700 dark:text-zinc-400 mb-6 leading-relaxed tracking-[0.01em] ${centered ? "max-w-2xl" : "max-w-lg"}`}
+        style={{ fontFamily: "'Georgia', 'Palatino Linotype', serif" }}
       >
-        {personalInfo.bio}
+        I work close to the metal — debugging systems where a single{" "}
+        <NullPointerGlitch />{" "}
+        can take everything down. With hands-on experience in network software R&amp;D,
+        I build and optimize low-level systems across{" "}
+        <span
+          className="font-bold text-cyan-900 dark:text-cyan-400"
+          style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace", fontSize: "0.85em" }}
+        >ACL</span>
+        {", "}
+        <span
+          className="font-bold text-cyan-900 dark:text-cyan-400"
+          style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace", fontSize: "0.85em" }}
+        >IEEE 802.1x</span>
+        {", and "}
+        <span
+          className="font-bold text-cyan-900 dark:text-cyan-400"
+          style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace", fontSize: "0.85em" }}
+        >AAA protocols</span>{" "}
+        — focusing on performance, reliability and how systems behave under real-world conditions.
       </motion.p>
 
       {/* ── Location ── */}
@@ -290,7 +504,7 @@ function LeftContent({ centered }: LeftContentProps) {
         className={`flex gap-8 mb-8 pb-7 border-b border-sky-100 dark:border-zinc-800 w-full ${wrap}`}
       >
         <StatItem to={2}  suffix="+"  label="Years Exp"   delay={600} />
-        <StatItem to={3}  suffix=""   label="IEEE Papers" delay={760} />
+        <StatItem to={1}  suffix=""   label="IEEE Papers" delay={760} />
         <StatItem to={10} suffix="+"  label="Projects"    delay={920} />
       </motion.div>
 
@@ -303,7 +517,7 @@ function LeftContent({ centered }: LeftContentProps) {
       >
         <a
           href="/#projects"
-          className="group relative px-6 py-3 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5 text-sm overflow-hidden"
+          className="group relative px-6 py-3 bg-violet-600/50 hover:bg-violet-500 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5 text-sm overflow-hidden"
         >
           {/* Shimmer sweep on hover */}
           <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
@@ -312,10 +526,13 @@ function LeftContent({ centered }: LeftContentProps) {
 
         <a
           href="/#contact"
-          className="px-6 py-3 border border-sky-300 dark:border-zinc-700 hover:border-violet-400 dark:hover:border-violet-600 text-sky-800 dark:text-zinc-300 hover:text-violet-700 dark:hover:text-violet-400 font-medium rounded-lg transition-all duration-200 hover:bg-sky-50 dark:hover:bg-violet-900/10 hover:-translate-y-0.5 text-sm"
+          className="group relative px-6 py-3 bg-violet-500/50 hover:bg-violet-500 text-white font-medium rounded-lg transition-all duration-200 hover:shadow-lg hover:shadow-violet-500/30 hover:-translate-y-0.5 text-sm overflow-hidden"
         >
+          {/* Shimmer sweep on hover */}
+          <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12" />
           Get In Touch
         </a>
+
 
         {/* Resume download — distinct pill style */}
         <a
@@ -323,32 +540,31 @@ function LeftContent({ centered }: LeftContentProps) {
           download
           target="_blank"
           rel="noopener noreferrer"
-          className="group inline-flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-sm transition-all duration-200 hover:-translate-y-0.5"
-          style={{
-            border: "1px solid rgba(124,58,237,0.35)",
-            color: "#7c3aed",
-            background: "rgba(124,58,237,0.06)",
-          }}
-          onMouseEnter={e => {
-            (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.12)";
-            (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.6)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "0 0 18px rgba(124,58,237,0.15)";
-          }}
-          onMouseLeave={e => {
-            (e.currentTarget as HTMLElement).style.background = "rgba(124,58,237,0.06)";
-            (e.currentTarget as HTMLElement).style.borderColor = "rgba(124,58,237,0.35)";
-            (e.currentTarget as HTMLElement).style.boxShadow = "none";
-          }}
+          className="group relative inline-flex items-center gap-2 px-5 py-3 rounded-lg font-semibold text-sm transition-all duration-300 hover:-translate-y-0.5
+            bg-gradient-to-r from-amber-400 to-orange-400
+            dark:from-amber-500 dark:to-orange-500
+            text-zinc-900
+            shadow-md shadow-amber-300/40 dark:shadow-amber-600/30
+            hover:shadow-xl hover:shadow-amber-400/50 dark:hover:shadow-amber-500/40
+            hover:from-amber-300 hover:to-orange-300
+            dark:hover:from-amber-400 dark:hover:to-orange-400
+            overflow-hidden"
         >
+          {/* Shimmer sweep — same as View My Work */}
+          <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12" />
+
+          {/* Pulsing ring to draw the eye */}
+          <span className="absolute inset-0 rounded-lg ring-2 ring-amber-400 dark:ring-amber-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <span className="absolute -inset-0.5 rounded-lg bg-amber-400/20 dark:bg-amber-500/20 blur-sm animate-pulse" />
+
           <motion.span
-            className="group-hover:animate-none"
             animate={{ y: [0, -2, 0] }}
             transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
           >
             <Download size={14} />
           </motion.span>
           <span>Résumé</span>
-          <ExternalLink size={11} className="opacity-50" />
+          <ExternalLink size={11} className="opacity-70" />
         </a>
       </motion.div>
 
@@ -735,6 +951,9 @@ export default function Hero() {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-violet-600/10 rounded-full blur-3xl" />
         <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-indigo-600/10 rounded-full blur-3xl" />
       </div>
+
+      {/* ── Floating background icons ── */}
+      <FloatingIcons />
 
       <div className="relative z-10 w-full max-w-7xl mx-auto py-24">
         <AnimatePresence mode="wait">
