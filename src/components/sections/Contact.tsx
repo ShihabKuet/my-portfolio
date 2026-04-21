@@ -9,7 +9,7 @@ import { personalInfo } from "@/data";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { SiResearchgate } from "react-icons/si";
-import { Mail, MapPin, Send, CheckCircle, AlertCircle, Loader2, WifiOff, ServerCrash } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle, AlertCircle, Loader2, ServerCrash } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
@@ -35,10 +35,10 @@ const contactInfoItems = [
 ];
 
 const socialLinks = [
-  { icon: <FaGithub size={18} />,      label: "GitHub",      href: personalInfo.github    },
-  { icon: <FaLinkedin size={18} />,    label: "LinkedIn",    href: personalInfo.linkedin  },
-  { icon: <SiResearchgate size={18}/>, label: "ResearchGate",href: personalInfo.researchgate },
-  { icon: <Mail size={18} />,          label: "Email",       href: `mailto:${personalInfo.email}` },
+  { icon: <FaGithub size={18} />,       label: "GitHub",       href: personalInfo.github      },
+  { icon: <FaLinkedin size={18} />,     label: "LinkedIn",     href: personalInfo.linkedin    },
+  { icon: <SiResearchgate size={18} />, label: "ResearchGate", href: personalInfo.researchgate },
+  { icon: <Mail size={18} />,           label: "Email",        href: `mailto:${personalInfo.email}` },
 ];
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -54,37 +54,6 @@ function getMsgId() {
 function byteSize(str: string) {
   return new Blob([str]).size;
 }
-
-// ─── InputField ───────────────────────────────────────────────────────────────
-
-function InputField({ label, error, children }: { label: string; error?: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <label className="block text-sky-800 dark:text-zinc-300 text-sm font-medium mb-2">{label}</label>
-      {children}
-      <AnimatePresence>
-        {error && (
-          <motion.p
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="mt-1.5 text-red-400 text-xs flex items-center gap-1 overflow-hidden"
-          >
-            <AlertCircle size={11} />{error}
-          </motion.p>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-const inputClass = cn(
-  "w-full px-4 py-3 rounded-lg text-sm font-mono",
-  "bg-white dark:bg-zinc-900/60 border border-sky-200 dark:border-zinc-800",
-  "text-sky-950 dark:text-zinc-100 placeholder:text-sky-300 dark:placeholder:text-zinc-600",
-  "focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/40",
-  "transition-colors duration-200"
-);
 
 // ─── Envelope SVG ─────────────────────────────────────────────────────────────
 
@@ -209,7 +178,6 @@ function PostboxScene({ phase }: { phase: PostboxPhase }) {
 
   // Envelope: enters from above → slides into slot
   // On success: pops back up from slot, flap opens, letter peaks out
-  const envY = isEntering ? [-80, 77] : isSuccess ? [77, 30] : 77;
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-5 py-4 select-none">
@@ -344,77 +312,80 @@ function PostboxScene({ phase }: { phase: PostboxPhase }) {
   );
 }
 
-// ─── SmtpPacketCard ───────────────────────────────────────────────────────────
+// ─── TerminalRow — a single inline-editable SMTP header row ───────────────────
 
-interface SmtpPacketCardProps {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  isReady: boolean;
-}
-
-// A single SMTP header row — flashes green when its value changes
-function PacketRow({
+function TerminalRow({
   label,
-  value,
-  flashKey,
+  labelClass,
+  valueClass,
+  children,
   dim,
-  labelClass = "text-slate-500 dark:text-slate-400",
-  valueClass = "text-slate-400 dark:text-slate-500",
+  staticValue,
 }: {
-  label:      string;
-  value:      string;
-  flashKey:   string | number;
-  dim?:       boolean;
-  labelClass?: string;
-  valueClass?: string;
+  label:        string;
+  labelClass?:  string;
+  valueClass?:  string;
+  children?:    React.ReactNode;
+  dim?:         boolean;
+  staticValue?: string;
 }) {
   return (
-    <motion.div
-      key={flashKey}
-      initial={{ backgroundColor: "rgba(80,250,123,0.18)" }}
-      animate={{ backgroundColor: "rgba(80,250,123,0)" }}
-      transition={{ duration: 0.9 }}
-      className={cn(
-        "flex gap-2 px-2.5 font-mono text-[0.70rem] leading-[1.9] transition-opacity duration-300",
-        dim ? "opacity-40" : "opacity-100"
-      )}
-    >
-      <span className={cn("shrink-0 min-w-[5.8rem]", labelClass)}>
+    <div className={cn(
+      "flex gap-2 px-2.5 font-mono text-[0.90rem] leading-[1.9] transition-opacity duration-300",
+      dim ? "opacity-40" : "opacity-100"
+    )}>
+      <span className={cn("shrink-0 min-w-[5.8rem]", labelClass ?? "text-slate-500 dark:text-slate-400")}>
         {label}
       </span>
-      <span className={cn("break-all", valueClass)}>
-        {value || (
-          <span className="text-[#3d3d5c] dark:text-[#3d3d5c] italic">—</span>
-        )}
-      </span>
-    </motion.div>
+      {staticValue !== undefined
+        ? <span className={cn("break-all", valueClass ?? "text-slate-400 dark:text-slate-500")}>
+            {staticValue || <span className="italic text-zinc-700">—</span>}
+          </span>
+        : <span className={cn("flex-1 min-w-0", valueClass)}>{children}</span>
+      }
+    </div>
   );
 }
 
-function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCardProps) {
+const terminalInputClass = cn(
+  "w-full bg-transparent border-none outline-none",
+  "font-mono text-[0.90rem] leading-[1.9]",
+  "placeholder:text-zinc-700 dark:placeholder:text-zinc-100/80",
+  "caret-violet-400"
+);
+
+// ─── SmtpTerminalForm — the form IS the SMTP packet ───────────────────────────
+
+interface SmtpTerminalFormProps {
+  register:     ReturnType<typeof useForm<ContactFormData>>["register"];
+  errors:       ReturnType<typeof useForm<ContactFormData>>["formState"]["errors"];
+  watched:      { name: string; email: string; subject: string; message: string };
+  isReady:      boolean;
+  isSent:       boolean;
+  isSubmitting: boolean;
+  isSuccess:    boolean;
+  isError:      boolean;
+  handleSubmit: ReturnType<typeof useForm<ContactFormData>>["handleSubmit"];
+  onSubmit:     (data: ContactFormData) => Promise<void>;
+}
+
+function SmtpTerminalForm({
+  register,
+  errors,
+  watched,
+  isReady,
+  isSent,
+  isSubmitting,
+  isSuccess,
+  isError,
+  handleSubmit,
+  onSubmit,
+}: SmtpTerminalFormProps) {
+
   // Stable-across-render values for generated SMTP fields
   // ── Initialize with empty string — same on server and client ──
   const msgIdRef = useRef("");
   const dateRef  = useRef("");
-
-  // Flash keys — incrementing key forces PacketRow to re-mount → retrigger animation
-  const [flashKeys, setFlashKeys] = useState({ name: 0, email: 0, subject: 0, message: 0 });
-  const prevVals   = useRef({ name: "", email: "", subject: "", message: "" });
-
-  useEffect(() => {
-    const updates: Partial<typeof flashKeys> = {};
-    if (name    !== prevVals.current.name)    { updates.name    = flashKeys.name    + 1; }
-    if (email   !== prevVals.current.email)   { updates.email   = flashKeys.email   + 1; }
-    if (subject !== prevVals.current.subject) { updates.subject = flashKeys.subject + 1; }
-    if (message !== prevVals.current.message) { updates.message = flashKeys.message + 1; }
-
-    if (Object.keys(updates).length > 0) {
-      setFlashKeys(k => ({ ...k, ...updates }));
-      prevVals.current = { name, email, subject, message };
-    }
-  }, [name, email, subject, message]);
 
   // ── Fix hydration mismatch: generate time-sensitive values client-side only ──
   useEffect(() => {
@@ -423,19 +394,17 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
   }, []);
 
   const totalBytes = byteSize(
-    `FROM: visitor@shanjid.client\r\nTO: ${personalInfo.email}\r\nSUBJECT: ${subject}\r\n\r\n${message}`
+    `FROM: visitor@shanjid.client\r\nTO: ${personalInfo.email}\r\nSUBJECT: ${watched.subject}\r\n\r\n${watched.message}`
   );
-  const bodyPreview = message
-    ? message.length > 90 ? message.slice(0, 90) + "…" : message
-    : "";
 
   return (
-    <div
+    <form
+      onSubmit={handleSubmit(onSubmit)}
       className={`
-        font-mono rounded-xl overflow-hidden h-full flex flex-col transition-shadow duration-500
+        font-mono rounded-xl overflow-hidden flex flex-col transition-shadow duration-500
         bg-white border border-gray-200 shadow-md
         dark:bg-[#05080f] dark:border-[#1a2035]
-        ${isReady 
+        ${isReady
           ? "dark:shadow-[0_0_0_1px_rgba(99,102,241,0.3),0_4px_32px_rgba(99,102,241,0.1)]"
           : "shadow-lg dark:shadow-[0_4px_24px_rgba(0,0,0,0.4)]"
         }
@@ -443,9 +412,9 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
       style={{ fontFamily: "'JetBrains Mono','Fira Code',monospace" }}
     >
       {/* Title bar */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b 
+      <div className="flex items-center gap-2 px-3 py-2 border-b
         bg-gray-100 border-gray-200
-        dark:bg-[#0b0072] dark:border-[#141830]"
+        dark:bg-zinc-900 dark:border-[#141830]"
       >
         {/* Traffic lights */}
         <div className="flex gap-[5px]">
@@ -476,9 +445,9 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
         {/* Left hex gutter */}
         <div className="absolute left-0 top-0 bottom-0 w-[1.8rem] flex flex-col py-1 overflow-hidden select-none
           bg-gray-100 border-r border-gray-200
-          dark:bg-[#0b0072] dark:border-[#0f1628]"
+          dark:bg-zinc-900 dark:border-[#0f1628]"
         >
-          {Array.from({ length: 24 }, (_, i) => (
+          {Array.from({ length: 32 }, (_, i) => (
             <div key={i} className="text-[0.56rem] leading-[1.9] text-center font-mono
               text-gray-300 dark:text-[#a4ffc38e]"
             >
@@ -496,104 +465,125 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
             EHLO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; client.shanjid.dev
           </div>
 
-          <div className="h-px mx-[10px] my-[2px]
-            bg-sky-300/60" />
+          <div className="h-px mx-[10px] my-[2px] bg-sky-300/60 dark:bg-sky-900/60" />
 
-          {/* Headers — live */}
-          <PacketRow 
-            label="FROM:" 
-            value="visitor@shanjid.client" 
-            flashKey={0} 
+          {/* Headers — static */}
+          <TerminalRow
+            label="FROM:"
+            staticValue="visitor@shanjid.client"
             labelClass="text-violet-600 dark:text-violet-400"
             valueClass="text-violet-500 dark:text-violet-300"
           />
-
-          <PacketRow 
-            label="TO:" 
-            value={personalInfo.email} 
-            flashKey={0} 
+          <TerminalRow
+            label="TO:"
+            staticValue={personalInfo.email}
             labelClass="text-violet-600 dark:text-violet-400"
             valueClass="text-violet-500 dark:text-violet-300"
           />
-
-          <PacketRow 
-            label="DATE:" 
-            value={dateRef.current} 
-            flashKey={0} 
-            labelClass="text-gray-500 dark:text-gray-400"
-            valueClass="text-gray-400 dark:text-gray-500"
+          <TerminalRow
+            label="DATE:"
+            staticValue={dateRef.current}
+          />
+          <TerminalRow
+            label="MESSAGE-ID:"
+            staticValue={msgIdRef.current}
           />
 
-          <PacketRow 
-            label="MESSAGE-ID:" 
-            value={msgIdRef.current} 
-            flashKey={0} 
-            labelClass="text-gray-500 dark:text-gray-400"
-            valueClass="text-gray-400 dark:text-gray-500"
-          />
+          <div className="h-px mx-[10px] my-[2px] bg-sky-300/60 dark:bg-sky-900/60" />
 
-          <PacketRow 
-            label="X-SENDER:" 
-            value={name} 
-            flashKey={flashKeys.name} 
-            dim={!name} 
+          {/* Headers — live (editable) */}
+
+          {/* X-SENDER — name input */}
+          <TerminalRow
+            label="X-SENDER:"
             labelClass="text-cyan-600 dark:text-cyan-400"
             valueClass="text-cyan-500 dark:text-cyan-300"
-          />
+            dim={!watched.name}
+          >
+            <input
+              {...register("name")}
+              placeholder="write your full name here"
+              disabled={isSent}
+              className={cn(terminalInputClass, "text-cyan-500 dark:text-cyan-100")}
+            />
+          </TerminalRow>
+          {errors.name && (
+            <p className="px-[10px] text-[0.62rem] text-red-400 font-mono flex items-center gap-1">
+              <AlertCircle size={9}/>{errors.name.message}
+            </p>
+          )}
 
-          <PacketRow 
-            label="REPLY-TO:" 
-            value={email} 
-            flashKey={flashKeys.email} 
-            dim={!email} 
+          {/* REPLY-TO — email input */}
+          <TerminalRow
+            label="REPLY-TO:"
             labelClass="text-cyan-600 dark:text-cyan-400"
             valueClass="text-cyan-500 dark:text-cyan-300"
-          />
+            dim={!watched.email}
+          >
+            <input
+              {...register("email")}
+              type="email"
+              placeholder="write_your@email.com"
+              disabled={isSent}
+              className={cn(terminalInputClass, "text-cyan-500 dark:text-cyan-300")}
+            />
+          </TerminalRow>
+          {errors.email && (
+            <p className="px-[10px] text-[0.62rem] text-red-400 font-mono flex items-center gap-1">
+              <AlertCircle size={9}/>{errors.email.message}
+            </p>
+          )}
 
-          <PacketRow 
-            label="SUBJECT:" 
-            value={subject} 
-            flashKey={flashKeys.subject} 
-            dim={!subject} 
+          {/* SUBJECT */}
+          <TerminalRow
+            label="SUBJECT:"
             labelClass="text-amber-600 dark:text-amber-400"
             valueClass="text-amber-500 dark:text-amber-300"
-          />
+            dim={!watched.subject}
+          >
+            <input
+              {...register("subject")}
+              placeholder="what's this about?"
+              disabled={isSent}
+              className={cn(terminalInputClass, "text-amber-500 dark:text-amber-300")}
+            />
+          </TerminalRow>
+          {errors.subject && (
+            <p className="px-[10px] text-[0.62rem] text-red-400 font-mono flex items-center gap-1">
+              <AlertCircle size={9}/>{errors.subject.message}
+            </p>
+          )}
 
-          <PacketRow 
-            label="MIME-VER:" 
-            value="1.0" 
-            flashKey={0} 
-            labelClass="text-gray-500 dark:text-gray-400"
-            valueClass="text-gray-400 dark:text-gray-500"
-          />
-
-          <PacketRow 
-            label="CONTENT:" 
-            value="text/plain; charset=utf-8" 
-            flashKey={0} 
-            labelClass="text-gray-500 dark:text-gray-400"
-            valueClass="text-gray-400 dark:text-gray-500"
-          />
+          <TerminalRow label="MIME-VER:" staticValue="1.0" />
+          <TerminalRow label="CONTENT:" staticValue="text/plain; charset=utf-8" />
 
           {/* Body section */}
-          <div className="h-px mx-[10px] my-1 bg-sky-300/60" />
+          <div className="h-px mx-[10px] my-1 bg-sky-300/60 dark:bg-sky-900/60" />
 
           <div className="px-[10px] text-[0.64rem] font-mono leading-[1.6]
             text-gray-500 dark:text-amber-200">
             ── BODY ──
           </div>
 
-          <motion.div
-            key={flashKeys.message}
-            initial={{ backgroundColor: "rgba(80,250,123,0.14)" }}
-            animate={{ backgroundColor: "rgba(80,250,123,0)" }}
-            transition={{ duration: 1.1 }}
-            className={`px-[10px] py-1 text-[0.68rem] font-mono leading-[1.7] min-h-[54px] break-words whitespace-pre-wrap
-              ${message ? "text-gray-600 dark:text-[#94a3b8]" : "text-gray-400 dark:text-[#1e2d42] italic"}
-            `}
-          >
-            {bodyPreview || "— awaiting message body —"}
-          </motion.div>
+          <div className="px-[10px] py-1">
+            <textarea
+              {...register("message")}
+              rows={5}
+              placeholder="tell me about your project, or just say hi..."
+              disabled={isSent}
+              className={cn(
+                terminalInputClass,
+                "resize-none w-full text-gray-600 dark:text-[#94a3b8]",
+                "placeholder:text-gray-400 dark:placeholder:text-[#1e2d42]",
+                "leading-[1.7] min-h-[80px]"
+              )}
+            />
+          </div>
+          {errors.message && (
+            <p className="px-[10px] text-[0.62rem] text-red-400 font-mono flex items-center gap-1">
+              <AlertCircle size={9}/>{errors.message.message}
+            </p>
+          )}
 
           {/* Footer */}
           <div className="h-px mx-[10px] my-1 bg-gray-200 dark:bg-[#0f1628]" />
@@ -611,9 +601,34 @@ function SmtpPacketCard({ name, email, subject, message, isReady }: SmtpPacketCa
               {isReady ? "● READY TO SEND" : "○ INCOMPLETE"}
             </span>
           </div>
+
+          {/* Submit button */}
+          <div className="px-[10px] pb-3">
+            <button
+              type="submit"
+              disabled={isSent}
+              className={cn(
+                "w-full py-2 px-4 rounded-lg font-medium text-[0.75rem] transition-all duration-200",
+                "flex items-center justify-center gap-2 font-mono",
+                isSuccess
+                  ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 cursor-default"
+                  : isError
+                  ? "bg-red-600/10 text-red-400 border border-red-500/30 cursor-default"
+                  : isSubmitting
+                  ? "bg-violet-600/50 text-white cursor-wait"
+                  : "bg-violet-600 hover:bg-violet-500 text-white hover:shadow-lg hover:shadow-violet-500/25 hover:-translate-y-0.5"
+              )}
+            >
+              {isSubmitting && <><Loader2 size={13} className="animate-spin" /> Transmitting packet...</>}
+              {isSuccess    && <><CheckCircle size={13} /> Delivered — check inbox!</>}
+              {isError      && <><AlertCircle size={13} /> Delivery failed — try again</>}
+              {!isSent      && <><Send size={13} /> Send Message</>}
+            </button>
+          </div>
+
         </div>
       </div>
-    </div>
+    </form>
   );
 }
 
@@ -627,7 +642,7 @@ export default function Contact() {
     resolver: zodResolver(contactSchema),
   });
 
-  // Live watch — feeds into SmtpPacketCard
+  // Live watch — feeds into SmtpTerminalForm
   const watchedName    = watch("name",    "");
   const watchedEmail   = watch("email",   "");
   const watchedSubject = watch("subject", "");
@@ -701,29 +716,27 @@ export default function Contact() {
 
   return (
     <section id="contact" className="py-24 px-4">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <SectionHeading
           title="Contact"
           subtitle="Have a project in mind or just want to connect? I'd love to hear from you."
         />
 
-        {/* 3-column grid: info | form | packet/postbox */}
-        <div className="grid grid-cols-1 lg:grid-cols-[360px_1fr_200px] xl:grid-cols-[390px_1fr_200px] gap-8 items-start">
+        {/* 2-column grid: terminal form | contact info */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-8 items-start">
 
-          {/* ── Column 1: SMTP Packet Card / Postbox ── */}
+          {/* ── Column 1: SMTP Terminal Form / Postbox ── */}
           <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="relative"
-            style={{ minHeight: 480 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
             <AnimatePresence mode="wait">
               {!isSent ? (
-                /* ── SMTP Packet Card — visible before submit ── */
+                /* ── SMTP Terminal Form — visible before submit ── */
                 <motion.div
-                  key="packet-card"
+                  key="terminal-form"
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{
@@ -734,14 +747,18 @@ export default function Contact() {
                     rotate: 18,
                     transition: { duration: 0.55, ease: [0.4, 0, 1, 1] },
                   }}
-                  style={{ height: "100%", minHeight: 480 }}
                 >
-                  <SmtpPacketCard
-                    name={watchedName}
-                    email={watchedEmail}
-                    subject={watchedSubject}
-                    message={watchedMessage}
+                  <SmtpTerminalForm
+                    register={register}
+                    errors={errors}
+                    watched={{ name: watchedName, email: watchedEmail, subject: watchedSubject, message: watchedMessage }}
                     isReady={isFormReady}
+                    isSent={isSent}
+                    isSubmitting={isSubmitting}
+                    isSuccess={isSuccess}
+                    isError={isError}
+                    handleSubmit={handleSubmit}
+                    onSubmit={onSubmit}
                   />
                 </motion.div>
               ) : (
@@ -752,7 +769,7 @@ export default function Contact() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.4, ease: "easeOut" }}
-                  className="rounded-2xl border border-zinc-800/60 bg-sky-200 dark:bg-violet-900"
+                  className="rounded-2xl border border-zinc-800/60 bg-sky-200 dark:bg-zinc-900"
                   style={{ minHeight: 480, display: "flex", alignItems: "center", justifyContent: "center" }}
                 >
                   <PostboxScene phase={postboxPhase} />
@@ -761,69 +778,12 @@ export default function Contact() {
             </AnimatePresence>
           </motion.div>
 
-          {/* ── Column 2: Form ── */}
+          {/* ── Column 2: Contact info ── */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-zinc-900/50 border border-sky-100 dark:border-zinc-800/50 space-y-5"
-            >
-              <div className="grid sm:grid-cols-2 gap-5">
-                <InputField label="Name" error={errors.name?.message}>
-                  <input {...register("name")} placeholder="Your name" className={inputClass} autoComplete="off"/>
-                </InputField>
-                <InputField label="Email" error={errors.email?.message}>
-                  <input {...register("email")} type="email" placeholder="your@email.com" className={inputClass} autoComplete="off"/>
-                </InputField>
-              </div>
-
-              <InputField label="Subject" error={errors.subject?.message}>
-                <input {...register("subject")} placeholder="What's this about?" className={inputClass}/>
-              </InputField>
-
-              <InputField label="Message" error={errors.message?.message}>
-                <textarea
-                  {...register("message")}
-                  rows={6}
-                  placeholder="Tell me about your project, or just say hi..."
-                  className={cn(inputClass, "resize-none")}
-                />
-              </InputField>
-
-              {/* Submit button */}
-              <button
-                type="submit"
-                disabled={isSent}
-                className={cn(
-                  "w-full py-3 px-6 rounded-lg font-medium text-sm transition-all duration-200",
-                  "flex items-center justify-center gap-2 font-mono",
-                  isSuccess
-                    ? "bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 cursor-default"
-                    : isError
-                    ? "bg-red-600/10 text-red-400 border border-red-500/30 cursor-default"
-                    : isSubmitting
-                    ? "bg-violet-600/50 text-white cursor-wait"
-                    : "bg-violet-600 hover:bg-violet-500 text-white hover:shadow-lg hover:shadow-violet-500/25 hover:-translate-y-0.5"
-                )}
-              >
-                {isSubmitting && <><Loader2 size={15} className="animate-spin" /> Transmitting packet...</>}
-                {isSuccess    && <><CheckCircle size={15} /> Delivered — check inbox!</>}
-                {isError      && <><AlertCircle size={15} /> Delivery failed — try again</>}
-                {!isSent      && <><Send size={15} /> Send Message</>}
-              </button>
-            </form>
-          </motion.div>
-
-          {/* ── Column 3: Contact info ── */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
+            initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             className="space-y-6"
           >
             <div>
