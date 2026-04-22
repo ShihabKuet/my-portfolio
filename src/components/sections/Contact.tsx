@@ -817,50 +817,157 @@ export default function Contact() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="space-y-6"
+            className="space-y-4"
           >
-            <div>
-              <h3 className="text-sky-950 dark:text-zinc-100 font-semibold text-base mb-2">Let's talk</h3>
-              <p className="text-sky-600 dark:text-zinc-400 text-sm leading-relaxed">
-                Job opportunities, collaborations, or just a technical deep-dive — reach out any time.
-              </p>
+
+            {/* ── "Let's talk" hero card ── */}
+            <div className="relative rounded-2xl overflow-hidden p-6
+              bg-gradient-to-br from-violet-600 via-violet-500 to-indigo-600
+              dark:from-violet-900/80 dark:via-violet-800/60 dark:to-indigo-900/80
+              shadow-xl shadow-violet-500/30 dark:shadow-violet-900/40"
+            >
+              {/* Background orbs */}
+              <div className="absolute -top-6 -right-6 w-28 h-28 bg-white/10 rounded-full blur-2xl pointer-events-none" />
+              <div className="absolute -bottom-4 -left-4 w-20 h-20 bg-indigo-400/20 rounded-full blur-xl pointer-events-none" />
+
+              {/* Dot grid overlay */}
+              <div className="absolute inset-0 pointer-events-none opacity-10"
+                style={{
+                  backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+                  backgroundSize: "16px 16px",
+                }}
+              />
+
+              {/* Content */}
+              <div className="relative">
+                {/* Pulsing availability badge */}
+                <div className="inline-flex items-center gap-1.5 bg-white/15 backdrop-blur-sm border border-white/20 rounded-full px-2.5 py-1 mb-4">
+                  <motion.span
+                    animate={{ opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.4, repeat: Infinity }}
+                    className="w-1.5 h-1.5 rounded-full bg-emerald-300 shrink-0"
+                    style={{ boxShadow: "0 0 6px rgba(110,231,183,0.9)" }}
+                  />
+                  <span className="text-[0.65rem] text-emerald-200 font-medium tracking-wide">
+                    Open to opportunities
+                  </span>
+                </div>
+
+                <h3 className="text-white text-2xl font-bold leading-tight mb-2">
+                  Let's build<br />something great.
+                </h3>
+                <p className="text-violet-200 dark:text-violet-300 text-sm leading-relaxed">
+                  Job opportunities, collaborations, or just a technical deep-dive — reach out any time.
+                </p>
+              </div>
             </div>
 
-            {/* Info cards */}
-            <div className="space-y-3">
-              {contactInfoItems.map(({ icon, label, value, href }) => (
-                <div key={label} className="flex items-center gap-3 p-3.5 rounded-xl bg-white dark:bg-zinc-900/50 border border-sky-100 dark:border-zinc-800/60">
-                  <span className="text-violet-400 shrink-0">{icon}</span>
-                  <div className="min-w-0">
-                    <p className="text-sky-400 dark:text-zinc-500 text-xs">{label}</p>
+            {/* ── Contact detail cards ── */}
+            <div className="space-y-2.5">
+              {contactInfoItems.map(({ icon, label, value, href }, i) => (
+                <motion.div
+                  key={label}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.4, delay: 0.3 + i * 0.08 }}
+                  className="group relative flex items-center gap-4 p-4 rounded-xl overflow-hidden
+                    bg-white border border-sky-100/80
+                    hover:border-violet-200 hover:shadow-lg hover:shadow-violet-100/60
+                    dark:bg-zinc-900/60 dark:border-zinc-800/60
+                    dark:hover:border-violet-800/50 dark:hover:bg-zinc-900
+                    transition-all duration-300"
+                >
+                  {/* Hover gradient sweep */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                    bg-gradient-to-r from-violet-50/80 via-transparent to-transparent
+                    dark:from-violet-950/40 dark:via-transparent dark:to-transparent
+                    pointer-events-none"
+                  />
+
+                  {/* Icon */}
+                  <div className="relative shrink-0 w-10 h-10 rounded-xl flex items-center justify-center
+                    bg-gradient-to-br from-violet-100 to-indigo-100 text-violet-600
+                    group-hover:from-violet-200 group-hover:to-indigo-200
+                    dark:from-violet-900/60 dark:to-indigo-900/60 dark:text-violet-400
+                    dark:group-hover:from-violet-800/50 dark:group-hover:to-indigo-800/50
+                    transition-all duration-300 shadow-sm"
+                  >
+                    {icon}
+                  </div>
+
+                  {/* Text */}
+                  <div className="relative min-w-0 flex-1">
+                    <p className="text-sky-400 dark:text-zinc-600 text-[0.65rem] uppercase tracking-widest mb-0.5">
+                      {label}
+                    </p>
                     {href
-                      ? <a href={href} className="text-sky-800 dark:text-zinc-300 text-xs hover:text-violet-400 transition-colors truncate block">{value}</a>
-                      : <p className="text-sky-800 dark:text-zinc-300 text-xs truncate">{value}</p>
+                      ? <a href={href} className="text-sky-900 dark:text-zinc-200 text-sm font-medium hover:text-violet-600 dark:hover:text-violet-400 transition-colors truncate block">
+                          {value}
+                        </a>
+                      : <p className="text-sky-900 dark:text-zinc-200 text-sm font-medium truncate">{value}</p>
                     }
                   </div>
-                </div>
+
+                  {/* Arrow */}
+                  {href && (
+                    <span className="relative shrink-0 w-7 h-7 rounded-lg flex items-center justify-center
+                      text-violet-300 dark:text-zinc-700
+                      group-hover:text-white group-hover:bg-violet-500
+                      dark:group-hover:text-white dark:group-hover:bg-violet-600
+                      transition-all duration-200 text-sm"
+                    >
+                      ↗
+                    </span>
+                  )}
+                </motion.div>
               ))}
             </div>
 
-            {/* Socials */}
-            <div>
-              <p className="text-zinc-500 text-xs font-mono mb-3 uppercase tracking-wider">Find me on</p>
-              <div className="flex flex-wrap gap-2">
-                {socialLinks.map(({ icon, label, href }) => (
-                  <a
+            {/* ── Socials ── */}
+            <div className="relative rounded-2xl p-4
+              bg-white border border-sky-100/80 shadow-sm
+              dark:bg-zinc-900/60 dark:border-zinc-800/60"
+            >
+              <p className="text-xs text-sky-400 dark:text-zinc-600 uppercase tracking-widest mb-3">
+                Find me on
+              </p>
+
+              <div className="grid grid-cols-4 gap-2">
+                {socialLinks.map(({ icon, label, href }, i) => (
+                  <motion.a
                     key={label}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
                     title={label}
-                    className="p-2.5 rounded-lg bg-white dark:bg-zinc-900/50 border border-sky-100 dark:border-zinc-800/60 text-sky-600 dark:text-zinc-400 hover:text-violet-400 hover:border-violet-500/30 transition-all duration-200"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.3, delay: 0.5 + i * 0.07 }}
+                    whileHover={{ y: -3, scale: 1.08 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex flex-col items-center gap-1.5 py-3 rounded-xl
+                      bg-sky-50/60 border border-sky-100
+                      hover:bg-gradient-to-br hover:from-violet-50 hover:to-indigo-50
+                      hover:border-violet-200 hover:shadow-md hover:shadow-violet-100/60
+                      dark:bg-zinc-800/40 dark:border-zinc-700/40
+                      dark:hover:bg-gradient-to-br dark:hover:from-violet-950/60 dark:hover:to-indigo-950/60
+                      dark:hover:border-violet-700/50
+                      text-sky-500 dark:text-zinc-500
+                      hover:text-violet-600 dark:hover:text-violet-400
+                      transition-all duration-200 group"
                   >
-                    {icon}
-                  </a>
+                    <span className="transition-transform duration-200">{icon}</span>
+                    <span className="text-[0.58rem] font-medium tracking-wide text-sky-400 dark:text-zinc-600 group-hover:text-violet-500 dark:group-hover:text-violet-400 transition-colors">
+                      {label}
+                    </span>
+                  </motion.a>
                 ))}
               </div>
             </div>
+
           </motion.div>
 
         </div>
