@@ -81,6 +81,13 @@ export default function FloatingTerminal() {
     }
   }, [isOpen, isMinimized]);
 
+  // Listen for custom event to open terminal from anywhere in the app
+  useEffect(() => {
+    const handler = () => setIsOpen(true);
+    window.addEventListener("open-floating-terminal", handler);
+    return () => window.removeEventListener("open-floating-terminal", handler);
+  }, []);
+
   const addEntry = useCallback((entry: Omit<HistoryEntry, "id">) => {
     setHistory(prev => [...prev, { ...entry, id: Date.now() + Math.random() }]);
   }, []);

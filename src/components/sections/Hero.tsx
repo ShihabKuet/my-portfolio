@@ -647,7 +647,7 @@ function NLine({ n, eof, children, highlight }: {
   );
   return (
     <div style={{ display: "flex", lineHeight: 1.75, fontSize: "0.80rem", background: highlight ? "rgba(255,85,85,0.08)" : "transparent", borderLeft: highlight ? "2px solid #ff5555" : "2px solid transparent" }}>
-      <span style={{ minWidth: "2.6rem", textAlign: "right", paddingRight: "0.8rem", color: highlight ? "#ff5555" : "#1e1e32", userSelect: "none", fontSize: "0.72rem", flexShrink: 0 }}>{n}</span>
+      <span style={{ minWidth: "2.6rem", textAlign: "right", paddingRight: "0.8rem", color: highlight ? "#ff5555" : "#868686", userSelect: "none", fontSize: "0.72rem", flexShrink: 0 }}>{n}</span>
       <span style={{ color: "#c8ccd8", whiteSpace: "pre", flex: 1 }}>{children ?? ""}</span>
     </div>
   );
@@ -681,10 +681,10 @@ export default function Hero() {
     };
 
     const run = async () => {
-      await sleep(2200);              if (abort()) return;
+      await sleep(3200);              if (abort()) return;
 
       setPhase("typing-nano");
-      await type(NANO_CMD, setNanoTyped, 20);
+      await type(NANO_CMD, setNanoTyped, 3);
       await sleep(1300);              if (abort()) return;
 
       setPhase("editor");
@@ -718,8 +718,8 @@ export default function Hero() {
       await sleep(950);              if (abort()) return;
 
       setPhase("compiling");
-      await type(COMPILE_CMD, setCompileTyped, 36);
-      await sleep(420);              if (abort()) return;
+      await type(COMPILE_CMD, setCompileTyped, 6);
+      await sleep(1300);              if (abort()) return;
 
       setPhase("output");
       for (let i = 0; i < OUTPUT_LINES.length; i++) {
@@ -777,28 +777,20 @@ export default function Hero() {
         </div>
 
         <div style={{ background: "#06060d", padding: "0.35rem 0", minHeight: 230 }}>
-          <NLine n={1}><Inc c="#include" /> <St c="&lt;stdio.h&gt;" /></NLine>
-          <NLine n={2}><Inc c="#include" /> <St c="&lt;string.h&gt;" /></NLine>
-          <NLine n={3}><Inc c="#include" /> <St c='"profile_info.h"' /></NLine>
-          <NLine n={4} />
-          <NLine n={5}><Cm c="/* Engineer profile — network software R&D */" /></NLine>
-          <NLine n={6}><Kw c="typedef" /> <Kw c="struct" /> {"{"}</NLine>
-          <NLine n={7}>{"    "}<Ty c="char" /> <Cm c="*name" />{", "}<Cm c="*role" />{", "}<Cm c="*stack" />{";"}</NLine>
-          <NLine n={8}>{"    "}<Ty c="int" />{"  "}<Cm c="experience" />{";"}</NLine>
-          <NLine n={9}>{"} "}<Ty c="Engineer" />{";"}</NLine>
-          <NLine n={10} />
-          <NLine n={11}><Kw c="int" /> <Fn c="main" />{"() {"}</NLine>
-          <NLine n={12}>{"    "}<Ty c="Engineer" />{" profile = {"}</NLine>
-          <NLine n={13}>{"        "}<St c={'"MD. SHANJID AREFIN"'} />{", "}<St c={'"R&D Engineer"'} />{","}</NLine>
-          <NLine n={14}>{"        "}<St c={'"C · Networking · Embedded"'} />{", "}<Num c="2" /></NLine>
-          <NLine n={15}>{"    "}{"}"}</NLine>
+          <NLine n={1}><Inc c="#include" /> <St c='"engineer_info.h"' /></NLine>
+          <NLine n={2} />
+          <NLine n={3}><Kw c="int" /> <Fn c="main" />{"(void) {"}</NLine>
+          <NLine n={4}>{"    "}<Ty c="Engineer" />{" profile = {"}</NLine>
+          <NLine n={5}>{"        "}<St c={'.name = "MD. SHANJID AREFIN"'} />{", "}<St c={'.role = "R&D Engineer"'} />{","}</NLine>
+          <NLine n={6}>{"        "}<St c={'.stack = "C · Networking · Embedded"'} />{", .experience = "}<Num c="2" /></NLine>
+          <NLine n={7}>{"    "}{"}"}</NLine>
 
           <div style={{
             display: "flex", lineHeight: 1.75, fontSize: "0.80rem",
             background: isFixed ? "rgba(80,250,123,0.06)" : "rgba(255,85,85,0.09)",
             borderLeft: isFixed ? "2px solid #50fa7b" : "2px solid #ff5555",
           }}>
-            <span style={{ minWidth: "2.6rem", textAlign: "right", paddingRight: "0.8rem", color: isFixed ? "#50fa7b" : "#ff5555", userSelect: "none", fontSize: "0.72rem", flexShrink: 0 }}>15</span>
+            <span style={{ minWidth: "2.6rem", textAlign: "right", paddingRight: "0.8rem", color: isFixed ? "#50fa7b" : "#ff5555", userSelect: "none", fontSize: "0.72rem", flexShrink: 0 }}>8</span>
             <span style={{ color: "#c8ccd8", whiteSpace: "pre", flex: 1 }}>
               {"    "}<Ty c="Engineer" />{" "}
               {isFixed
@@ -817,8 +809,8 @@ export default function Hero() {
             </span>
           </div>
 
-          <NLine n={17} />
-          <NLine n={18} highlight={!isFixed}>
+          <NLine n={9} />
+          <NLine n={10} highlight={!isFixed}>
             {"    "}
             {isFixed ? <Fn c="printf" /> : <Err c="printf" />}
             {"("}
@@ -826,10 +818,10 @@ export default function Hero() {
             {", dev->name);"}
             {!isFixed && <Cm c="  // SIGSEGV: null ptr!" />}
           </NLine>
-          <NLine n={19}>{"    "}<Fn c="load_profile_info" />{"("}
+          <NLine n={11}>{"    "}<Fn c="load_profile_info" />{"("}
             <Kw c="void" />{");"}</NLine>
-          <NLine n={20}>{"    "}<Kw c="return" /> <Num c="0" />{";"}</NLine>
-          <NLine n={21}>{"}"}</NLine>
+          <NLine n={12}>{"    "}<Kw c="return" /> <Num c="0" />{";"}</NLine>
+          <NLine n={13}>{"}"}</NLine>
           <NLine eof /><NLine eof />
         </div>
 
@@ -886,7 +878,7 @@ export default function Hero() {
           borderTop: "1px solid rgba(255,85,85,0.1)", paddingTop: 6,
           display: "flex", gap: 16,
         }}>
-          <span style={{ color: "#ffcece" }}>#0 main() · shanjid_arefin.c:17</span>
+          <span style={{ color: "#ffcece" }}>#0 main() · shanjid_arefin.c:10</span>
           <span style={{ color: "#ff4444" }}>← dev is NULL</span>
         </div>
       </div>
@@ -941,6 +933,8 @@ export default function Hero() {
     </div>
   );
 
+  const isClickable = phase === "done" || (phase === "output" && outputLines.length === OUTPUT_LINES.length);
+  
   const isEditorPhase = (["editor","fixing","saving"] as Phase[]).includes(phase);
 
   return (
@@ -1035,8 +1029,12 @@ export default function Hero() {
                         </span>
                       </div>
                     </div>
-
-                    <div style={{ minHeight: 280 }}>
+                    
+                    {/* Clickable after animation completes — triggers the floating terminal */}
+                    <div
+                      style={{ minHeight: 280, cursor: isClickable ? "pointer" : "default" }}
+                      onClick={isClickable ? () => window.dispatchEvent(new CustomEvent("open-floating-terminal")) : undefined}
+                    >
                       {isEditorPhase ? renderEditor() : renderBash()}
                     </div>
                   </div>
