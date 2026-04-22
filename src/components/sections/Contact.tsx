@@ -9,7 +9,7 @@ import { personalInfo } from "@/data";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { SiResearchgate } from "react-icons/si";
-import { Mail, MapPin, Send, CheckCircle, AlertCircle, Loader2, ServerCrash } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle, AlertCircle, Loader2, ServerCrash, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // ─── Schema ───────────────────────────────────────────────────────────────────
@@ -321,6 +321,7 @@ function TerminalRow({
   children,
   dim,
   staticValue,
+  locked,
 }: {
   label:        string;
   labelClass?:  string;
@@ -328,10 +329,15 @@ function TerminalRow({
   children?:    React.ReactNode;
   dim?:         boolean;
   staticValue?: string;
+  locked?:      boolean;
 }) {
+  const isEditable = staticValue === undefined;
+
   return (
     <div className={cn(
       "flex gap-2 px-2.5 font-mono text-[0.90rem] leading-[1.9] transition-opacity duration-300",
+      // Tinted background + left accent bar for editable rows
+      isEditable && "bg-violet-50/80 dark:bg-violet-950/40 border-l-2 border-violet-400/50 dark:border-violet-500/40 pl-[9px]",
       dim ? "opacity-40" : "opacity-100"
     )}>
       <span className={cn("shrink-0 min-w-[5.8rem]", labelClass ?? "text-slate-500 dark:text-slate-400")}>
@@ -341,8 +347,18 @@ function TerminalRow({
         ? <span className={cn("break-all", valueClass ?? "text-slate-400 dark:text-slate-500")}>
             {staticValue || <span className="italic text-zinc-700">—</span>}
           </span>
-        : <span className={cn("flex-1 min-w-0", valueClass)}>{children}</span>
+        : <span className={cn("flex-1 min-w-0 flex items-center gap-1", valueClass)}>
+            {/* Prompt glyph — universal terminal "type here" signal */}
+            <span className="text-violet-400/60 dark:text-violet-400 select-none">▸</span>
+            {children}
+          </span>
       }
+      {/* Lock icon — only on system-controlled fields */}
+      {locked && (
+        <span className="shrink-0 flex items-center ml-auto pl-2">
+          <Lock size={11} className="text-red-600/60" />
+        </span>
+      )}
     </div>
   );
 }
@@ -350,7 +366,11 @@ function TerminalRow({
 const terminalInputClass = cn(
   "w-full bg-transparent border-none outline-none",
   "font-mono text-[0.90rem] leading-[1.9]",
-  "placeholder:text-zinc-700 dark:placeholder:text-zinc-100/80",
+  "placeholder:text-zinc-400 dark:placeholder:text-zinc-200",
+  // Subtle underline so it reads as a field
+  "border-b border-dashed border-violet-300/40 dark:border-violet-700/40",
+  "focus:border-violet-400/70 dark:focus:border-violet-500/60",
+  "transition-colors duration-150",
   "caret-violet-400"
 );
 
@@ -462,7 +482,7 @@ function SmtpTerminalForm({
           {/* SMTP preamble — static */}
           <div className="px-[10px] text-[0.70rem] leading-[1.9]
             text-gray-500 dark:text-[#e00404]">
-            EHLO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; client.shanjid.dev
+            EHLO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; client.shanjid.bd
           </div>
 
           <div className="h-px mx-[10px] my-[2px] bg-sky-300/60 dark:bg-sky-900/60" />
@@ -470,23 +490,27 @@ function SmtpTerminalForm({
           {/* Headers — static */}
           <TerminalRow
             label="FROM:"
-            staticValue="visitor@shanjid.client"
+            staticValue="visitor@shanjid.bd"
             labelClass="text-violet-600 dark:text-violet-400"
             valueClass="text-violet-500 dark:text-violet-300"
+            locked
           />
           <TerminalRow
             label="TO:"
             staticValue={personalInfo.email}
             labelClass="text-violet-600 dark:text-violet-400"
             valueClass="text-violet-500 dark:text-violet-300"
+            locked
           />
           <TerminalRow
             label="DATE:"
             staticValue={dateRef.current}
+            locked
           />
           <TerminalRow
             label="MESSAGE-ID:"
             staticValue={msgIdRef.current}
+            locked
           />
 
           <div className="h-px mx-[10px] my-[2px] bg-sky-300/60 dark:bg-sky-900/60" />
@@ -515,7 +539,7 @@ function SmtpTerminalForm({
 
           {/* REPLY-TO — email input */}
           <TerminalRow
-            label="REPLY-TO:"
+            label="X-EMAIL:"
             labelClass="text-cyan-600 dark:text-cyan-400"
             valueClass="text-cyan-500 dark:text-cyan-300"
             dim={!watched.email}
@@ -545,7 +569,7 @@ function SmtpTerminalForm({
               {...register("subject")}
               placeholder="what's this about?"
               disabled={isSent}
-              className={cn(terminalInputClass, "text-amber-500 dark:text-amber-300")}
+              className={cn(terminalInputClass, "text-amber-700 dark:text-amber-300")}
             />
           </TerminalRow>
           {errors.subject && (
@@ -554,30 +578,39 @@ function SmtpTerminalForm({
             </p>
           )}
 
-          <TerminalRow label="MIME-VER:" staticValue="1.0" />
-          <TerminalRow label="CONTENT:" staticValue="text/plain; charset=utf-8" />
+          <TerminalRow label="MIME-VER:" staticValue="1.0" locked/>
+          <TerminalRow label="CONTENT:" staticValue="text/plain; charset=utf-8" locked/>
 
           {/* Body section */}
           <div className="h-px mx-[10px] my-1 bg-sky-300/60 dark:bg-sky-900/60" />
 
-          <div className="px-[10px] text-[0.64rem] font-mono leading-[1.6]
+          <div className="px-[10px] text-[0.90rem] font-mono leading-[3.6]
             text-gray-500 dark:text-amber-200">
             ── BODY ──
           </div>
 
-          <div className="px-[10px] py-1">
-            <textarea
-              {...register("message")}
-              rows={5}
-              placeholder="tell me about your project, or just say hi..."
-              disabled={isSent}
-              className={cn(
-                terminalInputClass,
-                "resize-none w-full text-gray-600 dark:text-[#94a3b8]",
-                "placeholder:text-gray-400 dark:placeholder:text-[#1e2d42]",
-                "leading-[1.7] min-h-[80px]"
-              )}
-            />
+          {/* Tinted editable body area */}
+          <div className="mx-0 border-l-2 border-violet-400/50 dark:border-violet-500/40 bg-violet-50/80 dark:bg-violet-950/40 pl-[9px] pr-[10px] py-1">
+            <div className="flex gap-1 items-start">
+              {/* Prompt glyph */}
+              <span className="text-violet-400/60 dark:text-violet-400/50 select-none text-[0.70rem] leading-[1.9] shrink-0">▸</span>
+              <textarea
+                {...register("message")}
+                rows={5}
+                placeholder="tell me about your project, or just say hi..."
+                disabled={isSent}
+                className={cn(
+                  "w-full bg-transparent border-none outline-none",
+                  "font-mono text-[0.90rem] text-gray-600 dark:text-[#94a3b8]",
+                  "placeholder:text-zinc-400 dark:placeholder:text-zinc-600",
+                  "border-b border-dashed border-violet-300/40 dark:border-violet-700/40",
+                  "focus:border-violet-400/70 dark:focus:border-violet-500/60",
+                  "transition-colors duration-150",
+                  "resize-none leading-[1.7] min-h-[80px]",
+                  "caret-violet-400"
+                )}
+              />
+            </div>
           </div>
           {errors.message && (
             <p className="px-[10px] text-[0.62rem] text-red-400 font-mono flex items-center gap-1">

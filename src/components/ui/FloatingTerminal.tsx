@@ -225,10 +225,10 @@ export default function FloatingTerminal() {
 
     if (cmd === "neofetch") {
       addEntry({ cmd: raw, ok: true, isInfo: true, output:
-        "        /\\         visitor@shanjid\n" +
+        "        /\\         visitor@shanjid.bd\n" +
         "       /  \\        ───────────────\n" +
         "      / /\\ \\       OS: PortfolioOS · Next.js 16\n" +
-        "     / /  \\ \\      Host: shanjidarefin.vercel.app\n" +
+        "     / /  \\ \\      Host: www.shanjid.bd\n" +
         "    / /    \\ \\     Shell: bash (portfolio edition)\n" +
         "   / / /\\   \\ \\    Stack: TypeScript · Tailwind v4\n" +
         "  /_/  \\_\\   \\_\\   Role: Software R&D Engineer\n" +
@@ -345,6 +345,7 @@ export default function FloatingTerminal() {
                 )}
               >
                 {/* Image before pulsing dot */}
+                {/*
                 <div className="relative flex items-center justify-center w-[24px] h-[24px] shrink-0">
                   <Image
                     src="/profile.png"
@@ -353,8 +354,9 @@ export default function FloatingTerminal() {
                     height={24}
                     className="object-contain"
                   />
-                  {/* <span className="absolute inset-0 rounded-full bg-emerald-400/30 blur-[4px] animate-pulse" /> */}
+                  <span className="absolute inset-0 rounded-full bg-emerald-400/30 blur-[4px] animate-pulse" />
                 </div>
+                */}
                 
                 {/* Pulsing live dot */}
                 <span className="relative flex h-2 w-2 shrink-0">

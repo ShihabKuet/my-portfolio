@@ -29,13 +29,13 @@ const BUGGY_LINE  = 'Engineer *dev = NULL;';
 const FIXED_LINE  = 'Engineer *dev = &profile;';
 
 const OUTPUT_LINES = [
-  { text: "[SYS]   Boot sequence initialized...",               color: "#6b7280", delay: 0   },
-  { text: "[ID]    MD. Shanjid Arefin — engineer loaded",       color: "#a78bfa", delay: 440 },
-  { text: "[ROLE]  R&D Engineer · Shanghai BDCOM",              color: "#4ade80", delay: 300 },
-  { text: "[STACK] C · Embedded Linux · Network Protocols",     color: "#4ade80", delay: 280 },
-  { text: "[PUB]   IEEE Research · RFC 1350 Implementor",       color: "#4ade80", delay: 320 },
-  { text: "[EDU]   B.Sc CSE · KUET 2024",                       color: "#4ade80", delay: 260 },
-  { text: "[READY] Operational. Let's build something great ∞", color: "#22d3ee", delay: 640 },
+  { text: "[SYS]   Boot sequence initialized...",                       color: "#6b7280", delay: 0   },
+  { text: "[ID]    MD. SHANJID AREFIN — engineer loaded",               color: "#a78bfa", delay: 440 },
+  { text: "[ROLE]  R&D Engineer @ Shanghai BDCOM",                      color: "#4ade80", delay: 300 },
+  { text: "[STACK] C · Embedded Linux · Network Protocols",             color: "#4ade80", delay: 280 },
+  { text: "[PUB]   IEEE Research · RFC Standard Protocols Implementor", color: "#4ade80", delay: 320 },
+  { text: "[EDU]   B.Sc CSE @ KUET",                                    color: "#4ade80", delay: 260 },
+  { text: "[READY] Operational. Let's build something great ∞",         color: "#22d3ee", delay: 640 },
 ];
 
 // ─── Social links ─────────────────────────────────────────────────────────────
@@ -619,7 +619,7 @@ const Prompt = () => (
   <span style={{ fontFamily: "monospace" }}>
     <span style={{ color: "#4ade80" }}>visitor</span>
     <span style={{ color: "#6b7280" }}>@</span>
-    <span style={{ color: "#818cf8" }}>shanjid-portfolio</span>
+    <span style={{ color: "#818cf8" }}>shanjid.bd</span>
     <span style={{ color: "#6b7280" }}>:~$ </span>
   </span>
 );
@@ -861,10 +861,10 @@ export default function Hero() {
       <div style={{
         border: "1px solid rgba(58, 44, 205, 0.18)",
         borderRadius: 8, padding: "10px 14px", marginBottom: 14,
-        background: "rgba(37, 117, 245, 0.04)",
+        background: "rgba(51, 127, 250, 0.21)",
       }}>
         <div style={{ marginBottom: 6 }}>
-          <Prompt /><span style={{ color: "#4a4a66" }}>./shanjid_arefin</span>
+          <Prompt /><span style={{ color: "#babaee" }}>./shanjid_arefin</span>
         </div>
 
         <motion.div
@@ -876,7 +876,7 @@ export default function Hero() {
           }}
         >
           ✗ Segmentation Fault
-          <span style={{ color: "#5a2a2a", fontWeight: 400, fontSize: "0.75rem", marginLeft: 10 }}>
+          <span style={{ color: "#830000", fontWeight: 400, fontSize: "0.75rem", marginLeft: 10 }}>
             SIGSEGV · core dumped
           </span>
         </motion.div>
@@ -886,7 +886,7 @@ export default function Hero() {
           borderTop: "1px solid rgba(255,85,85,0.1)", paddingTop: 6,
           display: "flex", gap: 16,
         }}>
-          <span>#0 main() · shanjid_arefin.c:17</span>
+          <span style={{ color: "#ffcece" }}>#0 main() · shanjid_arefin.c:17</span>
           <span style={{ color: "#ff4444" }}>← dev is NULL</span>
         </div>
       </div>
@@ -894,7 +894,7 @@ export default function Hero() {
       {(["typing-nano","compiling","output","done"] as Phase[]).includes(phase) && (
         <div style={{ marginBottom: 4 }}>
           <Prompt />
-          <span style={{ color: phase === "typing-nano" ? "#d4d4d8" : "#3d3d55" }}>
+          <span style={{ color: phase === "typing-nano" ? "#d4d4d8" : "#babaee" }}>
             {nanoTyped}
           </span>
           {phase === "typing-nano" && <Cursor />}
@@ -904,7 +904,7 @@ export default function Hero() {
       {(["compiling","output","done"] as Phase[]).includes(phase) && (
         <div style={{ marginBottom: 4 }}>
           <Prompt />
-          <span style={{ color: phase === "compiling" ? "#d4d4d8" : "#3d3d55" }}>
+          <span style={{ color: phase === "compiling" ? "#d4d4d8" : "#babaee" }}>
             {compileTyped}
           </span>
           {phase === "compiling" && <Cursor />}
@@ -1018,7 +1018,7 @@ export default function Hero() {
                         marginLeft: 10, color: "#6b5f9e", fontSize: 11,
                         fontFamily: "monospace", letterSpacing: "0.06em",
                       }}>
-                        {isEditorPhase ? "nano · shanjid_arefin.c" : "bash · visitor@shanjid"}
+                        {isEditorPhase ? "nano · shanjid_arefin.c" : "bash · visitor@shanjid.bd"}
                       </span>
 
                       <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 6 }}>
@@ -1030,7 +1030,7 @@ export default function Hero() {
                             background: "#4ade80", boxShadow: "0 0 7px rgba(74,222,128,0.8)",
                           }}
                         />
-                        <span style={{ fontSize: 10, fontFamily: "monospace", color: "#2d4a35", letterSpacing: "0.1em" }}>
+                        <span style={{ fontSize: 10, fontFamily: "monospace", color: "#00ff48", letterSpacing: "0.1em" }}>
                           LIVE
                         </span>
                       </div>
