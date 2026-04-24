@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getAllPosts, formatDate } from "@/lib/mdx";
 import type { Metadata } from "next";
 import BlogSearch from "@/components/blog/BlogSearch";
+import FunFactController from "@/components/blog/FunFactController";
 
 export const metadata: Metadata = {
   title: "Blog | MD SHANJID AREFIN",
@@ -90,6 +91,7 @@ export default function BlogPage() {
               <span className="font-mono text-xs text-zinc-400 dark:text-zinc-600">
                 {posts.length} article{posts.length !== 1 ? "s" : ""}
               </span>
+              <FunFactController />
             </div>
 
             <h1 className="mb-4 leading-[1.1]">

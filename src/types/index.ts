@@ -77,3 +77,5 @@ export interface Achievement {
   category: "certification" | "award" | "competition";
   highlight: boolean;
 }
+
+export type { FunFact } from "./funFact";

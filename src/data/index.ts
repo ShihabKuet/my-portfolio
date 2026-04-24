@@ -278,3 +278,5 @@ export const achievements = [
     highlight: false,
   },
 ];
+
+export { FUN_FACTS } from "./funFacts";
