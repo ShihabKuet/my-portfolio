@@ -20,17 +20,17 @@ export const personalInfo = {
 };
 
 export const navItems: NavItem[] = [
-  { label: "About",        href: "/#about",        icon: "User"          },
-  { label: "Skills",       href: "/#skills",       icon: "Wrench"        },
-  { label: "Experience",   href: "/#experience",   icon: "Briefcase"     },
-  { label: "Expertise",    href: "/#expertise",    icon: "Network"       },
-  { label: "Publications", href: "/#publications", icon: "FlaskConical"  },
-  { label: "Projects",     href: "/#projects",     icon: "FolderOpen"    },
-  { label: "Education",    href: "/#education",    icon: "GraduationCap" },
-  { label: "Coding",       href: "/#coding",       icon: "Terminal"      },
-  { label: "Achievements", href: "/#achievements", icon: "Trophy"        },
-  { label: "Blog",         href: "/blog",          icon: "PenLine"       },
-  { label: "Contact",      href: "/#contact",      icon: "Mail"          },
+  { label: "About",        href: "/#about",        icon: "UserStarIcon"          },
+  { label: "Skills",       href: "/#skills",       icon: "SwordsIcon"        },
+  { label: "Experience",   href: "/#experience",   icon: "HourglassIcon"     },
+  { label: "Expertise",    href: "/#expertise",    icon: "TelescopeIcon"       },
+  { label: "Publications", href: "/#publications", icon: "BookOpenCheckIcon"  },
+  { label: "Projects",     href: "/#projects",     icon: "WebhookIcon"    },
+  { label: "Education",    href: "/#education",    icon: "GraduationCapIcon" },
+  { label: "Coding",       href: "/#coding",       icon: "TerminalIcon"      },
+  { label: "Achievements", href: "/#achievements", icon: "SparklesIcon"        },
+  { label: "Blog",         href: "/blog",          icon: "PenToolIcon"       },
+  { label: "Contact",      href: "/#contact",      icon: "MailIcon"          },
 ];
 
 export const experiences: Experience[] = [

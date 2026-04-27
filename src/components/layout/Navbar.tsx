@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, ComponentType } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navItems, personalInfo } from "@/data";
@@ -14,10 +14,31 @@ import {
   FileDown, LucideIcon,
 } from "lucide-react";
 
+import {
+  MailIcon, SwordsIcon, ScanTextIcon, UserStarIcon, PenToolIcon,
+  TelescopeIcon, ZapIcon, TerminalIcon, WebhookIcon, BookOpenCheckIcon,
+  GraduationCapIcon, HourglassIcon, SparklesIcon, 
+} from "@/components/icons";
+
+import {
+  type MailIconHandle, type SwordsIconHandle, type ScanTextIconHandle,
+  type UserStarHandle, type PenToolIconHandle,
+  type TelescopeIconHandle, type ZapHandle,
+  type TerminalIconHandle, type WebhookHandle, type BookOpenCheckIconHandle,
+  type GraduationCapIconHandle, type HourglassIconHandle, type SparklesIconHandle,
+} from "@/components/icons";
+
+type IconComponent = LucideIcon | ComponentType<{ size?: number; className?: string; ref?: React.Ref<any> }>;
+
 // ── Icon map ─────────────────────────────────────────────────────────────────
-const iconMap: Record<string, LucideIcon> = {
+const iconMap: Record<string, IconComponent> = {
+  // Lucide icons
   User, Wrench, Briefcase, FolderOpen, FlaskConical,
   GraduationCap, Trophy, Terminal, PenLine, Mail, Network,
+  // Animated — key must match item.icon string in @/data exactly
+  UserStarIcon, TerminalIcon, PenToolIcon, MailIcon,
+  SwordsIcon, ScanTextIcon, TelescopeIcon, ZapIcon, WebhookIcon, BookOpenCheckIcon,
+  GraduationCapIcon, HourglassIcon, SparklesIcon, 
 };
 
 // ── Frame definitions ─────────────────────────────────────────────────────────
