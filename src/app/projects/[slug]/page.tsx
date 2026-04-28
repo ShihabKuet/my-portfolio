@@ -1,3 +1,4 @@
+import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -43,7 +44,10 @@ export default async function ProjectPage({ params }: Props) {
 
   const toc              = extractTOC(project.content);
   const slugComponents   = await getComponentsForProjectSlug(slug);
-  const components       = { ...projectHeadingComponents, ...slugComponents };
+  const components = {
+    ...projectHeadingComponents,
+    ...slugComponents,
+    } as Record<string, React.ComponentType>;
   const status           = STATUS_MAP[project.status] ?? STATUS_MAP.completed;
   const heroImage        = project.featureImage ?? project.coverImage;
 
