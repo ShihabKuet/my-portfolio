@@ -7,3 +7,13 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/** Converts heading text → URL-safe id. e.g. "Why Next.js?" → "why-nextjs" */
+export function slugifyHeading(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/`([^`]+)`/g, "$1")   // strip backticks, keep inner text
+    .replace(/[^a-z0-9\s-]/g, "")  // remove special chars
+    .trim()
+    .replace(/\s+/g, "-");
+}

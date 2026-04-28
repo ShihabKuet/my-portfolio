@@ -25,7 +25,7 @@ export const navItems: NavItem[] = [
   { label: "Experience",   href: "/#experience",   icon: "HourglassIcon"     },
   { label: "Expertise",    href: "/#expertise",    icon: "TelescopeIcon"       },
   { label: "Publications", href: "/#publications", icon: "BookOpenCheckIcon"  },
-  { label: "Projects",     href: "/#projects",     icon: "WebhookIcon"    },
+  { label: "Projects",     href: "/projects",     icon: "WebhookIcon"    },
   { label: "Education",    href: "/#education",    icon: "GraduationCapIcon" },
   { label: "Coding",       href: "/#coding",       icon: "TerminalIcon"      },
   { label: "Achievements", href: "/#achievements", icon: "SparklesIcon"        },
@@ -193,6 +193,7 @@ export const projects: Project[] = [
   },
   {
     title: "Portfolio Website (This Site!)",
+    slug: "portfolio-website",
     description: "Built with Next.js and Tailwind CSS, this portfolio website is designed to showcase my projects, experience, and skills. It features a clean, responsive design with sections for about, skills, experience, projects, education, coding profiles, and achievements. The site also includes SEO optimizations and is deployed on Vercel for fast performance.",
     technologies: ["TypeScript", "Next.js", "Tailwind CSS", "Vercel"],
     github: "https://github.com/ShihabKuet/my-portfolio",

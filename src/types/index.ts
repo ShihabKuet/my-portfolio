@@ -45,6 +45,7 @@ export interface Project {
   image?: string;
   featured: boolean;
   category: string;
+  slug?: string;
 }
 
 export interface BlogPost {
