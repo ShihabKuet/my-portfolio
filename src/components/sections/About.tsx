@@ -6,11 +6,49 @@ import { personalInfo } from "@/data";
 import SectionHeading from "@/components/ui/SectionHeading";
 import { MapPin, GraduationCap, Briefcase, Coffee } from "lucide-react";
 
+import { Orbitron, DM_Mono } from "next/font/google";
+
+const dmMono = DM_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-dm-mono",
+});
+
+const orbitron = Orbitron({
+  subsets: ["latin"], // only "latin" is available for Orbitron
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-orbitron",
+});
+
 const stats = [
-  { icon: <Briefcase size={16} />, label: "Current Role", value: "R&D Engineer" },
-  { icon: <GraduationCap size={16} />, label: "Graduated", value: "KUET, 2024" },
-  { icon: <MapPin size={16} />, label: "Location", value: "Bangladesh" },
-  { icon: <Coffee size={16} />, label: "Status", value: "Open to Opportunities" },
+  {
+    icon: <Briefcase size={16} />,
+    label: "Current Role",
+    value: "SWE",
+    sub: "Research & Development",
+    fill: 9,
+  },
+  {
+    icon: <GraduationCap size={16} />,
+    label: "Graduated",
+    value: "2024",
+    sub: "CSE, KUET",
+    fill: 10,
+  },
+  {
+    icon: <MapPin size={16} />,
+    label: "Location",
+    value: "Dhaka",
+    sub: "Bangladesh",
+    fill: 6,
+  },
+  {
+    icon: <Coffee size={16} />,
+    label: "Status",
+    value: "Open",
+    sub: "To Building Something Impactful",
+    fill: 8,
+  },
 ];
 
 export default function About() {
@@ -135,17 +173,84 @@ export default function About() {
             </div>
 
             {/* Quick stat pills */}
-            <div className="grid grid-cols-2 gap-3">
-              {stats.map(({ icon, label, value }) => (
-                <div key={label} className="flex items-start gap-3 p-3 rounded-lg bg-white dark:bg-zinc-900/50 border border-sky-200 dark:border-zinc-800/50 hover:bg-amber-50 dark:hover:bg-blue-400/30 transition">
-                  <span className="text-violet-400 mt-0.5">{icon}</span>
-                  <div>
-                    <p className="text-sky-500 dark:text-zinc-500 text-xs">{label}</p>
-                    <p className="text-sky-900 dark:text-zinc-200 text-sm font-medium">{value}</p>
+            <div
+              className={`${dmMono.variable} ${orbitron.variable} grid grid-cols-2 gap-[10px]`}
+              style={{ fontFamily: "var(--font-dm-mono)" }}
+            >
+              {stats.map(({ icon, label, value, sub, fill = 7 }, i) => {
+                const accents = ["#7F77DD", "#1D9E75", "#EF9F27", "#D4537E"];
+                const color = accents[i % accents.length];
+                const offset = i % 2 === 1 ? "mt-[14px]" : ""; /* Right pills having different height than the left ones */
+
+                return (
+                  <div
+                    key={label}
+                    className={`group relative px-4 py-[14px] pl-5 rounded-[10px] overflow-hidden cursor-default
+                      bg-zinc-100/80 dark:bg-zinc-900/60
+                      border border-zinc-200/60 dark:border-zinc-700/40
+                      hover:-translate-y-[3px] hover:scale-[1.015] hover:border-zinc-300 dark:hover:border-zinc-600
+                      transition-all duration-[250ms] ease-[cubic-bezier(0.34,1.56,0.64,1)]
+                      ${offset}`}
+                  >
+                    {/* Left accent bar */}
+                    <div
+                      className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-[10px]"
+                      style={{ background: color }}
+                    />
+
+                    {/* Top row */}
+                    <div className="flex items-center justify-between mb-[6px]">
+                      <span className="text-[10px] uppercase tracking-[0.12em] text-zinc-400 dark:text-zinc-500">
+                        {label}
+                      </span>
+                      <div className="w-5 h-5 flex items-center justify-center rounded-[5px]
+                        border border-zinc-200 dark:border-zinc-700 text-[11px] text-zinc-400">
+                        {icon}
+                      </div>
+                    </div>
+
+                    {/* Value */}
+                    <div
+                      className="font-black text-[20px] leading-none tracking-tight text-zinc-900 dark:text-zinc-50 mb-[3px]"
+                      style={{ fontFamily: "var(--font-orbitron)", fontWeight: 800 }}
+                    >
+                      {value}
+                    </div>
+
+                    {/* Sub label */}
+                    {sub && (
+                      <div className="text-[10px] tracking-[0.05em] text-zinc-400 dark:text-zinc-500">
+                        {sub}
+                      </div>
+                    )}
+
+                    {/* Mini ticker bar */}
+                    <div className="flex gap-[2px] mt-[10px]">
+                      {Array.from({ length: 10 }).map((_, j) => (
+                        <div
+                          key={j}
+                          className="h-[3px] flex-1 rounded-full transition-[transform,opacity] duration-200 group-hover:scale-y-[2]"
+                          style={{
+                            backgroundColor: j < fill ? color : "rgba(128,128,128,0.2)",
+                            transitionDelay: `${j * 25}ms`,
+                            transformOrigin: "bottom",
+                          }}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Corner index */}
+                    <div
+                      className="absolute bottom-2 right-[10px] text-[9px] tracking-[0.08em] text-zinc-300 dark:text-zinc-700"
+                      style={{ fontFamily: "var(--font-dm-mono)" }}
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
+
           </motion.div>
 
           {/* Right — Photo placeholder */}
