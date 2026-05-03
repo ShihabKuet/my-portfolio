@@ -18,15 +18,36 @@ export interface Skill {
   icon?:    SkillIcon;
 }
 
+// ─── experience Types ────────────────────────────────────────────────────────────────────
+
+export interface Metric {
+  label: string;
+  value: string;
+  suffix?: string;
+}
+
+export interface WorkAchievement {
+  id: string;
+  category: "Performance" | "Protocol" | "Standards" | "Cross-Platform" | "Scalability" | "Leadership";
+  title: string;
+  subtitle: string;
+  points: string[];
+  metrics?: Metric[];
+  technologies: string[];
+}
+
 export interface Experience {
   company: string;
   role: string;
   duration: string;
   location: string;
-  description: string[];
-  technologies: string[];
   link?: string;
+  summary: string[];
+  achievements: WorkAchievement[];
+  technologies: string[];
 }
+
+// -------------------------------------
 
 export interface Education {
   institution: string;

@@ -1,4 +1,4 @@
-import { NavItem, Experience, Education, Project, Skill, Publication } from "@/types";
+import { NavItem, Metric, WorkAchievement, Experience, Education, Project, Skill, Publication } from "@/types";
 
 export const personalInfo = {
   name:         "MD. SHANJID AREFIN",
@@ -33,57 +33,124 @@ export const navItems: NavItem[] = [
   { label: "Contact",      href: "/#contact",      icon: "MailIcon"          },
 ];
 
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
 export const experiences: Experience[] = [
   {
     company: "Shanghai BDCOM (Bangladesh)",
-    role: "Software Engineer (R&D)",
+    role: "Software Engineer · R&D",
     duration: "2024 – Present",
     location: "Dhaka, Bangladesh",
     link: "https://www.bdcom.cn",
-    description: [
-      "Developing and optimizing networking features for embedded systems, focusing on access control and packet-level policy enforcement",
-      "Worked on RPC-based synchronization mechanisms between control and line cards in VxWorks, improving reliability of distributed configurations",
-      "Designed and enhanced IPACL modules, ensuring efficient rule updates and consistency across hardware components",
-      "Integrated and debugged low-level networking protocols using C in Linux/VxWorks environments",
-      "Collaborated with cross-functional teams to analyze system behavior, troubleshoot performance issues, and deliver production-grade solutions",
+    summary: [
+      "Developing and optimizing networking features for embedded systems, focusing on access control and packet-level policy enforcement.",
+      "Worked on RPC-based synchronization mechanisms between control and line cards in VxWorks, improving reliability of distributed configurations.",
+      "Integrated and debugged low-level networking protocols using C in Linux/VxWorks environments.",
+    ],
+    achievements: [
+      {
+        id: "ACH-001",
+        category: "Performance",
+        title: "Dynamic Library Integration for IPACL",
+        subtitle: "Performance Optimization",
+        points: [
+          "Implemented command execution using dynamic libraries in the IPACL module, replacing static linkage bottlenecks.",
+          "Achieved 10–20× faster rule addition time, dramatically reducing configuration latency under high-load conditions.",
+          "Delivered 85–90% overall improvement in IPACL processing and configuration pipeline efficiency.",
+        ],
+        metrics: [
+          { label: "Rule Addition Speed", value: "20×", suffix: "faster" },
+          { label: "Processing Efficiency", value: "90%", suffix: "improved" },
+        ],
+        technologies: ["C", "VxWorks", "Linux", "Dynamic Link Library", "Embedded Optimization"],
+      },
+      {
+        id: "ACH-002",
+        category: "Protocol",
+        title: "Usage-Based Accounting under IEEE 802.1X",
+        subtitle: "Protocol Implementation",
+        points: [
+          "Designed and implemented usage-based accounting functionality integrated with the IEEE 802.1X authentication framework.",
+          "Enabled granular per-user session tracking and billing capabilities for enterprise-scale network deployments.",
+          "Built end-to-end accounting flows bridging authentication state with downstream billing and auditing systems.",
+        ],
+        metrics: [
+          { label: "Auth Framework", value: "802.1X", suffix: "integrated" },
+          { label: "Deployment", value: "Enterprise", suffix: "scale" },
+        ],
+        technologies: ["IEEE 802.1X", "RADIUS", "PAM", "Linux", "VxWorks", "Auth Flows"],
+      },
+      {
+        id: "ACH-003",
+        category: "Standards",
+        title: "RADIUS RFC Alignment & CLI Enhancement",
+        subtitle: "Standards Compliance",
+        points: [
+          "Corrected RADIUS packet validation logic for the Message-Authenticator attribute to align with relevant RFCs, closing a security compliance gap.",
+          "Added full CLI support for Message-Authenticator configuration in VxWorks environments.",
+          "Extended IPv4/IPv6 access-policy application on interfaces via CLI/KLISH, expanding operator control surface.",
+        ],
+        metrics: [
+          { label: "RFC Compliance", value: "100%", suffix: "aligned" },
+          { label: "Protocol Coverage", value: "IPv4+6", suffix: "supported" },
+        ],
+        technologies: ["RADIUS RFCs", "CLI", "KLISH", "VxWorks", "Linux", "Packet Validation"],
+      },
+      {
+        id: "ACH-004",
+        category: "Cross-Platform",
+        title: "Unified IPACL & PAM Module Support",
+        subtitle: "Cross-Platform Development",
+        points: [
+          "Developed and maintained core networking modules (ipacl, dot1x, pam_*, userm) across both VxWorks and Linux platforms.",
+          "Enabled full feature parity for software IPACL functionality in LinuxNG stacking environments.",
+          "Demonstrated deep adaptability across embedded RTOS and general-purpose Linux development paradigms.",
+        ],
+        metrics: [
+          { label: "Platforms", value: "2", suffix: "unified" },
+          { label: "Modules", value: "4+", suffix: "maintained" },
+        ],
+        technologies: ["C", "Python", "XML", "KLISH", "PAM", "MIBs", "Platform SDKs"],
+      },
+      {
+        id: "ACH-005",
+        category: "Scalability",
+        title: "IPv4/IPv6 Access-List Expansion",
+        subtitle: "Scalability Enhancement",
+        points: [
+          "Increased maximum supported entries for IP access-lists across both IPv4 and IPv6 protocols.",
+          "Optimized underlying data structures and rule-matching logic to handle larger policy sets without performance degradation.",
+          "Future-proofed ACL architecture for enterprise deployments requiring extensive, high-density traffic control policies.",
+        ],
+        metrics: [
+          { label: "ACL Capacity", value: "↑", suffix: "expanded" },
+          { label: "Perf Degradation", value: "0%", suffix: "at scale" },
+        ],
+        technologies: ["C", "IPv4", "IPv6", "Data Structures", "Rule Matching", "ACL Engine"],
+      },
+      {
+        id: "ACH-006",
+        category: "Leadership",
+        title: "BDF – BDCOM Devs Forum",
+        subtitle: "Technical Leadership Initiative",
+        points: [
+          "Volunteered to create an internal knowledge-sharing platform for troubleshooting documentation and peer-to-peer support.",
+          "Platform serves as a searchable archive of solved issues, significantly accelerating onboarding for new engineers.",
+          "Demonstrates proactive collaboration, documentation discipline, and a team-first engineering culture mindset.",
+        ],
+        metrics: [
+          { label: "Onboarding", value: "↑", suffix: "accelerated" },
+          { label: "Debug Loops", value: "↓", suffix: "reduced" },
+        ],
+        technologies: ["Knowledge Management", "Technical Writing", "Team Enablement", "Documentation"],
+      },
     ],
     technologies: [
-      "C",
-      "Python",
-      "Linux",
-      "VxWorks",
-      "Networking",
-      "RPC",
-      "IPACL",
-      "RADIUS",
-      "PAM"
+      "C", "Python", "Linux", "VxWorks", "IPACL",
+      "RADIUS", "IEEE 802.1X", "PAM", "RPC",
+      "CLI/KLISH", "MIBs", "Dynamic Libraries",
     ],
   },
-  // {
-  //   company: "KUET FILM SOCIETY",
-  //   role: "Design Secretary",
-  //   duration: "2022 – 2024",
-  //   location: "Khulna, Bangladesh",
-  //   link: "https://www.bdcom.cn",
-  //   description: [
-  //     "Developing and optimizing networking features for embedded systems, focusing on access control and packet-level policy enforcement",
-  //     "Worked on RPC-based synchronization mechanisms between control and line cards in VxWorks, improving reliability of distributed configurations",
-  //     "Designed and enhanced IPACL modules, ensuring efficient rule updates and consistency across hardware components",
-  //     "Integrated and debugged low-level networking protocols using C in Linux/VxWorks environments",
-  //     "Collaborated with cross-functional teams to analyze system behavior, troubleshoot performance issues, and deliver production-grade solutions",
-  //   ],
-  //   technologies: [
-  //     "C",
-  //     "Python",
-  //     "Linux",
-  //     "VxWorks",
-  //     "Networking",
-  //     "RPC",
-  //     "IPACL",
-  //     "RADIUS",
-  //     "PAM"
-  //   ],
-  // },
 ];
 
 export const education: Education[] = [
