@@ -32,13 +32,6 @@ export const metadata: Metadata = {
     google: "roRt5OCysppLvJFSam2eMT3fIRZqP3p2Q7FZQU4Cj-c", // ← replace with your string
   },
 
-  // URL bar icon
-  icons: {
-    icon: "/icon.svg",
-    shortcut: "/favicon.ico",
-    apple: "/icon.svg",
-  },
-
   // OpenGraph = what shows up when you share on LinkedIn/WhatsApp/Twitter
   openGraph: {
     title: `${personalInfo.name} | Software Engineer`,

@@ -1,43 +1,22 @@
-<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <rect width="512" height="512" rx="90" fill="#020617"/>
-
-  <!-- Gradient -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="550 240 250 200" width="100%" style="">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#00f5ff"/>
-      <stop offset="100%" stop-color="#7c3aed"/>
+    <linearGradient id="gradS" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE566"/>
+      <stop offset="100%" stop-color="#FFB800"/>
+    </linearGradient>
+    <linearGradient id="gradA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7DD6F5"/>
+      <stop offset="100%" stop-color="#2AA8E0"/>
     </linearGradient>
   </defs>
 
-  <!-- Bold geometric S -->
-  <path d="
-    M 380 120
-    L 200 120
-    L 160 180
-    L 300 180
-    L 360 240
-    L 260 240
-    L 200 300
-    L 340 300
-    L 380 360
-    L 140 360
-  "
-    stroke="url(#g)"
-    stroke-width="28"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    fill="none"
-  />
+  <g stroke="#00000033" stroke-width="1.5" style="fill:rgb(0, 0, 0);stroke:rgba(0, 0, 0, 0.2);color:rgb(255, 255, 255);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto">
+    <path fill="url(#gradS)" d="M604.157 260.804C620.948 258.278 638.526 262.506 652.811 271.544C648.829 278.122 646.229 282.722 640.676 288.023C625.273 283.019 593.898 273.19 586.519 297.394C584.028 309.826 591.969 316.624 601.696 321.595C619.761 330.825 643.98 336.169 655.787 353.647C662.424 363.471 661.835 375.937 659.457 386.551C688.414 347.952 727.253 352.412 759.728 321.712C764.098 317.58 768.164 310.643 771.204 305.518C769.38 312.024 767.874 315.679 764.631 321.468C746.225 348.86 710.925 353.755 684.927 372.124C671.675 381.487 665.955 389.818 655.29 401.803C643.426 415.135 631.252 416.276 614.654 416.852C634.362 409.976 643.144 396.482 640.564 375.14C638.978 360.313 621.382 351.85 607.639 347.033C575.429 335.742 549.567 314.125 571.584 277.888C577.57 268.037 592.263 262.555 604.157 260.804Z" style="stroke:rgba(0, 0, 0, 0.2);color:rgb(255, 255, 255);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
 
-  <!-- Binary pattern inside -->
-  <text x="190" y="170" font-size="22" fill="#22d3ee" font-family="monospace">101</text>
-  <text x="260" y="270" font-size="22" fill="#a78bfa" font-family="monospace">010</text>
-  <text x="180" y="340" font-size="22" fill="#22d3ee" font-family="monospace">110</text>
+    <path fill="url(#gradA)" d="M692.037 260.122C694.928 260.075 696.845 259.907 699.652 260.654C702.595 262.62 729.875 324.097 733.866 332.853C727.478 336.136 720.999 339.238 714.436 342.157C708.496 330.382 701.016 312.355 695.45 299.953L688.386 317.314L667.175 367.238C664.411 355.921 662.543 351.249 654.727 342.599C658.093 333.942 689.815 262.103 692.037 260.122Z" style="stroke:rgba(0, 0, 0, 0.2);color:rgb(255, 255, 255);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
 
-  <!-- Cursor line -->
-  <rect x="350" y="320" width="8" height="40" fill="#00f5ff">
-    <animate attributeName="opacity" values="1;0;1" dur="1s" repeatCount="indefinite"/>
-  </rect>
+    <path fill="url(#gradS)" d="M568.88 376.396C570.614 377.067 575.771 381.468 577.721 382.734C595.308 394.155 619.656 397.551 636.07 382.618C635.39 393.157 633.474 397.74 626.795 405.611C607.607 423.119 575.005 408.799 557.75 394.744C561.423 388.605 565.133 382.489 568.88 376.396Z" style="stroke:rgba(0, 0, 0, 0.2);color:rgb(255, 255, 255);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
 
+    <path fill="url(#gradA)" d="M740.649 349.816C743.08 351.84 767.468 407.386 770.522 414.578C764.911 414.759 759.895 414.593 754.39 413.477C741.603 409.642 738.939 397.198 733.837 386.121C729.753 377.254 725.955 368.21 721.919 359.3C728.711 356.121 734.069 353.524 740.649 349.816Z" style="stroke:rgba(0, 0, 0, 0.2);color:rgb(255, 255, 255);stroke-width:1.5px;stroke-linecap:butt;stroke-linejoin:miter;opacity:1;font-family:&quot;Anthropic Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, sans-serif;font-size:16px;font-weight:400;text-anchor:start;dominant-baseline:auto"/>
+  </g>
 </svg>
