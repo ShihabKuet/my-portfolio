@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Projects | MD SHANJID AREFIN",
   description:
     "Case studies on software projects — from embedded VxWorks systems to full-stack web applications.",
+  alternates: { canonical: "https://shanjid.bd/projects" },
 };
 
 export default function ProjectsPage() {

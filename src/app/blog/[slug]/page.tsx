@@ -18,6 +18,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${post.title} | Blog`,
     description: post.excerpt,
+    alternates: { canonical: `https://shanjid.bd/blog/${slug}` },
   };
 }
 

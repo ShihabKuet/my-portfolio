@@ -7,6 +7,7 @@ import FunFactController from "@/components/blog/FunFactController";
 export const metadata: Metadata = {
   title: "Blog | MD SHANJID AREFIN",
   description: "Thoughts on software engineering, networking, and technology.",
+  alternates: { canonical: "https://shanjid.bd/blog" },
 };
 
 const THEMES = [

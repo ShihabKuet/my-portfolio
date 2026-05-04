@@ -24,8 +24,13 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: `${personalInfo.name} | Software Engineer`,
   description: personalInfo.bio,
-  keywords: ["Software Engineer", "R&D", "KUET", "Portfolio", "Bangladesh"],
+  keywords: ["MD SHANJID AREFIN", "Software Engineer", "R&D", "KUET", "CSE", "Portfolio", "Bangladesh"],
   authors: [{ name: personalInfo.name }],
+
+  // Tells Google the definitive URL — prevents duplicate content
+  alternates: {
+    canonical: "https://shanjid.bd",
+  },
 
   // Search Engine Verification:
   verification: {
@@ -40,6 +45,15 @@ export const metadata: Metadata = {
     title: `${personalInfo.name} | Software Engineer`,
     description: personalInfo.shortBio,
     type: "website",
+    url: "https://shanjid.bd",
+    siteName: personalInfo.name,
+    locale: "en_US",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: `${personalInfo.name} | Software Engineer`,
+    description: personalInfo.shortBio,
   },
 
   // This controls Google Search appearance specifically

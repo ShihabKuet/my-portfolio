@@ -5,6 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      disallow: ["/api/"],   // no need for Google to crawl your API routes
     },
     sitemap: "https://shanjid.bd/sitemap.xml",
   };
