@@ -48,6 +48,13 @@ export const metadata: Metadata = {
     url: "https://shanjid.bd",
     siteName: personalInfo.name,
     locale: "en_US",
+    images: [
+      {
+        url: "https://shanjid.bd/opengraph-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
   },
 
   twitter: {
