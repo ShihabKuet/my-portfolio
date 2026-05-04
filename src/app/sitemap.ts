@@ -2,12 +2,12 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/mdx";
 import { getAllProjects } from "@/lib/projects";
 
-const baseUrl = "https://shanjidarefin.vercel.app";
+const baseUrl = "https://shanjid.bd";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts();
   const blogUrls = posts.map((post) => ({
-    url:          `https://shanjidarefin.vercel.app/blog/${post.slug}`,
+    url:          `${baseUrl}/blog/${post.slug}`,
     lastModified: new Date(post.date),
     changeFrequency: "monthly" as const,
     priority:     0.7,
@@ -23,13 +23,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     {
-      url:             "https://shanjidarefin.vercel.app",
+      url:             `${baseUrl}`,
       lastModified:    new Date(),
       changeFrequency: "weekly",
       priority:        1.0,
     },
     {
-      url:             "https://shanjidarefin.vercel.app/blog",
+      url:             `${baseUrl}/blog`,
       lastModified:    new Date(),
       changeFrequency: "weekly",
       priority:        0.8,

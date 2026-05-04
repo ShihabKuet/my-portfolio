@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
   // Google Search Engine Verification:
   verification: {
-    google: "roRt5OCysppLvJFSam2eMT3fIRZqP3p2Q7FZQU4Cj-c", // ← replace with your string
+    google: "0k9vsROjRTdd3cE5K5cVitay2ixqcsYoQn34CdfNGW0", // ← replace with your string
   },
 
   // OpenGraph = what shows up when you share on LinkedIn/WhatsApp/Twitter
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   },
 
   // This controls Google Search appearance specifically
-  metadataBase: new URL("https://shanjidarefin.vercel.app"),
+  metadataBase: new URL("https://shanjid.bd"),
 };
 
 export default function RootLayout({
