@@ -27,9 +27,12 @@ export const metadata: Metadata = {
   keywords: ["Software Engineer", "R&D", "KUET", "Portfolio", "Bangladesh"],
   authors: [{ name: personalInfo.name }],
 
-  // Google Search Engine Verification:
+  // Search Engine Verification:
   verification: {
-    google: "0k9vsROjRTdd3cE5K5cVitay2ixqcsYoQn34CdfNGW0", // ← replace with your string
+    google: "0k9vsROjRTdd3cE5K5cVitay2ixqcsYoQn34CdfNGW0",
+    other: {
+      "msvalidate.01": "A9330E28F0A58AE0DCE30E1297628AB8",   // bing
+    },
   },
 
   // OpenGraph = what shows up when you share on LinkedIn/WhatsApp/Twitter
