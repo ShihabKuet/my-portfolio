@@ -13,43 +13,38 @@ We don’t want our program to behave like our girlfriend or wife — getting an
 
 Yeah… frustrating, right? 😅
 
-Now imagine your **C program** doing the same thing — failing silently with no explanation. That’s exactly what we *don’t* want. Instead, we want clear, meaningful error messages so we can debug properly and fix issues efficiently.
+Yeah, we’ve all been there. It’s infuriating, and it’s equally frustrating with our code!
+Now imagine your **C program** doing the same thing — failing silently with no explanation. Ugh, right? Suddenly, your **girlfriend/wife debug mode** is activated on your program… not exactly what you signed up for. We want to know the problem so that we can think and take proper steps to solve it rather than thinking and beating around the bush.
 
 ---
 
-## 📌 Introduction
+## Introduction
 
-Today, we’ll explore how **error messages in C** are generated and handled.
+Today, we’ll explore how **error messages in C** are generated and handled. Generally, we don’t like ERRORS but error messages are important specially to debug a code or to find whether the expected output is generated.
 
 Errors might be annoying, but they are extremely important. They help us understand:
 - Why a program isn’t working
 - What went wrong internally
 - How to fix the issue
 
-If you have some experience with **file handling in C**, this will feel familiar.
+If you have some experience with **file handling in C**, this will feel familiar.  For now, jot down these two key words: **perror & errno**. We’ll get into all the juicy details soon enough.
 
-> 🔑 Key terms to remember: `errno` and `perror()`
-
----
-
-## ⚙️ Error Generation in C
-
-Let’s assume you try to open a file that **doesn’t exist**.
-
-In this situation:
-- The **Operating System (OS)** detects the issue
-- It signals the error to the **library function**
-- The library passes that information to your program
 
 ---
 
-## 🧠 How does C store errors?
+## Error Generation in C
 
-C uses a special integer variable called:
+Let’s assume you try to open a file that **doesn’t exist** in your directory or drive. In this case, the Operating System (OS) won’t do much but just will indicate that — **“hey, something’s wrong”**. This ‘something wrong indication’ will be passed by the library function to the user program. Let’s walk through exactly how that happens.
 
-```c
-errno
-```
+First, a quick refresher: remember those `#include <stdio.h>` lines at the top of your C code? Those are how you bring in library files. We’ll dive deeper into what that `#include` process really does later on, when we explore the “GCC Compilation Process — Preprocessor”. For now, just know — it pulls in the functionality you need.
+
+Previously, I said that the ‘something wrong indication’ will be passed by the library function to the user program. Now, the question is how the Operating System will indicate this ‘something wrong’. How does the OS flag that error? It stores a specific error code in an integer variable called errno. Now, you might be thinking, “wait, I haven’t defined any errno variable.” And you’re right! The thing is, errno is defined in a different file: errno.h. So, from your program’s perspective, it’s an external integer variable. Let’s see this in action.
+
+---
+
+## How does C store errors
+
+C uses a special integer variable called `errno`
 
 But here’s the catch:
 - You don’t declare it yourself
@@ -61,52 +56,63 @@ But here’s the catch:
 
 ---
 
-## 🛠️ Step-by-Step Example
+## Let’s dive into the action
 
-### 1. Create Project Folder
-
+1. Go ahead and create a new directory, maybe call it “ErrorHandling”.
 ```
 D:\ErrorHandling
 ```
+---
 
-### 2. Create a file
-
+2. Inside that, create a C program — I’ll call mine “**program.c**”. You can use Visual Studio Code like me, or your favorite IDE.
 ```
 program.c
 ```
 
-![Project Structure](./images/project-structure.png)
+![Project Structure](https://miro.medium.com/v2/resize:fit:720/format:webp/0*lTzI_bv8NO-Qi4FE)
+*Figure 1: Project structure showing program.c inside the project folder*
 
 ---
 
-### 3. Basic Code Test
-
+3. First, let’s make sure things are working as expected. Write a little code snippet to verify that.
 ```c
 #include <stdio.h>
 
-int main() {
+int main(void)
+{
     printf("We’ll generate error message today!\n");
     return 0;
 }
 ```
 
-![Basic Code](./images/basic-code.png)
+![Basic Code](https://miro.medium.com/v2/resize:fit:720/format:webp/0*sbIW5vWW20bBjOIu)
+*Figure 2: program.c code snippet*
 
 ---
 
-### 4. Using `errno`
-
+4. Great, that’s working! Now, as we discussed earlier about errno, let’s add a line to see what its current value is.
 ```c
 #include <stdio.h>
-#include <errno.h>
 
-int main() {
-    printf("errno value: %d\n", errno);
+int main(void)
+{
+    printf("%d\n", errno);
+    printf("We’ll generate error message today!\n");
     return 0;
 }
 ```
 
-![Errno Variable](./images/errno-variable.png)
+![Errno Variable](https://miro.medium.com/v2/resize:fit:720/format:webp/0*eXmg8yxvWpJ4EC3-)
+*Figure 2: Adding errno variable*
+
+---
+
+5. See that squiggly line underlining errno? That’s because we haven’t defined it in our program. We don’t need to, though — it’s already defined in **errno.h**. So, we just need to include that header file.
+
+![Errno Header](https://miro.medium.com/v2/resize:fit:720/format:webp/0*sNiB_W-2qSo78v2b)
+*Figure 2: Adding errno header*
+
+---
 
 👉 If `errno = 0`, no error has occurred.
 
