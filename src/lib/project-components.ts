@@ -7,7 +7,12 @@ import type { MDXComponents } from "mdx/types";
 //   "booklit": () =>
 //     import("@/content/projects/booklit/components").then((m) => m.default),
 //
-const registry: Record<string, () => Promise<MDXComponents>> = {};
+const registry: Record<string, () => Promise<MDXComponents>> = {
+  "c-through": () =>
+    import("@/content/projects/c-through/components").then((m) => ({
+      FeatureGrid: m.default,
+    })),
+};
 
 export async function getComponentsForProjectSlug(
   slug: string

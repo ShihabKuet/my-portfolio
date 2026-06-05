@@ -1,0 +1,202 @@
+---
+title: "C Through — VS Code Extension"
+description: "A Source Insight-style code intelligence extension for C/C++ developers inside VS Code. Interactive call graphs, cross-file reference tracking, global variable analysis, dead code detection, and inline CodeLens metrics — with zero configuration required."
+date: "2026-06-01"
+status: "active"
+tags: ["VS Code", "C", "C++", "Developer Tools", "Open Source", "Static Analysis"]
+technologies: ["Node.js", "VS Code Extension API", "SVG", "JavaScript", "WebView API", "Regex Static Analysis"]
+github: "https://github.com/ShihabKuet/c-through"
+live: "https://marketplace.visualstudio.com/items?itemName=ShanjidArefin.c-through"
+category: "developer-tools"
+featured: true
+---
+
+import FeatureGrid from "./components"
+
+## The Problem
+
+If you've ever worked on a large C codebase — embedded firmware, a Linux driver, a networking stack — you know the pain.
+
+You open a file. You see a function called `process_packet`. You want to know: *who calls this? What does it call? Where is this global variable being written?*
+
+In a 50-file project, you already know the answers. In a 300-file project, you don't. You start jumping between files manually, running grep, losing your place, losing context. It slows you down.
+
+**Source Insight** solved this for decades with its Relational Window — a live panel showing exactly how functions connected across your entire codebase. But Source Insight is a separate, aging tool that lives outside your modern workflow.
+
+Most developers have already moved to VS Code. But VS Code never had a proper C-focused relational navigation tool.
+
+So I built one.
+
+---
+
+## What C Through Does
+
+C Through is a VS Code extension that analyzes your C and C++ source files and gives you a complete picture of how your code connects — across every file, instantly.
+
+<FeatureGrid />
+
+---
+
+## How It Works Under the Hood
+
+C Through does not use a compiler, a language server, or any build system. It uses **static analysis** — reading your source files directly and extracting structure using pattern matching.
+
+When you open a `.c` file, here is what happens:
+
+**Step 1 — Comment stripping**
+The parser removes all `/* */` block comments, `//` line comments, string literals, and character literals from the source text. This prevents false matches where function names appear inside comments or strings.
+
+**Step 2 — Structure extraction**
+The cleaned text is scanned for `#include` directives, `#define` macros, `struct` and `typedef` definitions, file-scope variable declarations, and function signatures.
+
+**Step 3 — Function body analysis**
+Each function's body is extracted by tracking brace depth. Inside each body, the parser finds every function call, every reference to known global variables, and classifies each reference as a read, a write, an address-taken operation, or a function argument.
+
+**Step 4 — Cross-file indexing**
+After a workspace scan, all parsed data is merged into an in-memory database. The database builds two reverse indexes: a callers index (for any function, who calls it?) and a global refs index (for any global variable, who touches it and how?).
+
+**Step 5 — UI rendering**
+The sidebar tree, the call graph WebView, the CodeLens annotations, and the Dead Code Report all read from this shared database. Every click triggers a lookup, not a re-parse.
+
+This means the first scan takes a few seconds. After that, everything is instant.
+
+---
+
+## Key Features Explained
+
+### Interactive Call Graph
+
+The call graph is a live SVG rendered inside a VS Code WebView panel. Every node is a function. Every edge is a call relationship.
+
+You can:
+- Pan by dragging, zoom by scrolling
+- Collapse and expand individual nodes independently — collapsing a node hides its subtree but keeps a `+N` badge showing how many children are hidden
+- Switch between **Top→Down** and **Left→Right** layouts
+- Search to highlight matching nodes and dim everything else
+- Navigate **Back** and **Forward** through your drill-down history like a browser
+- Click any node to jump directly to that function's definition in your source file
+
+The root node (the function you started from) is always highlighted in blue. Functions that call unknown external code appear in orange. Recursive calls are flagged in red.
+
+### Global Variable Reference Tracker
+
+This is the feature that took the longest to get right.
+
+Expand any global variable in the sidebar and you see a complete cross-file breakdown:
+
+- **Defined** — where it is declared in source
+- **Extern declared** — every file that imports it with `extern`
+- **Written** — every function that assigns to it (`g_count = 5`, `g_count++`, `g_count += x`)
+- **Read** — every function that reads its value
+- **Passed as argument** — every call site where it is passed to a function
+- **Address taken** — every place where `&g_count` is used
+
+Every entry is clickable and jumps to the exact line.
+
+This is genuinely useful for embedded and driver code where global variables are common and bugs often come from unexpected writes in the wrong context.
+
+### Dead Code Report
+
+Open the report via the ⚠ button in the sidebar toolbar or `Ctrl+Shift+P` → `C Through: Show Dead Code Report`.
+
+The report scans your entire workspace and produces a categorized list of:
+
+| Category | What it detects |
+|---|---|
+| Unused Functions | Functions with zero callers anywhere in the scanned scope |
+| Unused Globals | Variables declared but never referenced, or written but never read |
+| Unused Macros | `#define` values that never appear in any function body |
+| Unresolved Externs | `extern` declarations with no matching definition in scanned files |
+
+Each finding has a **severity** (High / Medium / Low / Info) and a **confidence** rating so you know how much to trust the finding. Click any row to jump to that source line.
+
+### CodeLens Inline Metrics
+
+Without opening any panel, you see live metrics floating above every function definition in your editor:
+
+```c
+  ↑ 4 callers  ↓ 7 calls  🟡 complexity: 11  📄 main.c, driver.c
+  int process_packet(PacketHeader *hdr, uint8_t *buf, int len) {
+```
+
+- `↑ 4 callers` — click to open the callers tree
+- `↓ 7 calls` — click to open the callees tree
+- `🟡 complexity: 11` — cyclomatic complexity, color-coded green / yellow / red
+- `📄 main.c, driver.c` — which files call this function
+- `⚠ dead code` — appears when no callers are found
+
+---
+
+## Design Decisions
+
+### Why regex-based parsing instead of clangd or tree-sitter?
+
+Three reasons.
+
+First, many C codebases — especially embedded and legacy firmware — don't compile cleanly on a developer's machine. Clangd requires a working compile database. Tree-sitter requires a proper build environment. C Through works on any file you can open in a text editor.
+
+Second, zero configuration is a feature. You open a folder and it works. No `compile_commands.json`, no CMake integration, no toolchain setup.
+
+Third, for navigation purposes, you don't need perfect AST accuracy. You need to find functions, find calls, find global variable accesses. Regex handles the 95% case very well. The remaining 5% — heavily macro-expanded code, function pointers, K&R-style declarations — is documented as a known limitation.
+
+### Why store everything in memory instead of a file-based cache?
+
+Simplicity. The data structures are plain JavaScript Maps. A workspace with 200 files and 2,000 functions uses roughly 20MB of memory — well within VS Code's budget. An on-disk cache would add file I/O, cache invalidation logic, and version migration complexity for a marginal benefit.
+
+### Why SVG for the call graph instead of a canvas or a library like D3?
+
+SVG nodes are DOM elements. This means click handlers, hover states, and animations work naturally with standard browser event APIs. The graph is interactive without a rendering library. It also means the graph is accessible — screen readers can read node labels.
+
+The tradeoff is performance at large node counts. Above ~200 visible nodes the frame rate drops noticeably. This is addressed by the collapse system — you can always collapse subtrees you don't care about right now.
+
+---
+
+## Known Limitations
+
+These are honest trade-offs of the static analysis approach:
+
+- **Function pointers** — `void (*handler)(int)` calls are detected as calls to the variable name, not the actual target function
+- **Multi-line signatures** — function signatures split across multiple lines with the opening brace on a separate line may not be detected
+- **Heavily macro-generated code** — functions defined entirely by macros like `DEFINE_HANDLER(name, ...)` are invisible to the parser
+- **Very large files** — files over ~10,000 lines may have partial symbol extraction
+- **C++ templates** — basic function detection works; template specializations may be missed
+
+---
+
+## Version History
+
+| Version | What shipped |
+|---|---|
+| v1.0.0 | Sidebar tree, interactive call graph, cross-file analysis, auto-analyze on open |
+| v1.1.0 | Directory-scoped scan, no file count cap, re-scan last scope, glob settings |
+| v1.2.2 | CodeLens inline annotations, cyclomatic complexity, toggle CodeLens |
+| v1.3.3 | Dark/Light mode, sidebar toggle, globals/macros/includes click-to-source |
+| v1.3.4 | Pointer return type spacing fix (`struct ipacl *func()` pattern) |
+| v2.0.0 | Global Variable Reference Tracker — written/read/addr/arg across all files |
+| v2.1.0 | Search and filter in sidebar and call graph |
+| v2.2.3 | Dead Code Report panel — unused functions, globals, macros, unresolved externs |
+| v2.3.0 | Back/Forward navigation history in call graph |
+
+---
+
+## What I Learned Building This
+
+**WebView sandboxing is strict.** VS Code WebViews run in a sandboxed iframe. `vscode.postMessage()` only works reliably when called from named top-level functions invoked via inline `onclick` attributes — not from `addEventListener` callbacks. This cost me days of debugging before I understood the pattern.
+
+**Template literal escaping is a landmine.** The call graph HTML is generated as a Node.js template literal. Any `${...}` or backtick inside the browser-side JavaScript embedded in that template gets consumed by Node before the browser ever sees it. The solution is to use `var` declarations and string concatenation inside the embedded JS, never template literals.
+
+**Static analysis is harder than it looks.** The edge cases are endless. K&R function definitions, multi-line signatures, `__attribute__` annotations, pointer return types with spaces (`struct foo *func()` vs `struct foo* func()`), function-like macros, `#ifdef` blocks wrapping entire function bodies. Each one required a separate fix and a regression test.
+
+**In-memory indexes make everything fast.** The decision to build a callers index (mapping callee names to caller lists) and a global refs index (mapping variable names to usage locations) at parse time, rather than scanning on demand, is what makes every click in the UI feel instant. Data structure design matters more than algorithmic cleverness.
+
+---
+
+## Installation
+
+Search **C Through** in the VS Code Extensions panel, or install directly:
+
+```bash
+code --install-extension c-through-2.3.0.vsix
+```
+
+Works on any C or C++ file. No setup required.
