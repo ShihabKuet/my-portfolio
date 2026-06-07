@@ -328,7 +328,12 @@ export default function Experience() {
                 </div>
                 <span className="flex items-center gap-1.5 text-[10px] font-mono
                   text-emerald-600 dark:text-emerald-400">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+                  <span
+                    className="w-2.5 h-2.5 bg-emerald-500 dark:bg-emerald-400 inline-block"
+                    style={{
+                      clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+                    }}
+                  />
                   ACTIVE DEPLOYMENT
                 </span>
               </div>
@@ -399,7 +404,7 @@ export default function Experience() {
                       </span>
                     </div>
 
-                    <div className="mt-2 px-4 py-3 rounded-xl text-center
+                    {/* <div className="mt-2 px-4 py-3 rounded-xl text-center
                       bg-violet-50 dark:bg-violet-500/10
                       border border-violet-200 dark:border-violet-500/20">
                       <p className="text-3xl font-black font-mono leading-none
@@ -408,9 +413,9 @@ export default function Experience() {
                       </p>
                       <p className="text-[10px] font-mono uppercase tracking-widest mt-1
                         text-violet-500 dark:text-violet-600">
-                        Missions
+                        Notable Mentions of My Working Logs
                       </p>
-                    </div>
+                    </div> */}
                   </div>
 
                 </div>
@@ -451,7 +456,7 @@ export default function Experience() {
               <div className="h-px flex-1 bg-gradient-to-r from-violet-300/60 dark:from-violet-500/20 to-transparent" />
               <p className="text-[10px] font-mono tracking-[0.3em] uppercase
                 text-slate-400 dark:text-zinc-600">
-                Mission Logs · {exp.achievements.length} entries
+                · Working Logs : Impactful Works I Have Done ·
               </p>
               <div className="h-px flex-1 bg-gradient-to-l from-violet-300/60 dark:from-violet-500/20 to-transparent" />
             </motion.div>

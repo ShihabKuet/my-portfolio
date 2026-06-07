@@ -211,15 +211,16 @@ export const skills: Skill[] = [
 export const projects: Project[] = [
   // --- FEATURED PROJECTS (shown as large cards) ---
   {
-    title: "An Assistive Device for the Visually Impaired for Enhanced Navigation and Reading",
+    title: "C Through — A VS Code Extension",
+    slug: "c-through",
     description:
-      "An academic thesis and project on Smart Eye-wear device. A thesis of smartware device which has modules of i. Fall Detection, ii. Object Distance Detection iii. Image to Text Conversion and feeding the output to the bluetooth speaker.",
-    technologies: ["Python", "Raspberry Pi Nano", "Embedded System", "Hardware"],
-    github: "https://github.com/ShihabKuet/project-one",
-    live: "https://ieeexplore.ieee.org/document/11024586/",
+      "Relational function call tree and reference visualizer for C/C++ code. Interactive call graphs, cross-file reference tracking, global variable analysis, dead code detection, and inline CodeLens metrics — with zero configuration required. C Through brings Source Insight-style code intelligence into VS Code — built specifically for C and C++ developers who need more than what a standard editor provides.",
+    technologies: ["JavaScript (Node.js)", "VS Code Extension API", "Regex", "HTML5", "Extension Packaging & Publishing"],
+    github: "https://github.com/ShihabKuet/c-through",
+    live: "https://marketplace.visualstudio.com/items?itemName=ShanjidArefin.c-through",
     featured: true,
-    category: "thesis",
-    image: "thesis_paper_cover.png",
+    category: "extension",
+    image: "https://res.cloudinary.com/dhslusvuk/image/upload/v1780826511/c-through-project_sk9kad.png",
   },
   {
     title: "3D Dynamic Airport - OpenGL",
@@ -310,7 +311,7 @@ export const achievements = [
   {
     title: "Certificate of Excellence (ITEE)",
     issuer: "ITEE",
-    date: "October 2024",
+    date: "October 2025",
     description: "Ranked 2nd in Bangladesh in the ITEE FE Exam",
     credentialUrl: "",           // ← add URL if available
     image: "/certs/fe-exam.jpg", // ← add certificate image if you have it
@@ -320,7 +321,7 @@ export const achievements = [
   {
     title: "ITEE Level-2 FE Certificate",
     issuer: "ITEE",
-    date: "October 2024",
+    date: "October 2025",
     description: "Passed the FE Computer Engineering exam — a nationally recognized engineering certification. Physical certificate pending collection.",
     credentialUrl: "",           // ← add URL if available
     image: "/certs/fe-exam.jpg", // ← add certificate image if you have it

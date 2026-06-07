@@ -78,7 +78,17 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
         <div className="mb-4">
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1.5 text-sky-500 dark:text-zinc-500 hover:text-violet-400 text-xs font-mono transition-colors"
+            className={`
+              inline-flex items-center gap-1.5
+              px-3 py-1.5 rounded-full
+              text-xs font-mono
+              border transition-all duration-200
+              ${
+                expanded
+                  ? "bg-violet-500/10 text-violet-500 border-violet-500/30"
+                  : "bg-sky-100 dark:bg-zinc-800 text-sky-700 dark:text-zinc-300 border-sky-200 dark:border-zinc-700 hover:bg-sky-200 dark:hover:bg-zinc-700"
+              }
+            `}
           >
             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
             {expanded ? "Hide Abstract" : "Show Abstract"}
@@ -91,7 +101,7 @@ function PublicationCard({ pub, index }: { pub: (typeof publications)[0]; index:
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="mt-3 text-sky-700 dark:text-zinc-400 text-sm leading-relaxed p-4 rounded-lg bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30">
+            <p className="mt-3 text-sky-700 dark:text-zinc-400 text-sm leading-relaxed p-4 rounded-lg bg-sky-100 dark:bg-zinc-800/40 border border-zinc-700/30 text-justify">
               {pub.abstract}
             </p>
           </motion.div>

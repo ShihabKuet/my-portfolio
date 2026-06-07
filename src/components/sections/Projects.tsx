@@ -16,6 +16,7 @@ import {
   ArrowUpRight,
   BookOpen,
 } from "lucide-react";
+import { WebhookIcon } from "@/components/icons"
 
 const buildFilters = () => {
   const categories = projects.map((p) => p.category);
@@ -63,9 +64,14 @@ function FeaturedCard({
           {project.image ? (
             <>
               <img
-                src={`/projects/${project.image}`}
+                src={
+                  project.image.startsWith("http://") ||
+                  project.image.startsWith("https://")
+                    ? project.image
+                    : `/projects/${project.image}`
+                }
                 alt={project.title}
-                className="absolute inset-0 w-full h-full object-cover object-top
+                className="absolute inset-0 w-full h-full object-fill
                   transition-transform duration-700 ease-out group-hover:scale-[1.04]"
               />
               {/* Dark scrim */}
@@ -227,7 +233,7 @@ function ProjectCard({
       <div>
         {/* Top row */}
         <div className="flex items-start justify-between mb-4">
-          <Folder
+          <WebhookIcon
             size={26}
             className="text-violet-400 dark:text-violet-500 group-hover:text-violet-400 transition-colors shrink-0"
           />

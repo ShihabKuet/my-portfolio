@@ -3,10 +3,10 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { personalInfo } from "@/data";
-import { ArrowDown, MapPin, Mail, Briefcase, SkipForward, Download, ExternalLink, Wifi, Cpu, Network } from "lucide-react";
+import { ArrowDown, MapPin, Mail, Briefcase, SkipForward, Download, ExternalLink, Wifi, Cpu, Network, Globe } from "lucide-react";
 import { FaGithub, FaLinkedin, FaLinux, FaDocker, FaGitAlt, FaNetworkWired, FaTerminal } from "react-icons/fa";
 import { SiResearchgate, SiMedium, SiWireshark, SiKubernetes, SiAnsible, SiGnubash, SiC, SiVim, SiCmake, SiMqtt } from "react-icons/si";
-import { Globe } from "lucide-react";
+import { AtomIcon } from "@/components/icons";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -377,12 +377,7 @@ function LeftContent({ centered }: LeftContentProps) {
         className="inline-flex items-center gap-2 pl-3 pr-4 py-1.5 rounded-full border border-sky-200 dark:border-zinc-700/50 bg-white/80 dark:bg-zinc-900/50 backdrop-blur-sm shadow-sm mb-6 overflow-hidden"
         style={{ height: 34 }}
       >
-        <motion.span
-          className="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"
-          animate={{ scale: [1, 1.4, 1], opacity: [1, 0.6, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
-        <Briefcase size={12} className="text-sky-500 dark:text-zinc-500 flex-shrink-0" />
+        <AtomIcon size={12} className="text-sky-500 dark:text-zinc-500 flex-shrink-0" />
         {/* Sliding text slot */}
         <div className="relative overflow-hidden" style={{ width: 220, height: 20 }}>
           <AnimatePresence mode="wait">

@@ -11,4 +11,5 @@ export { BookOpenCheckIcon, type BookOpenCheckIconHandle } from "./BookOpenCheck
 export { GraduationCapIcon, type GraduationCapIconHandle } from "./GraduationCapIcon";
 export { HourglassIcon, type HourglassIconHandle } from "./HourglassIcon";
 export { SparklesIcon, type SparklesIconHandle } from "./SparklesIcon";
+export { AtomIcon, type AtomIconHandle } from "./AtomIcon"
 // ... add every icon here once
