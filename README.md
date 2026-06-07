@@ -161,9 +161,13 @@ npm run build
 
 ---
 
-## License
+## License & Usage
 
-MIT — use freely, attribution appreciated.
+The source code is open source under the [MIT License](./LICENSE) — feel free
+to use it as a reference or starting point for your own portfolio.
+
+**Please don't copy the content directly** — the bio, project write-ups, blog
+posts, and case studies are my own work. Use the structure, not the words.
 
 ---
 
