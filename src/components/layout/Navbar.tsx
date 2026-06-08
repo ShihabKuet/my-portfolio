@@ -418,7 +418,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-2 shrink-0">
           <ThemeToggle />
           <a
-            href="/cv.pdf"
+            href="/CV_SHANJID.pdf"
             target="_blank"
             className="relative inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white overflow-hidden group/resume"
           >
@@ -471,7 +471,7 @@ export default function Navbar() {
           <div className="px-4 pb-3 pt-1 border-t border-sky-200 dark:border-zinc-800/50 flex items-center justify-between">
             <ThemeToggle />
             <a
-              href="/cv.pdf"
+              href="/CV_SHANJID.pdf"
               target="_blank"
               className="relative inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium text-white overflow-hidden group/resume"
             >

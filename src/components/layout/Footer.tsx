@@ -225,7 +225,7 @@ export default function Footer() {
               {/* Resume Download */}
               <li>
                 <a
-                  href="/cv.pdf"
+                  href="/CV_SHANJID.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group/ql flex items-center gap-3 p-2.5 rounded-lg bg-white/40 dark:bg-white/[0.04] border border-sky-200/60 dark:border-white/[0.07] hover:border-violet-400/50 dark:hover:border-violet-500/40 hover:bg-white/70 dark:hover:bg-violet-500/10 transition-all duration-200"

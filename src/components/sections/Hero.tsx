@@ -531,7 +531,7 @@ function LeftContent({ centered }: LeftContentProps) {
 
         {/* Resume download — distinct pill style */}
         <a
-          href="/cv.pdf"
+          href="/CV_SHANJID.pdf"
           download
           target="_blank"
           rel="noopener noreferrer"
