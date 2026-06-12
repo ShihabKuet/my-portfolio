@@ -6,7 +6,8 @@ status: "active"
 tags: ["VS Code", "C", "C++", "Developer Tools", "Open Source", "Static Analysis"]
 technologies: ["Node.js", "VS Code Extension API", "SVG", "JavaScript", "WebView API", "Regex Static Analysis"]
 github: "https://github.com/ShihabKuet/c-through"
-live: "https://marketplace.visualstudio.com/items?itemName=ShanjidArefin.c-through"
+vscode_marketplace: "https://marketplace.visualstudio.com/items?itemName=ShanjidArefin.c-through"
+vsix_openvsx: "https://open-vsx.org/extension/ShanjidArefin/c-through"
 coverImage: "https://res.cloudinary.com/dhslusvuk/image/upload/v1780826511/c-through-project_sk9kad.png"
 featureImage: "https://res.cloudinary.com/dhslusvuk/image/upload/v1780826511/c-through-project_sk9kad.png"
 category: "developer-tools"
@@ -176,8 +177,8 @@ These are honest trade-offs of the static analysis approach:
 | v1.3.4 | Pointer return type spacing fix (`struct ipacl *func()` pattern) |
 | v2.0.0 | Global Variable Reference Tracker — written/read/addr/arg across all files |
 | v2.1.0 | Search and filter in sidebar and call graph |
-| v2.2.3 | Dead Code Report panel — unused functions, globals, macros, unresolved externs |
-| v2.3.0 | Back/Forward navigation history in call graph |
+| v2.2.4 | Dead Code Report panel — unused functions, globals, macros, unresolved externs |
+| v2.2.9 | Added Call Graph toolbar button responsiveness, Function detection with macro-prefixed return types  |
 
 ---
 
@@ -195,10 +196,18 @@ These are honest trade-offs of the static analysis approach:
 
 ## Installation
 
-Search **C Through** in the VS Code Extensions panel, or install directly:
+Search **C Through** in the VS Code Extensions panel, or get it directly:
+
+| Platform | Link |
+|---|---|
+| VS Code Marketplace | [Install from Marketplace](https://marketplace.visualstudio.com/items?itemName=ShanjidArefin.c-through) |
+| Open VSX Registry | [Install from Open VSX](https://open-vsx.org/extension/ShanjidArefin/c-through) |
+| GitHub Releases | [Download latest .vsix](https://github.com/ShihabKuet/c-through/releases/latest) |
+
+Or install via terminal:
 
 ```bash
-code --install-extension c-through-2.3.0.vsix
+code --install-extension c-through-2.2.9.vsix
 ```
 
 Works on any C or C++ file. No setup required.

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { FaGithub } from "react-icons/fa";
-import { ExternalLink, Calendar, Clock, Tag, ArrowLeft } from "lucide-react";
+import { ExternalLink, Calendar, Clock, Tag, ArrowLeft, Download } from "lucide-react";
 
 import { getProjectBySlug, getAllProjects, extractTOC } from "@/lib/projects";
 import { getComponentsForProjectSlug } from "@/lib/project-components";
@@ -168,7 +168,28 @@ export default async function ProjectPage({ params }: Props) {
                   className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-violet-500 text-white text-sm font-mono hover:bg-violet-400 transition-colors shadow-sm shadow-violet-500/30"
                 >
                   <ExternalLink size={14} />
-                  Live Demo
+                  Take-A-Look
+                </a>
+              )}
+              {project.vsix_openvsx && (
+                <a
+                  href={project.vsix_openvsx}
+                  download
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-sm font-mono text-sky-950 dark:text-zinc-200 hover:border-violet-500/50 hover:text-violet-400 transition-all"
+                >
+                  <Download size={14} />
+                  Download VSIX (OpenVSX)
+                </a>
+              )}
+              {project.vscode_marketplace && (
+                <a
+                  href={project.vscode_marketplace}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg bg-violet-500 text-white text-sm font-mono hover:bg-violet-400 transition-colors shadow-sm shadow-violet-500/30"
+                >
+                  <ExternalLink size={14} />
+                  Visit Marketplace
                 </a>
               )}
             </div>

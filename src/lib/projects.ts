@@ -18,6 +18,8 @@ export interface ProjectMeta {
   technologies: string[];
   github?: string;
   live?: string;
+  vsix_openvsx?: string;
+  vscode_marketplace?: string;
   coverImage?: string;   // thumbnail on listing page
   featureImage?: string; // hero image/gif on detail page
   demoVideo?: string;    // YouTube embed or local video
@@ -66,6 +68,8 @@ function parseProject(slug: string, fileContent: string): ProjectMeta {
     technologies: data.technologies ?? [],
     github:       data.github       ?? undefined,
     live:         data.live         ?? undefined,
+    vscode_marketplace: data.vscode_marketplace ?? undefined,
+    vsix_openvsx: data.vsix_openvsx ?? undefined,
     coverImage:   data.coverImage   ?? undefined,
     featureImage: data.featureImage ?? undefined,
     demoVideo:    data.demoVideo    ?? undefined,
