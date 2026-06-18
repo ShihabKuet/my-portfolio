@@ -11,6 +11,7 @@ import { getComponentsForProjectSlug } from "@/lib/project-components";
 import { projectHeadingComponents } from "@/components/projects/ProjectMDXComponents";
 import MDXContent from "@/components/blog/MDXContent";
 import TableOfContents from "@/components/projects/TableOfContents";
+import TableOfContentsMobile from "@/components/projects/TableOfContentsMobile";
 import type { ProjectStatus } from "@/lib/projects";
 
 interface Props {
@@ -222,6 +223,9 @@ export default async function ProjectPage({ params }: Props) {
             </aside>
           )}
         </div>
+
+        {/* Mobile floating TOC — visible below lg */}
+        {toc.length > 0 && <TableOfContentsMobile entries={toc} />}
 
         {/* ── Footer nav ── */}
         <div className="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between flex-wrap gap-4">
