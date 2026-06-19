@@ -12,6 +12,10 @@ const registry: Record<string, () => Promise<MDXComponents>> = {
     import("@/content/projects/c-through/components").then((m) => ({
       FeatureGrid: m.default,
     })),
+  "vocab-glance": () =>
+    import("@/content/projects/vocab-glance/components").then((m) => ({
+      VocabGlancePreview: m.default,
+    })),
 };
 
 export async function getComponentsForProjectSlug(

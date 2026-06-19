@@ -223,6 +223,18 @@ export const projects: Project[] = [
     image: "https://res.cloudinary.com/dhslusvuk/image/upload/v1780826511/c-through-project_sk9kad.png",
   },
   {
+    title: "VocabGlance — Windows Vocabulary Reminder",
+    slug: "vocab-glance",
+    description:
+      "A Windows desktop app that silently floats vocabulary cards above every application you use — no context switching, no study sessions. Built with Electron and React, it delivers passive repeated word exposure through system-level always-on-top popups, a weighted queue algorithm, and a full-featured word bucket. Words come to you while you work.",
+    technologies: ["Electron", "React", "JavaScript", "electron-vite", "electron-store", "CSS Animations", "IPC Bridge"],
+    github: "https://github.com/ShihabKuet/VocabGlance",
+    live: "https://shihabkuet.github.io/vocabglance-app/",
+    featured: true,
+    category: "desktop-app",
+    image: "",
+  },
+  {
     title: "3D Dynamic Airport - OpenGL",
     description:
       "Project on Computer Graphics featuring controllable dynamic aeroplanes, lighiting and texturing etc.",

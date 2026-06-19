@@ -122,7 +122,7 @@ export default function TableOfContentsMobile({ entries }: Props) {
       <button
         onClick={() => setIsOpen(true)}
         className={[
-          "fixed bottom-6 left-1/2 -translate-x-1/2 z-40",
+          "fixed bottom-20 left-1/2 -translate-x-1/2 z-40",
           "flex items-center gap-2 px-4 py-2.5 rounded-full",
           "bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md",
           "border border-violet-500/25 dark:border-violet-500/20",

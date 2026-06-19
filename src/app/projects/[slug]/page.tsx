@@ -161,6 +161,17 @@ export default async function ProjectPage({ params }: Props) {
                   GitHub
                 </a>
               )}
+              {project.download && (
+                <a
+                  href={project.download}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-sm font-mono text-sky-950 dark:text-zinc-200 hover:border-violet-500/50 hover:text-violet-400 transition-all"
+                >
+                  <Download size={14} />
+                  Download App
+                </a>
+              )}
               {project.live && (
                 <a
                   href={project.live}

@@ -18,6 +18,7 @@ export interface ProjectMeta {
   technologies: string[];
   github?: string;
   live?: string;
+  download?: string;
   vsix_openvsx?: string;
   vscode_marketplace?: string;
   coverImage?: string;   // thumbnail on listing page
@@ -68,6 +69,7 @@ function parseProject(slug: string, fileContent: string): ProjectMeta {
     technologies: data.technologies ?? [],
     github:       data.github       ?? undefined,
     live:         data.live         ?? undefined,
+    download:     data.download     ?? undefined,
     vscode_marketplace: data.vscode_marketplace ?? undefined,
     vsix_openvsx: data.vsix_openvsx ?? undefined,
     coverImage:   data.coverImage   ?? undefined,
