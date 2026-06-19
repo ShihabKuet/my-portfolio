@@ -88,7 +88,7 @@ export default function BlogCard({
         {hasCover && (
           <div
             className={[
-              "absolute z-0 inset-0 left-[44px] right-[6px] bg-cover bg-right",
+              "absolute z-0 inset-0 left-[44px] right-[6px] bg-contain bg-right bg-no-repeat",
               "transition-opacity duration-300",
               on ? "opacity-35" : "opacity-100",
             ].join(" ")}

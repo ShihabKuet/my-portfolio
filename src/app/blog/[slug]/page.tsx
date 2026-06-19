@@ -100,13 +100,13 @@ export default async function BlogPostPage({ params }: Props) {
         <header className="mb-12 max-w-3xl">
           {/* Cover Image */}
           {post.coverImage && (
-            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-8">
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden mb-8 bg-zinc-100 dark:bg-zinc-800">
               <Image
                 src={post.coverImage}
                 alt={post.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 768px"
-                className="object-cover"
+                className="object-contain"
                 priority
               />
             </div>

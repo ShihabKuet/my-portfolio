@@ -83,7 +83,7 @@ export default function ProjectCard({ project, featured = false }: Props) {
                 alt={project.title}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-contain"
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">

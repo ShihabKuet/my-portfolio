@@ -232,7 +232,7 @@ export const projects: Project[] = [
     live: "https://shihabkuet.github.io/vocabglance-app/",
     featured: true,
     category: "desktop-app",
-    image: "",
+    image: "https://res.cloudinary.com/dhslusvuk/image/upload/v1781864135/VocabGlance-cover_rfvwhd.png",
   },
   {
     title: "3D Dynamic Airport - OpenGL",
