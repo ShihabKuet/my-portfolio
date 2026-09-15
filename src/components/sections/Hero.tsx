@@ -52,7 +52,7 @@ const SOCIALS = [
 // ─── Roles that cycle in the badge ────────────────────────────────────────────
 
 const ROLES = [
-  `R&D Engineer @ ${personalInfo.company}`,
+  `Ex. R&D Engineer @ ${personalInfo.company}`,
   "Network Systems Developer",
   "Researcher",
   "Embedded Software Engineer",
@@ -379,7 +379,7 @@ function LeftContent({ centered }: LeftContentProps) {
       >
         <AtomIcon size={12} className="text-sky-500 dark:text-zinc-500 flex-shrink-0" />
         {/* Sliding text slot */}
-        <div className="relative overflow-hidden" style={{ width: 220, height: 20 }}>
+        <div className="relative overflow-hidden" style={{ width: 248, height: 20 }}>
           <AnimatePresence mode="wait">
             <motion.span
               key={roleIndex}

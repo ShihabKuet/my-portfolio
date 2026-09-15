@@ -39,7 +39,7 @@ export const experiences: Experience[] = [
   {
     company: "Shanghai BDCOM (Bangladesh)",
     role: "Software Engineer · R&D",
-    duration: "2024 – Present",
+    duration: "2024 – 2026",
     location: "Dhaka, Bangladesh",
     link: "https://www.bdcom.cn",
     summary: [
@@ -325,7 +325,7 @@ export const achievements = [
     issuer: "ITEE",
     date: "October 2025",
     description: "Ranked 2nd in Bangladesh in the ITEE FE Exam",
-    credentialUrl: "",           // ← add URL if available
+    credentialUrl: "/certifications/ITEE_CoE.jpeg",           // ← add URL if available
     image: "/certs/fe-exam.jpg", // ← add certificate image if you have it
     category: "certification",
     highlight: true,             // marks it as a featured achievement
@@ -335,7 +335,7 @@ export const achievements = [
     issuer: "ITEE",
     date: "October 2025",
     description: "Passed the FE Computer Engineering exam — a nationally recognized engineering certification. Physical certificate pending collection.",
-    credentialUrl: "",           // ← add URL if available
+    credentialUrl: "/certifications/ITEE_FE.jpeg",           // ← add URL if available
     image: "/certs/fe-exam.jpg", // ← add certificate image if you have it
     category: "certification",
     highlight: true,             // marks it as a featured achievement
