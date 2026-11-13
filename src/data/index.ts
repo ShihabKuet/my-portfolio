@@ -13,7 +13,7 @@ export const personalInfo = {
   location:     "Dhaka, Bangladesh",
   bio: `I work close to the metal — debugging systems where a single null pointer can take everything down.
         With hands-on experience in network software R&D, I build and optimize low-level systems across ACL, IEEE 802.1x, and AAA protocols — focusing on performance, reliability, and how systems behave under real-world conditions.`,
-  aboutBio:     "I graduated from KUET in 2024 with a degree in Computer Science & Engineering. Over time, I’ve become particularly interested in how systems work beneath the surface — from networking protocols to backend architecture",
+  aboutBio:     "I graduated from KUET in 2024 with a degree in Computer Science & Engineering. Currently I'm persuing M.Sc (Engg) in CSE from BUET. Over time, I’ve become particularly interested in how systems work beneath the surface — from networking protocols to backend architecture",
   shortBio:     "Building scalable systems & exploring emerging tech.",
   quote:        "When I'm not engineering software, I enjoy exploring new technologies, contributing to open source, and writing about what I learn.",
   availableForWork: false,
@@ -154,6 +154,13 @@ export const experiences: Experience[] = [
 ];
 
 export const education: Education[] = [
+  {
+    institution: "Bangladesh University of Engineering & Technology (BUET)",
+    degree: "M.Sc. (Engg.) in Computer Science & Engineering",
+    duration: "2016 – Present",
+    result: "1st Semester", // ← Fill in
+    description: "Relevant coursework: Deep Learning, NLP, Meta Heuristics, Programming Languages and Systems ...",
+  },
   {
     institution: "Khulna University of Engineering & Technology (KUET)",
     degree: "B.Sc. (Engg.) in Computer Science & Engineering",
